@@ -19,7 +19,6 @@ interface ExplosionShockwave {
 
 export const GlobalCursorEffects: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [hoverLabel, setHoverLabel] = useState<string | null>(null);
   const [isHoveringClickable, setIsHoveringClickable] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
@@ -113,21 +112,8 @@ export const GlobalCursorEffects: React.FC = () => {
       );
       if (target) {
         setIsHoveringClickable(true);
-        const customLabel = target.getAttribute("data-cursor-label");
-        if (customLabel) {
-          setHoverLabel(customLabel);
-        } else if (["a", "button"].includes(target.tagName.toLowerCase())) {
-          setHoverLabel("↗");
-        } else if (target.classList.contains("step")) {
-          setHoverLabel("✦");
-        } else if (["input", "select", "textarea"].includes(target.tagName.toLowerCase())) {
-          setHoverLabel(null);
-        } else {
-          setHoverLabel("→");
-        }
       } else {
         setIsHoveringClickable(false);
-        setHoverLabel(null);
       }
     };
 
@@ -187,6 +173,8 @@ export const GlobalCursorEffects: React.FC = () => {
 
     const handleTouchEnd = () => {
       setIsClicking(false);
+      setIsVisible(false);
+      trailPointsRef.current = [];
     };
 
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
@@ -560,29 +548,10 @@ export const GlobalCursorEffects: React.FC = () => {
   }, [isHoveringClickable, isClicking]);
 
   return (
-    <>
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 w-full h-full pointer-events-none z-[9998]"
-        aria-hidden="true"
-      />
-
-      {isVisible && hoverLabel && (
-        <div
-          className={`fixed pointer-events-none z-[9999] transition-transform duration-75 ease-out ${
-            isClicking ? "scale-90" : "scale-100"
-          }`}
-          style={{
-            left: `${mouseRef.current.x + 18}px`,
-            top: `${mouseRef.current.y + 18}px`,
-          }}
-        >
-          <div className="bg-[#0A0A0A] text-white px-2.5 py-1 text-[11px] font-mono tracking-wider pixel-clip-sm shadow-xl flex items-center gap-1.5 border border-white/10 animate-arrow-pulse">
-            <span className="text-[#7c3aed] font-bold">▶</span>
-            <span>{hoverLabel}</span>
-          </div>
-        </div>
-      )}
-    </>
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 w-full h-full pointer-events-none z-[9998]"
+      aria-hidden="true"
+    />
   );
 };
