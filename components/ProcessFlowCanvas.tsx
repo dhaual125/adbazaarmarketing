@@ -12,11 +12,13 @@ export const ProcessFlowCanvas: React.FC = () => {
     if (!ctx) return;
 
     let DPR = Math.min(window.devicePixelRatio || 1, 2);
-    const CELL = 7;
     let W = 0;
     let H = 0;
+    let isMobile = false;
+    let CELL = 7;
     let animId: number;
     let t = Math.random() * 5000;
+    let lastTime = performance.now();
 
     // Brand Palette: Purple -> Blue -> Green -> Orange
     const PURPLE = "#7c3aed";
@@ -43,7 +45,11 @@ export const ProcessFlowCanvas: React.FC = () => {
       const rect = parent.getBoundingClientRect();
       if (rect.width < 2) return;
       W = rect.width;
-      H = Math.max(260, Math.min(380, rect.width * 0.32));
+      isMobile = W < 640;
+      CELL = isMobile ? 5.5 : 7;
+      // Responsive height: well-proportioned on small phone screens
+      H = Math.max(190, Math.min(360, isMobile ? rect.width * 0.44 : rect.width * 0.30));
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * DPR);
       cv.height = Math.round(H * DPR);
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -65,16 +71,34 @@ export const ProcessFlowCanvas: React.FC = () => {
       mouseY = -1000;
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const rect = cv.getBoundingClientRect();
+        mouseX = e.touches[0].clientX - rect.left;
+        mouseY = e.touches[0].clientY - rect.top;
+        isHovered = mouseX >= -20 && mouseX <= W + 20 && mouseY >= -20 && mouseY <= H + 20;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isHovered = false;
+      mouseX = -1000;
+      mouseY = -1000;
+    };
+
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     cv.addEventListener("pointerleave", handlePointerLeave);
+    cv.addEventListener("touchmove", handleTouchMove, { passive: true });
+    cv.addEventListener("touchend", handleTouchEnd, { passive: true });
+    cv.addEventListener("touchcancel", handleTouchEnd, { passive: true });
 
     // 2000 Particles configured for Braided Wave Harmonic Flow (media_1787598097026.jpg)
-    const NUM = 2000;
+    const MAX_NUM = 2000;
     interface Particle {
       u: number;
       seed: number;
       speed: number;
-      waveBranch: number; // 0, 1, or 2 (which braided sinusoidal ribbon)
+      waveBranch: number;
       yNoise: number;
       xNoise: number;
       curX: number;
@@ -82,12 +106,12 @@ export const ProcessFlowCanvas: React.FC = () => {
     }
 
     const particles: Particle[] = [];
-    for (let i = 0; i < NUM; i++) {
+    for (let i = 0; i < MAX_NUM; i++) {
       const branchRand = hash(i * 9.17 + 2.43);
       particles.push({
         u: hash(i * 5.31 + 7.19),
         seed: hash(i * 3.71 + 1.49),
-        speed: 0.7 + hash(i * 2.13) * 0.6,
+        speed: 0.75 + hash(i * 2.13) * 0.55,
         waveBranch: branchRand < 0.38 ? 0 : branchRand < 0.74 ? 1 : 2,
         yNoise: (hash(i * 11.73) - 0.5) * 2,
         xNoise: (hash(i * 13.89) - 0.5) * 2,
@@ -97,30 +121,36 @@ export const ProcessFlowCanvas: React.FC = () => {
     }
 
     const render = () => {
-      t += 0.022;
+      const now = performance.now();
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+      t += dt * 1.35; // Constant silky smooth time progression
+
       ctx.clearRect(0, 0, W, H);
 
       const cy = H * 0.5;
+      const activeCount = isMobile ? 950 : MAX_NUM;
 
       // Draw subtle guide grid
-      ctx.strokeStyle = "rgba(10, 10, 10, 0.035)";
+      ctx.strokeStyle = "rgba(10, 10, 10, 0.03)";
       ctx.lineWidth = 1;
       ctx.beginPath();
-      for (let gx = 0; gx <= W; gx += CELL * 4) {
+      const gridStep = CELL * 4;
+      for (let gx = 0; gx <= W; gx += gridStep) {
         ctx.moveTo(gx + 0.5, 0);
         ctx.lineTo(gx + 0.5, H);
       }
-      for (let gy = 0; gy <= H; gy += CELL * 4) {
+      for (let gy = 0; gy <= H; gy += gridStep) {
         ctx.moveTo(0, gy + 0.5);
         ctx.lineTo(W, gy + 0.5);
       }
       ctx.stroke();
 
-      for (let i = 0; i < particles.length; i++) {
+      for (let i = 0; i < activeCount; i++) {
         const p = particles[i];
 
         // Continuous left-to-right living stream flow
-        p.u = (p.u + 0.0011 * p.speed) % 1;
+        p.u = (p.u + dt * 0.065 * p.speed) % 1;
         const u = p.u;
 
         let targetX = u * W + Math.sin(t * 1.6 + p.seed * 10) * 3 + p.xNoise * (CELL * 0.7);
@@ -157,25 +187,20 @@ export const ProcessFlowCanvas: React.FC = () => {
           }
         } else {
           // 3. RIGHT BRAIDED SINE WAVE RIBBONS (media_1787598097026.jpg)
-          // 3 Intertwined multi-frequency sinusoidal waves weaving through each other
           const waveProg = (u - 0.52) / 0.48; // 0 to 1
-          const amp = (0.30 + waveProg * 0.18) * H;
-          const waveFreq = 11.2;
+          const amp = (0.28 + waveProg * 0.18) * H;
+          const waveFreq = isMobile ? 9.5 : 11.2;
           const phaseOffset = t * 2.8;
 
           let waveOffset = 0;
           if (p.waveBranch === 0) {
-            // Wave 1: Primary oscillating sine ribbon (high peaks & troughs)
             waveOffset = Math.sin(u * waveFreq + phaseOffset) * amp;
           } else if (p.waveBranch === 1) {
-            // Wave 2: Counter-phase intertwined harmonic ribbon
             waveOffset = Math.sin(u * waveFreq + phaseOffset + Math.PI * 0.9) * amp * 0.92;
           } else {
-            // Wave 3: Fast tertiary undulating ribbon
             waveOffset = Math.cos(u * (waveFreq * 1.35) - phaseOffset * 1.1) * amp * 0.75;
           }
 
-          // Thickness of ribbon line
           const lineThickness = (0.028 + waveProg * 0.045) * H;
           targetY = cy + waveOffset + p.yNoise * lineThickness;
 
@@ -187,17 +212,17 @@ export const ProcessFlowCanvas: React.FC = () => {
           }
         }
 
-        // --- Interactive Cursor Repulsion Cut & Wake (Void shockwave) ---
+        // --- Interactive Repulsion Cut & Wake ---
         if (isHovered && mouseX > 0) {
           const dx = targetX - mouseX;
           const dy = targetY - mouseY;
           const dist = Math.hypot(dx, dy);
-          const repulsionRadius = 110;
+          const repulsionRadius = isMobile ? 80 : 110;
 
           if (dist < repulsionRadius && dist > 0.1) {
-            const force = Math.pow(1 - dist / repulsionRadius, 1.7) * 65;
+            const force = Math.pow(1 - dist / repulsionRadius, 1.7) * (isMobile ? 45 : 65);
             const angle = Math.atan2(dy, dx);
-            const swirl = (p.seed > 0.5 ? 1 : -1) * (1 - dist / repulsionRadius) * 16;
+            const swirl = (p.seed > 0.5 ? 1 : -1) * (1 - dist / repulsionRadius) * 14;
 
             targetX += Math.cos(angle) * force - Math.sin(angle) * swirl;
             targetY += Math.sin(angle) * force + Math.cos(angle) * swirl;
@@ -237,11 +262,14 @@ export const ProcessFlowCanvas: React.FC = () => {
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", handlePointerMove);
       cv.removeEventListener("pointerleave", handlePointerLeave);
+      cv.removeEventListener("touchmove", handleTouchMove);
+      cv.removeEventListener("touchend", handleTouchEnd);
+      cv.removeEventListener("touchcancel", handleTouchEnd);
     };
   }, []);
 
   return (
-    <div className="procflow w-full mb-10 relative group">
+    <div className="procflow w-full mb-10 relative group touch-pan-y">
       <canvas
         ref={cvRef}
         id="procflow"

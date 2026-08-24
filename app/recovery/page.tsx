@@ -43,7 +43,7 @@ export default function RecoveryPage() {
 
       {/* Urgent Banner */}
       <div className="urgent-banner">
-        ⚠️ <strong>Urgent:</strong> If your ad account is restricted or your Business Manager is disabled, every day without access means lost revenue. <Link href="/contact">Contact us immediately →</Link>
+        <strong>Urgent:</strong> If your ad account is restricted or your Business Manager is disabled, every day without access means lost revenue. <Link href="/contact">Contact us immediately →</Link>
       </div>
 
       {/* Hero */}
@@ -185,7 +185,7 @@ export default function RecoveryPage() {
             <p className="value-body">For complex disputes, some law firms and specialized agencies offer legal or strategic support. While we may not offer these directly, we can guide you on what makes sense for your situation.</p>
           </div>
           <div className="urgent-banner" style={{ marginTop: "2rem" }}>
-            ⚠️ <em>Recovery is not guaranteed and depends on the final decision of Meta. Our service fee covers our professional time and expertise. We will always be honest about your chances and advise accordingly.</em>
+            <em>Recovery is not guaranteed and depends on the final decision of Meta. Our service fee covers our professional time and expertise. We will always be honest about your chances and advise accordingly.</em>
           </div>
         </div>
       </section>

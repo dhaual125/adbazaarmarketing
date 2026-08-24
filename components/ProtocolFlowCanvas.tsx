@@ -12,11 +12,13 @@ export const ProtocolFlowCanvas: React.FC = () => {
     if (!ctx) return;
 
     let DPR = Math.min(window.devicePixelRatio || 1, 2);
-    const CELL = 7;
+    let CELL = 7;
     let W = 0;
     let H = 0;
+    let isMobile = false;
     let animId: number;
     let t = 0;
+    let lastTime = performance.now();
 
     // Brand colors only
     const PURPLE = "#7c3aed";
@@ -28,7 +30,7 @@ export const ProtocolFlowCanvas: React.FC = () => {
     const ORANGE = "#f97316";
     const ORANGE_LIGHT = "#fb923c";
 
-    // Mouse interaction
+    // Pointer & Touch interaction
     let mouseX = -1000;
     let mouseY = -1000;
     let isHovered = false;
@@ -44,7 +46,10 @@ export const ProtocolFlowCanvas: React.FC = () => {
       const rect = parent.getBoundingClientRect();
       if (rect.width < 2) return;
       W = rect.width;
-      H = Math.max(280, Math.min(420, rect.width * 0.35));
+      isMobile = W < 640;
+      CELL = isMobile ? 5.5 : 7;
+      H = Math.max(190, Math.min(420, isMobile ? rect.width * 0.44 : rect.width * 0.32));
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * DPR);
       cv.height = Math.round(H * DPR);
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -66,27 +71,45 @@ export const ProtocolFlowCanvas: React.FC = () => {
       mouseY = -1000;
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const rect = cv.getBoundingClientRect();
+        mouseX = e.touches[0].clientX - rect.left;
+        mouseY = e.touches[0].clientY - rect.top;
+        isHovered = mouseX >= -10 && mouseX <= W + 10 && mouseY >= -10 && mouseY <= H + 10;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isHovered = false;
+      mouseX = -1000;
+      mouseY = -1000;
+    };
+
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     cv.addEventListener("pointerleave", handlePointerLeave);
+    cv.addEventListener("touchmove", handleTouchMove, { passive: true });
+    cv.addEventListener("touchend", handleTouchEnd, { passive: true });
+    cv.addEventListener("touchcancel", handleTouchEnd, { passive: true });
 
     // --- Particles: Horizontal comet stream matching media_1787596605265.png ---
-    const NUM = 2400;
+    const MAX_NUM = 2400;
     interface Particle {
-      baseU: number;     // base horizontal position 0..1
+      baseU: number;
       seed: number;
       speed: number;
-      yOff: number;      // vertical scatter factor -1..1
-      drift: number;     // individual drift amplitude
+      yOff: number;
+      drift: number;
       curX: number;
       curY: number;
     }
 
     const particles: Particle[] = [];
-    for (let i = 0; i < NUM; i++) {
+    for (let i = 0; i < MAX_NUM; i++) {
       particles.push({
         baseU: hash(i * 5.31 + 9.17),
         seed: hash(i * 3.71 + 1.49),
-        speed: 0.6 + hash(i * 2.13) * 0.8,
+        speed: 0.65 + hash(i * 2.13) * 0.75,
         yOff: (hash(i * 11.73) - 0.5) * 2,
         drift: hash(i * 7.91) * 2 - 1,
         curX: 0,
@@ -95,45 +118,38 @@ export const ProtocolFlowCanvas: React.FC = () => {
     }
 
     const render = () => {
-      t += 0.018;
+      const now = performance.now();
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+      t += dt * 1.25;
+
       ctx.clearRect(0, 0, W, H);
 
-      const cy = H * 0.48; // Vertical center slightly above middle
+      const cy = H * 0.48;
+      const activeCount = isMobile ? 1050 : MAX_NUM;
 
-      for (let i = 0; i < particles.length; i++) {
+      for (let i = 0; i < activeCount; i++) {
         const p = particles[i];
 
         // Continuous leftward-to-rightward flow
-        p.baseU = (p.baseU + 0.0009 * p.speed) % 1;
+        p.baseU = (p.baseU + dt * 0.055 * p.speed) % 1;
         const u = p.baseU;
-
-        // --- Horizontal comet/stream geometry ---
-        // Shape: scattered left → converging → dense center block → expanding → scattered right
-        //
-        // Key zones from media_1787596605265.png:
-        //   0.00 - 0.28: LEFT SCATTER — Sparse dispersed particles, wide vertical spread
-        //   0.28 - 0.42: LEFT CONVERGENCE — Particles funnel inward, tightening
-        //   0.42 - 0.58: DENSE CENTER BLOCK — Tight dense pixel mass, minimal scatter
-        //   0.58 - 0.72: RIGHT EXPANSION — Particles fan outward, widening
-        //   0.72 - 1.00: RIGHT SCATTER — Sparse expanding plume with trailing sparks
 
         let targetX = u * W;
         let targetY = cy;
         let verticalSpread = 0;
 
         if (u < 0.28) {
-          // LEFT SCATTER: Wide dispersed cloud, tapering right
-          const prog = u / 0.28; // 0..1
+          // LEFT SCATTER
+          const prog = u / 0.28;
           verticalSpread = (1 - prog * 0.5) * H * 0.42;
-          // Gentle drift animation
           const wobble = Math.sin(t * 1.2 + p.seed * 20 + u * 8) * 8 * (1 - prog * 0.5);
           targetY = cy + p.yOff * verticalSpread + wobble;
-          // Slight horizontal scatter
           targetX += (p.drift * 6) * (1 - prog);
 
         } else if (u < 0.42) {
-          // LEFT CONVERGENCE: Funnel inward
-          const prog = (u - 0.28) / 0.14; // 0..1
+          // LEFT CONVERGENCE
+          const prog = (u - 0.28) / 0.14;
           const startSpread = H * 0.28;
           const endSpread = H * 0.10;
           verticalSpread = startSpread + (endSpread - startSpread) * prog;
@@ -141,42 +157,37 @@ export const ProtocolFlowCanvas: React.FC = () => {
           targetY = cy + p.yOff * verticalSpread + wobble;
 
         } else if (u < 0.58) {
-          // DENSE CENTER BLOCK: Tight compact mass
-          const prog = (u - 0.42) / 0.16; // 0..1
+          // DENSE CENTER BLOCK
+          const prog = (u - 0.42) / 0.16;
           verticalSpread = H * 0.10 + Math.sin(prog * Math.PI) * H * 0.02;
           const wobble = Math.sin(t * 2.2 + p.seed * 12) * 3;
           targetY = cy + p.yOff * verticalSpread + wobble;
 
         } else if (u < 0.72) {
-          // RIGHT EXPANSION: Fan outward
-          const prog = (u - 0.58) / 0.14; // 0..1
+          // RIGHT EXPANSION
+          const prog = (u - 0.58) / 0.14;
           const startSpread = H * 0.10;
           const endSpread = H * 0.30;
           verticalSpread = startSpread + (endSpread - startSpread) * prog;
           const wobble = Math.sin(t * 1.5 + p.seed * 18 + u * 10) * 6 * prog;
           targetY = cy + p.yOff * verticalSpread + wobble;
-          // Slight upward tilt for right side (matching image: right side goes up-right)
           targetY -= prog * H * 0.08 * (p.yOff < 0 ? 1 : 0.3);
 
         } else {
-          // RIGHT SCATTER: Sparse expanding plume trailing off
-          const prog = (u - 0.72) / 0.28; // 0..1
+          // RIGHT SCATTER
+          const prog = (u - 0.72) / 0.28;
           verticalSpread = H * 0.30 + prog * H * 0.16;
           const wobble = Math.sin(t * 1.0 + p.seed * 22 + u * 6) * 10 * prog;
           targetY = cy + p.yOff * verticalSpread + wobble;
-          // Upward-right tilt matching the image's comet tail going upper-right
           targetY -= prog * H * 0.18 * (p.yOff < -0.2 ? 1.2 : 0.4);
-          // Horizontal scatter
           targetX += p.drift * 8 * prog;
         }
 
-        // --- COLOR: Purple → Blue → Green → Orange (left to right) ---
+        // --- COLOR: Purple → Blue → Green → Orange ---
         let col: string;
         if (u < 0.28) {
-          // Purple zone (scattered left)
           col = p.seed < 0.4 ? PURPLE : PURPLE_LIGHT;
         } else if (u < 0.42) {
-          // Purple → Blue transition
           const blend = (u - 0.28) / 0.14;
           if (blend < 0.5) {
             col = p.seed < 0.6 ? PURPLE : BLUE_LIGHT;
@@ -184,10 +195,8 @@ export const ProtocolFlowCanvas: React.FC = () => {
             col = p.seed < 0.3 ? PURPLE : p.seed < 0.8 ? BLUE : BLUE_LIGHT;
           }
         } else if (u < 0.58) {
-          // Blue zone (dense center)
           col = p.seed < 0.7 ? BLUE : BLUE_LIGHT;
         } else if (u < 0.72) {
-          // Blue → Green transition
           const blend = (u - 0.58) / 0.14;
           if (blend < 0.5) {
             col = p.seed < 0.5 ? BLUE : GREEN;
@@ -195,7 +204,6 @@ export const ProtocolFlowCanvas: React.FC = () => {
             col = p.seed < 0.3 ? BLUE : p.seed < 0.8 ? GREEN : GREEN_LIGHT;
           }
         } else if (u < 0.88) {
-          // Green → Orange transition
           const blend = (u - 0.72) / 0.16;
           if (blend < 0.5) {
             col = p.seed < 0.6 ? GREEN : GREEN_LIGHT;
@@ -203,22 +211,20 @@ export const ProtocolFlowCanvas: React.FC = () => {
             col = p.seed < 0.3 ? GREEN : p.seed < 0.75 ? ORANGE : ORANGE_LIGHT;
           }
         } else {
-          // Orange zone (trailing sparks)
           col = p.seed < 0.6 ? ORANGE : ORANGE_LIGHT;
         }
 
-        // --- CURSOR REPULSION: Void/cut when cursor moves through ---
+        // --- CURSOR / TOUCH REPULSION ---
         if (isHovered && mouseX > 0) {
           const dx = targetX - mouseX;
           const dy = targetY - mouseY;
           const dist = Math.hypot(dx, dy);
-          const repulsionRadius = 100;
+          const repulsionRadius = isMobile ? 75 : 100;
 
           if (dist < repulsionRadius && dist > 0.5) {
-            const force = Math.pow(1 - dist / repulsionRadius, 1.8) * 70;
+            const force = Math.pow(1 - dist / repulsionRadius, 1.8) * (isMobile ? 48 : 70);
             const angle = Math.atan2(dy, dx);
-            // Swirl around cursor
-            const swirl = (p.seed > 0.5 ? 1 : -1) * (1 - dist / repulsionRadius) * 18;
+            const swirl = (p.seed > 0.5 ? 1 : -1) * (1 - dist / repulsionRadius) * 16;
 
             targetX += Math.cos(angle) * force + Math.sin(angle) * swirl;
             targetY += Math.sin(angle) * force - Math.cos(angle) * swirl;
@@ -238,7 +244,6 @@ export const ProtocolFlowCanvas: React.FC = () => {
         const gx = Math.round(p.curX / CELL) * CELL;
         const gy = Math.round(p.curY / CELL) * CELL;
 
-        // Skip if out of bounds
         if (gx < -CELL || gx > W + CELL || gy < -CELL || gy > H + CELL) continue;
 
         ctx.fillStyle = col;
@@ -255,11 +260,14 @@ export const ProtocolFlowCanvas: React.FC = () => {
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", handlePointerMove);
       cv.removeEventListener("pointerleave", handlePointerLeave);
+      cv.removeEventListener("touchmove", handleTouchMove);
+      cv.removeEventListener("touchend", handleTouchEnd);
+      cv.removeEventListener("touchcancel", handleTouchEnd);
     };
   }, []);
 
   return (
-    <div className="procflow w-full mb-8 relative group">
+    <div className="procflow w-full mb-8 relative group touch-pan-y">
       <canvas
         ref={cvRef}
         id="bcp-flowviz"

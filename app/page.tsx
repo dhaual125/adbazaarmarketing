@@ -8,7 +8,6 @@ import { Carousel, CarouselSlide } from "@/components/Carousel";
 import { EditorialSection } from "@/components/EditorialSection";
 import { ProcessFlowCanvas } from "@/components/ProcessFlowCanvas";
 import { ProtocolFlowCanvas } from "@/components/ProtocolFlowCanvas";
-import { DonutCanvas } from "@/components/DonutCanvas";
 import { PixelMarquee } from "@/components/PixelMarquee";
 
 
@@ -143,36 +142,55 @@ export default function Home() {
           {/* Double-Helix Wave Canvas (Image 2) */}
           <ProcessFlowCanvas />
 
-          {/* 4 Interactive Step Animations */}
-          <div className="donuts grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8">
-            <DonutCanvas
-              kind="explore"
-              numberLabel="01"
-              title="Plan"
-              desc="Understand the business, audience, offer and objective before the campaign begins."
-              badgeBg="bg-[#2563eb]"
-            />
-            <DonutCanvas
-              kind="generate"
-              numberLabel="02"
-              title="Create"
-              desc="Develop the ads, videos, creatives and messaging that give people a reason to pay attention."
-              badgeBg="bg-[#7c3aed]"
-            />
-            <DonutCanvas
-              kind="refine"
-              numberLabel="03"
-              title="Launch"
-              desc="Take campaigns live across Meta, Google and social platforms with the right targeting and structure."
-              badgeBg="bg-[#16a34a]"
-            />
-            <DonutCanvas
-              kind="scale"
-              numberLabel="04"
-              title="Scale"
-              desc="Learn from performance, improve the campaign and scale the strongest opportunities."
-              badgeBg="bg-[#f97316]"
-            />
+          {/* 4 Process Steps (Clean Text & Badges, Borderless) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+            <div className="step flex flex-col gap-3 group relative">
+              <div className="dl flex items-center gap-2">
+                <span className="dn inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[#2563eb] text-white font-mono text-[11px] font-medium tracking-wide">
+                  01
+                </span>
+                <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">Plan</span>
+              </div>
+              <p className="dd m-0 text-[14px] leading-[1.55] text-[#2a2a2a]">
+                Understand the business, audience, offer and objective before the campaign begins.
+              </p>
+            </div>
+
+            <div className="step flex flex-col gap-3 group relative">
+              <div className="dl flex items-center gap-2">
+                <span className="dn inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[#7c3aed] text-white font-mono text-[11px] font-medium tracking-wide">
+                  02
+                </span>
+                <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">Create</span>
+              </div>
+              <p className="dd m-0 text-[14px] leading-[1.55] text-[#2a2a2a]">
+                Develop the ads, videos, creatives and messaging that give people a reason to pay attention.
+              </p>
+            </div>
+
+            <div className="step flex flex-col gap-3 group relative">
+              <div className="dl flex items-center gap-2">
+                <span className="dn inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[#16a34a] text-white font-mono text-[11px] font-medium tracking-wide">
+                  03
+                </span>
+                <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">Launch</span>
+              </div>
+              <p className="dd m-0 text-[14px] leading-[1.55] text-[#2a2a2a]">
+                Take campaigns live across Meta, Google and social platforms with the right targeting and structure.
+              </p>
+            </div>
+
+            <div className="step flex flex-col gap-3 group relative">
+              <div className="dl flex items-center gap-2">
+                <span className="dn inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[#f97316] text-white font-mono text-[11px] font-medium tracking-wide">
+                  04
+                </span>
+                <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">Scale</span>
+              </div>
+              <p className="dd m-0 text-[14px] leading-[1.55] text-[#2a2a2a]">
+                Learn from performance, improve the campaign and scale the strongest opportunities.
+              </p>
+            </div>
           </div>
         </div>
       </section>
