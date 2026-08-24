@@ -122,6 +122,31 @@ const services = [
     tags: ["Meta Recovery", "Ad Account Appeals", "Page Reinstatement", "Compliance"],
     color: "var(--green)",
   },
+  {
+    number: "08",
+    title: "Website & App Development — Navchetna Technologies",
+    headline: "Custom Digital Products Built to Perform",
+    desc: "Powered by Navchetna Technologies, we design and develop high-performance websites, mobile apps, and custom software solutions tailored to your business. From sleek landing pages to full-scale enterprise platforms — we build it all, fast and right.",
+    what: [
+      "Custom website design & development (React, Next.js, WordPress, Shopify)",
+      "Mobile app development (iOS & Android — React Native / Flutter)",
+      "E-commerce stores with payment gateway integration",
+      "Custom CRM, ERP & business management software",
+      "API development, third-party integrations & automation",
+      "UI/UX design, prototyping & user testing",
+      "Cloud hosting, deployment & ongoing maintenance",
+      "AI chatbots, automation workflows & smart dashboards",
+    ],
+    results: [
+      "Fully custom, scalable digital products",
+      "3–6 week delivery for standard projects",
+      "99.9% uptime with managed cloud hosting",
+      "SEO-optimised, mobile-first builds",
+    ],
+    cta: "Start Your Build",
+    tags: ["Next.js", "React Native", "Shopify", "Flutter", "Node.js", "AWS", "UI/UX", "Custom Software"],
+    color: "var(--orange)",
+  },
 ];
 
 const steps = [
@@ -154,7 +179,7 @@ export default function ServicesPage() {
           <p className="page-lead">
             Growth marketing, IT consulting, creative production, leads management, and crisis account recovery — all integrated, all focused on one thing: your business growth.
           </p>
-          <Link href="/contact" className="btn-site pixel-clip" style={{ display: "inline-flex", marginTop: "2rem" }}>
+          <Link href="/contact" className="btn-site pixel-clip" style={{ display: "inline-flex", marginTop: "2rem", width: "100%", maxWidth: "320px" }}>
             Get a Free Marketing Audit →
           </Link>
         </div>
@@ -176,7 +201,7 @@ export default function ServicesPage() {
                 aria-expanded={open === i}
               >
                 <span className="svc-accordion__num">{s.number}</span>
-                <span className="svc-accordion__title">{s.title}</span>
+                <span className="svc-accordion__title" style={{ minWidth: 0 }}>{s.title}</span>
                 <span className="svc-accordion__chevron">{open === i ? "−" : "+"}</span>
               </button>
 

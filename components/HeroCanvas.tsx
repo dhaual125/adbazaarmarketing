@@ -3,13 +3,13 @@
 import React, { useEffect, useRef } from "react";
 
 interface HeroCanvasProps {
-  cellSize: number;
-  brushSize: number;
+  cellSize?: number;
+  brushSize?: number;
 }
 
 export const HeroCanvas: React.FC<HeroCanvasProps> = ({
-  cellSize,
-  brushSize,
+  cellSize = 14,
+  brushSize = 18,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -22,8 +22,8 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
     let DPR = Math.min(window.devicePixelRatio || 1, 2);
     let W = 0;
     let H = 0;
-    let cell = cellSize || 8;
-    let BRUSH = brushSize || 10;
+    let cell = cellSize;
+    let BRUSH = brushSize;
     let cols = 0;
     let rows = 0;
     let heat: Float32Array | null = null;
@@ -32,12 +32,12 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
     let animationFrameId: number;
     const SEED = Math.random() * 1000;
 
-    // Palette: Purple -> Blue -> Green -> Orange (4 brand colors only)
+    // Palette: Purple -> Blue -> Green -> Orange
     const BANDS: [number, string][] = [
-      [0.26, "#7c3aed"], // Purple
-      [0.44, "#2563eb"], // Blue
-      [0.62, "#16a34a"], // Green
-      [0.80, "#f97316"], // Orange
+      [0.30, "#7c3aed"],
+      [0.46, "#2563eb"],
+      [0.62, "#16a34a"],
+      [0.78, "#f97316"],
     ];
 
     let mx = -1;
@@ -45,7 +45,6 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
     let pmx = -1;
     let pmy = -1;
     let hov = false;
-    let lastMove = -9;
     let charging = false;
     let chT0 = 0;
     let chx = 0;
@@ -53,20 +52,11 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
     let shake = 0;
     const waves: Array<{ x: number; y: number; t0: number; pow: number }> = [];
 
-    let pacOn = false;
-    let pacx = 0;
-    let pacy = 0;
-    let pacDir = 1;
-    let pacStart = 0;
-    let pacAge = 0;
-    let PFOOD = 34;
-
     const hsh = (c: number, r: number) => {
       const n = Math.sin(c * 127.1 + r * 311.7 + SEED * 0.13) * 43758.5453;
       return n - Math.floor(n);
     };
 
-    // Organic procedural wave generator matching craft.wild.as
     const base = (nx: number, ny: number, tt: number) => {
       const s = SEED;
       nx += Math.sin(ny * 5 + tt * 0.5 + s) * 0.05;
@@ -107,7 +97,7 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
           if (w < 0.02) continue;
           const id = r * cols + c;
           const vv = heat[id] + amt * w;
-          heat[id] = vv > 1.2 ? 1.2 : vv;
+          heat[id] = vv > 1 ? 1 : vv;
         }
       }
     };
@@ -123,89 +113,17 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
       const steps = Math.max(1, Math.min(48, Math.round(dl / (cell * 0.8))));
       for (let s = 1; s <= steps; s++) {
         const f = s / steps;
-        dep(pmx + dx * f, pmy + dy * f, 0.20, sig);
+        dep(pmx + dx * f, pmy + dy * f, 0.16, sig);
       }
       pmx = x;
       pmy = y;
     };
 
-    const pacman = (
-      cx: number,
-      cy: number,
-      rad: number,
-      ang: number,
-      mouth: number,
-      val: number
-    ) => {
-      if (!heat) return;
-      const c0 = Math.floor((cx - rad) / cell);
-      const c1 = Math.ceil((cx + rad) / cell);
-      const r0 = Math.floor((cy - rad) / cell);
-      const r1 = Math.ceil((cy + rad) / cell);
-      const rr = rad * rad;
-
-      for (let r = r0; r <= r1; r++) {
-        for (let c = c0; c <= c1; c++) {
-          if (c < 0 || r < 0 || c >= cols || r >= rows) continue;
-          const dx = (c + 0.5) * cell - cx;
-          const dy = (r + 0.5) * cell - cy;
-          if (dx * dx + dy * dy > rr) continue;
-          const da = Math.abs(
-            (((Math.atan2(dy, dx) - ang) % (2 * Math.PI)) + 3 * Math.PI) %
-              (2 * Math.PI) -
-              Math.PI
-          );
-          if (da < mouth) continue;
-          const id = r * cols + c;
-          const v = val + 0.03 * Math.sin(c * 0.7 + r * 0.7 - t * 0.01);
-          if (v > heat[id]) heat[id] = v;
-        }
-      }
-    };
-
-    const wander = (restx: number, resty: number) => {
-      if (!pacOn) {
-        pacOn = true;
-        pacDir = restx < W * 0.5 ? 1 : -1;
-        pacx = restx;
-        pacy = resty;
-        pacStart = restx;
-        pacAge = 0;
-        PFOOD = BRUSH * 3.4;
-      }
-      const rad = BRUSH * 3.4;
-      pacAge++;
-      pacx += pacDir * 2.6;
-
-      if (pacx > W + rad + 12 || pacx < -rad - 12) {
-        pacDir = Math.random() < 0.5 ? 1 : -1;
-        pacy = 70 + Math.random() * (H - 140);
-        pacx = pacDir > 0 ? -rad : W + rad;
-        pacStart = pacx;
-        pacAge = 0;
-      }
-      const ang = pacDir > 0 ? 0 : Math.PI;
-      const pr = Math.round(pacy / cell);
-      for (let k = 1; k <= 80; k++) {
-        const pxPos = pacStart + pacDir * PFOOD * k;
-        if (pxPos < -20 || pxPos > W + 20) continue;
-        if (pacDir * (pxPos - pacx) > rad * 0.7) {
-          const pc = Math.round(pxPos / cell);
-          if (pc >= 0 && pr >= 0 && pc < cols && pr < rows && heat) {
-            const pid = pr * cols + pc;
-            if (0.72 > heat[pid]) heat[pid] = 0.72;
-          }
-        }
-      }
-      const mouth = 0.05 + 0.6 * Math.abs(Math.sin(pacAge * 0.16));
-      pacman(pacx, pacy, rad, ang, mouth, 0.72);
-    };
-
     const resize = () => {
       W = window.innerWidth;
       H = window.innerHeight;
-      cell = cellSize || 8;
-      BRUSH = brushSize || 10;
+      cell = cellSize;
+      BRUSH = brushSize;
       cv.width = Math.round(W * DPR);
       cv.height = Math.round(H * DPR);
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -219,8 +137,6 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
     window.addEventListener("resize", resize);
 
     const handlePointerMove = (e: PointerEvent) => {
-      lastMove = performance.now() / 1000;
-      pacOn = false;
       mx = e.clientX;
       my = e.clientY;
       hov = true;
@@ -242,10 +158,10 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
         x: chx,
         y: chy,
         t0: ns,
-        pow: 0.5 + ch * 2.8,
+        pow: 0.35 + ch * 2.1,
       });
-      dep(chx, chy, 1, BRUSH * (3 + ch * 22));
-      shake = 0.5 + ch * 2.4;
+      dep(chx, chy, 1, BRUSH * (2.5 + ch * 18));
+      shake = 0.45 + ch * 1.9;
     };
 
     const handleDblClick = (e: MouseEvent) => {
@@ -253,10 +169,10 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
         x: e.clientX,
         y: e.clientY,
         t0: performance.now() / 1000,
-        pow: 3.4,
+        pow: 2.8,
       });
-      dep(e.clientX, e.clientY, 1, BRUSH * 26);
-      shake = 2.8;
+      dep(e.clientX, e.clientY, 1, BRUSH * 22);
+      shake = 2.4;
     };
 
     let lastTapTime = 0;
@@ -269,15 +185,15 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
         const now = performance.now();
         const dist = Math.hypot(touch.clientX - lastTapX, touch.clientY - lastTapY);
 
-        if (now - lastTapTime < 350 && dist < 45) {
+        if (now - lastTapTime < 350 && dist < 40) {
           waves.push({
             x: touch.clientX,
             y: touch.clientY,
             t0: performance.now() / 1000,
-            pow: 3.4,
+            pow: 2.8,
           });
-          dep(touch.clientX, touch.clientY, 1, BRUSH * 26);
-          shake = 2.8;
+          dep(touch.clientX, touch.clientY, 1, BRUSH * 22);
+          shake = 2.4;
           lastTapTime = 0;
         } else {
           lastTapTime = now;
@@ -313,15 +229,14 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
       const heroEl = document.getElementById("hero");
       const heroHeight = heroEl ? heroEl.offsetHeight : H;
       const heroBottom = heroHeight - sy;
-      const heroEnd = heroBottom * 0.65;
-      const fadeSpan = Math.max(1, heroBottom * 0.22);
-      const hAmp = H * 0.16;
+      const heroEnd = heroBottom * 0.55;
+      const fadeSpan = Math.max(1, heroBottom * 0.18);
+      const hAmp = H * 0.14;
 
       const headerEl = document.querySelector(".hhead") as HTMLElement | null;
       const headerHeight = headerEl ? headerEl.offsetHeight : 0;
       const headerVisibleBottom = Math.max(0, headerHeight - sy);
 
-      // 1. Decay heat
       for (let i = 0; i < heat.length; i++) {
         if (dis[i] > 0 && Math.floor(i / cols) * cell > heroBottom) {
           dis[i] -= 0.007;
@@ -335,43 +250,32 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
           }
         } else {
           if (dis[i] > 0) dis[i] = 0;
-          heat[i] *= 0.885;
+          heat[i] *= 0.878;
           if (heat[i] < 0.003) heat[i] = 0;
         }
       }
 
-      // 2. Mouse follow / wander
-      if (hov && mx > 0 && my > headerVisibleBottom && my <= heroBottom + 20) {
-        const idle = ns - lastMove;
-        if (idle > 1.5) {
-          wander(mx, my);
-          pmx = mx;
-          pmy = my;
-        } else {
-          follow(mx, my, BRUSH);
-        }
+      if (hov && mx > 0 && my > headerVisibleBottom && my <= heroBottom + 10) {
+        follow(mx, my, BRUSH);
       }
 
-      // 3. Hold-to-charge
       if (charging) {
         const chg = Math.min((ns - chT0) / 2.2, 1);
         dep(chx, chy, 0.45 + chg * 0.5, BRUSH * (2 + chg * 8));
         if (shake < 0.12 + chg * 0.35) shake = 0.12 + chg * 0.35;
       }
 
-      // 4. Shockwaves (Double-click explosion expanding across whole page)
-      const maxDist = Math.hypot(W, H);
       for (let wi = waves.length - 1; wi >= 0; wi--) {
         const wv = waves[wi];
         const age = ns - wv.t0;
-        if (age > 2.0) {
+        if (age > 1.5) {
           waves.splice(wi, 1);
           continue;
         }
         const pw = wv.pow || 1;
-        const R = age * maxDist * 1.8;
-        const sig = cell * 6.8 * pw;
-        const amp = Math.max(0, 1 - age / 2.0) * 1.35 * pw;
+        const R = age * Math.hypot(W, H) * 1.7;
+        const sig = cell * 5.5 * pw;
+        const amp = Math.max(0, 1 - age / 1.5) * 1.2 * pw;
         const inv = 1 / (2 * sig * sig);
 
         for (let r = 0; r < rows; r++) {
@@ -391,27 +295,25 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
         }
       }
 
-      // 5. Screen shake
       ctx.save();
       if (shake > 0.01) {
         shake *= 0.9;
         ctx.translate(
-          (Math.random() - 0.5) * shake * 18,
-          (Math.random() - 0.5) * shake * 18
+          (Math.random() - 0.5) * shake * 20,
+          (Math.random() - 0.5) * shake * 20
         );
       } else {
         shake = 0;
       }
 
       ctx.clearRect(-40, -40, W + 80, H + 80);
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#fff";
       ctx.fillRect(-40, -40, W + 80, H + 80);
 
-      // 6. Draw subtle pixel grid lines (#fafafa)
       const off = sy - Math.floor(sy / cell) * cell;
       const s = cell - 1;
 
-      ctx.strokeStyle = "#f3f4f6";
+      ctx.strokeStyle = "#fafafa";
       ctx.lineWidth = 1;
       ctx.beginPath();
       for (let gx = 0; gx <= W; gx += cell) {
@@ -424,13 +326,12 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
       }
       ctx.stroke();
 
-      // 7. Render organic gradient squares flowing below header
-      const drStart = Math.floor((sy + headerVisibleBottom + 2) / cell);
-      const drEnd = Math.min(Math.floor((sy + H) / cell) + 1, Math.floor((heroHeight + 30) / cell));
+      const drStart = Math.floor((sy + headerVisibleBottom + 10) / cell);
+      const drEnd = Math.min(Math.floor((sy + H) / cell) + 1, Math.floor((heroHeight + 20) / cell));
 
       for (let dr = drStart; dr <= drEnd; dr++) {
         const vy = dr * cell - sy;
-        if (vy < headerVisibleBottom + 1) continue;
+        if (vy < headerVisibleBottom + 6) continue;
 
         const ccyView = vy + cell * 0.5;
         const vr = Math.floor(ccyView / cell);
@@ -452,7 +353,7 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
           const regThr =
             depthN <= heroEnd ? 0 : Math.min(1, (depthN - heroEnd) / fadeSpan);
 
-          let v = inRow ? heat[vr * cols + c2] * 0.92 : 0;
+          let v = inRow ? heat[vr * cols + c2] * 0.9 : 0;
 
           if (
             region(nx, ny, tt) > regThr &&
@@ -464,15 +365,13 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
               Math.sin(c2 * 0.6 + dr * 0.8 + tt * 1.7) * 0.045;
           }
 
-          if (v < 0.26) continue;
+          if (v < 0.3 && !(v >= 0.86 && v < 1.02)) continue;
 
           let col = BANDS[0][1];
-          for (let b = BANDS.length - 1; b >= 0; b--) {
-            if (v >= BANDS[b][0]) {
-              col = BANDS[b][1];
-              break;
-            }
-          }
+          if (v >= BANDS[1][0]) col = BANDS[1][1];
+          if (v >= BANDS[2][0]) col = BANDS[2][1];
+          if (v >= BANDS[3][0]) col = BANDS[3][1];
+          if (v >= 0.86 && v < 1.02) col = "#22c55e";
 
           ctx.fillStyle = col;
           ctx.fillRect(c2 * cell, vy, s, s);
@@ -501,8 +400,7 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
     <canvas
       ref={canvasRef}
       id="hero-kv"
-      className="fixed w-full h-full block z-0 pointer-events-none"
-      style={{ top: "62px", left: 0, right: 0, bottom: 0 }}
+      className="fixed inset-0 w-full h-full block z-0 pointer-events-none"
       aria-hidden="true"
     />
   );

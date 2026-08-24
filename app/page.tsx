@@ -19,63 +19,33 @@ export default function Home() {
   const workSlides: CarouselSlide[] = [
     {
       title: "Meta Ads Scaling",
-      desc: "Turn cold social scrolls into qualified buyers. We build, test, and scale high-ROI Facebook & Instagram campaigns with real-time conversion tracking.",
+      desc: "Turn social attention into qualified leads.",
       visualType: "meta-ads",
-      tags: [
-        { label: "Facebook & IG", className: "bg-[#0081FB]" },
-        { label: "4.8x Avg ROAS", className: "bg-[#16A34A]" },
-        { label: "Audience AI", className: "bg-[#7C3AED]" },
-      ],
     },
     {
       title: "Google Search & P-Max",
-      desc: "Be the first answer when customers are actively searching to buy. Precision search ads, YouTube video placements, and high-intent keyword acquisition.",
+      desc: "Capture high-intent searches and drive conversions.",
       visualType: "google-ads",
-      tags: [
-        { label: "1st Page Rank", className: "bg-[#EA4335]" },
-        { label: "High Intent", className: "bg-[#4285F4]" },
-        { label: "YouTube Ads", className: "bg-[#FF0000]" },
-      ],
     },
     {
       title: "Advertising Content Videos",
-      desc: "Creatives that stop the thumb in 2 seconds. High-converting UGC videos, 3D product motion, and brand storytelling engineered for maximum retention.",
+      desc: "Scroll-stopping content built for conversions.",
       visualType: "ad-videos",
-      tags: [
-        { label: "Thumb-Stopping", className: "bg-[#F97316]" },
-        { label: "4K UGC Creators", className: "bg-[#7C3AED]" },
-        { label: "Viral Scaling", className: "bg-[#16A34A]" },
-      ],
     },
     {
       title: "Social Media Distribution",
-      desc: "Build a brand that commands authority. Consistent daily reels, multi-platform publishing, and genuine community engagement across every touchpoint.",
+      desc: "Turn consistent content into brand authority.",
       visualType: "social-media",
-      tags: [
-        { label: "Instagram & TikTok", className: "bg-[#E1306C]" },
-        { label: "Daily Distribution", className: "bg-[#0A66C2]" },
-        { label: "Brand Authority", className: "bg-[#0A0A0A]" },
-      ],
     },
     {
       title: "Leads Management & CRM",
-      desc: "Never lose a valuable customer. Automated qualification pipelines, instant WhatsApp/SMS follow-up, and real-time CRM lead routing.",
+      desc: "Capture, manage and convert leads efficiently",
       visualType: "leads-management",
-      tags: [
-        { label: "Zero Leakage", className: "bg-[#0081FB]" },
-        { label: "Instant Nurture", className: "bg-[#16A34A]" },
-        { label: "Automated Pipeline", className: "bg-[#F97316]" },
-      ],
     },
     {
       title: "Business Growth & Scaling",
-      desc: "Connect advertising, content, and conversion into one compounding growth engine. Full-funnel strategy built to expand revenue predictably.",
+      desc: "Connect marketing efforts to predictable growth.",
       visualType: "growth-scaling",
-      tags: [
-        { label: "Omni-Channel", className: "bg-[#16A34A]" },
-        { label: "Revenue Flywheel", className: "bg-[#7C3AED]" },
-        { label: "CAC Reduction", className: "bg-[#4285F4]" },
-      ],
     },
   ];
 
@@ -83,49 +53,57 @@ export default function Home() {
     {
       title: "Heritage, Crafted Beautifully",
       desc: "A timeless jewellery creation by Toran, bringing together heritage, craftsmanship, and contemporary elegance.",
-      videoSrc: "/1.mp4",
+      thumbSrc: "/2.jpg",
+      instagramUrl: "https://www.instagram.com/reel/DQwz4vrE5uv/?igsh=bmF6eXJ6cTRxbnJz",
       reelsVideo: true,
     },
     {
       title: "From Traditional to Modern",
       desc: "Timeless classics and contemporary designs, crafted for every occasion, story, and style.",
-      videoSrc: "/3.mp4",
+      thumbSrc: "/7.jpg",
+      instagramUrl: "https://www.instagram.com/reel/DZSFf7Tvxtr/?igsh=MTRvMjgzcnFhcG81cg==",
       reelsVideo: true,
     },
     {
       title: "Unisex salon",
       desc: "Super Star Unisex Salon, ",
-      videoSrc: "/2.mp4",
+      thumbSrc: "/3.jpg",
+      instagramUrl: "https://www.instagram.com/reel/DZcWXbNi5EI/?igsh=ZTBxdWpmaGszMGZw",
       reelsVideo: true,
     },
     {
       title: "Matarani laptopwala",
       desc: "minerwa centar Jodhpur,Shop no 404,",
-      videoSrc: "/7.mp4",
+      thumbSrc: "/8.jpg",
+      instagramUrl: "https://www.instagram.com/reel/DSCuWkXk29F/?igsh=cm8ycGphZjVpZ3E3",
       reelsVideo: true,
     },
     {
       title: "Gold Jewellery, Better Value",
       desc: "Explore beautiful gold jewellery at Shree Krishna Jewellers with value-focused making charges..",
-      videoSrc: "/8.mp4",
+      thumbSrc: "/1.jpg",
+      instagramUrl: "https://www.instagram.com/reel/DLg4pIgyOVn/?igsh=enVzeXptdnVzNGlt",
       reelsVideo: true,
     },
     {
       title: "Tech Essentials, All in One Place",
       desc: "Discover branded accessories, audio gear, smart devices and more — with mobile finance options available at Krishna Mobile Shopee.",
-      videoSrc: "/6.mp4",
+      thumbSrc: "/6.jpg",
+      instagramUrl: "https://www.instagram.com/reel/Db8Ne6Uvyb0/?igsh=cjY5Y3lmYTdhMTg4",
       reelsVideo: true,
     },
     {
       title: "Designed for a Premium Home",
       desc: "Elevate your everyday space with refined bathroom solutions crafted to bring comfort, elegance and a premium feel.",
-      videoSrc: "/5.mp4",
+      thumbSrc: "/9.jpg",
+      instagramUrl: "https://www.instagram.com/reel/DZU6ZichWGC/?igsh=MXVuMmJ4eXpzNjJuaA==",
       reelsVideo: true,
     },
     {
       title: "Tradition in Every Drape",
       desc: "Graceful sarees that celebrate Indian tradition with colours, textures and designs made for every special occasion.",
-      videoSrc: "/4.mp4",
+      thumbSrc: "/5.jpg",
+      instagramUrl: "https://www.instagram.com/reel/DcGodu9v_7X/?igsh=MWMzdGgxZTA4bWQxeg==",
       reelsVideo: true,
     },
   ];
@@ -148,7 +126,7 @@ export default function Home() {
       <EditorialSection />
 
       {/* Process Section - Matches Image 2 & Image 3 */}
-      <section className="proc relative z-2 py-16 px-7 md:px-14 bg-transparent" id="process">
+      <section className="proc relative z-2 py-12 sm:py-16 px-4 sm:px-7 md:px-14 bg-transparent" id="process">
         <div className="wrap max-w-[1176px] mx-auto">
           {/* Header */}
           <div className="ph mb-6">
@@ -200,7 +178,7 @@ export default function Home() {
       </section>
 
       {/* 360° Service Pillars Section */}
-      <section className="ed-protocol relative z-2 py-16 md:py-24 px-7 md:px-14 bg-transparent" id="protocol">
+      <section className="ed-protocol relative z-2 py-12 sm:py-16 md:py-24 px-4 sm:px-7 md:px-14 bg-transparent" id="protocol">
         <div className="wrap max-w-[1176px] mx-auto">
           {/* Header Row */}
           <div className="grid grid-cols-1 md:grid-cols-[0.82fr_1.18fr] gap-8 md:gap-14 items-start mb-12">
@@ -293,7 +271,7 @@ export default function Home() {
       />
 
       {/* Merged Seamless Pixel Marquee & Contact CTA Section */}
-      <section className="cta relative z-2 pt-12 pb-24 md:pb-36 px-7 md:px-14 text-center bg-transparent overflow-hidden" id="contact">
+      <section className="cta relative z-2 pt-10 sm:pt-12 pb-20 sm:pb-24 md:pb-36 px-4 sm:px-7 md:px-14 text-center bg-transparent overflow-hidden" id="contact">
         {/* Pixel Marquee seamlessly integrated above CTA */}
         <div className="mb-14 cursor-pointer" data-cursor-label="✦">
           <PixelMarquee />
@@ -316,7 +294,7 @@ export default function Home() {
             >
               hello@adbazaar.com
             </a>{" "}
-            &middot; 🚨{" "}
+            &middot;{" "}
             <a
               href="mailto:recovery@adbazaar.com"
               className="text-[#0A0A0A] no-underline border-b border-black/50 hover:border-black transition-colors"

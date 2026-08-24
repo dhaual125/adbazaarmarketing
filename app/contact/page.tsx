@@ -40,8 +40,6 @@ export default function ContactPage() {
     source: "",
     budget: "",
   });
-  const [sent, setSent] = useState(false);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -57,7 +55,7 @@ export default function ContactPage() {
       `*Email:* ${form.email}`,
       `*Phone:* ${form.phone}`,
       form.service ? `*Service:* ${form.service}` : null,
-      form.budget  ? `*Budget:* ${form.budget}`  : null,
+      form.budget ? `*Budget:* ${form.budget}` : null,
       ``,
       `*Challenge:*`,
       form.challenge,
@@ -65,9 +63,18 @@ export default function ContactPage() {
       .filter(Boolean)
       .join("\n");
 
-    const url = `https://wa.me/918849091228?text=${encodeURIComponent(msg)}`;
-    window.open(url, "_blank");
-    setSent(true);
+    // Send to AD BAZAAR number
+    window.open(`https://wa.me/918849091228?text=${encodeURIComponent(msg)}`, "_blank");
+
+    // Also open WhatsApp for the user's own number so they receive a copy
+    const userPhone = form.phone.replace(/[^0-9]/g, "");
+    const userPhoneWithCode = userPhone.startsWith("91") ? userPhone : `91${userPhone}`;
+    setTimeout(() => {
+      window.open(`https://wa.me/${userPhoneWithCode}?text=${encodeURIComponent(msg)}`, "_blank");
+    }, 800);
+
+    // Reset form
+    setForm({ name: "", business: "", email: "", phone: "", service: "", challenge: "", source: "", budget: "" });
   };
 
   return (
@@ -91,14 +98,7 @@ export default function ContactPage() {
 
           {/* Form */}
           <div className="contact-form-wrap">
-            {sent ? (
-              <div className="contact-success">
-                <div className="contact-success__icon">✓</div>
-                <h3>Message received.</h3>
-                <p>We&apos;ll be in touch within 24 hours. For urgent issues, call us directly.</p>
-              </div>
-            ) : (
-              <form className="contact-form" onSubmit={handleSubmit}>
+            <form className="contact-form" onSubmit={handleSubmit}>
                 <div className="form-row">
                   <div className="form-field">
                     <label className="form-label">Full name *</label>
@@ -193,10 +193,9 @@ export default function ContactPage() {
                 </div>
 
                 <button type="submit" className="btn-site pixel-clip contact-submit">
-                   Send message
+                  Send message
                 </button>
               </form>
-            )}
           </div>
 
           {/* Info Sidebar */}
@@ -209,7 +208,7 @@ export default function ContactPage() {
             </div>
 
             <div className="contact-info__block">
-              <h3 className="contact-info__label">🚨 Urgent account recovery?</h3>
+              <h3 className="contact-info__label"> Urgent account recovery?</h3>
               <p className="contact-info__text">
                 If your ad account is restricted or your Business Manager is disabled, don&apos;t wait — every hour means lost revenue.
               </p>

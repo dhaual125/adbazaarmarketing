@@ -11,7 +11,7 @@ export const EditorialSection: React.FC = () => {
       {/* Section 1: Origin */}
       <div className="relative z-2 bg-transparent">
         <section
-          className="ed py-16 md:py-24 px-7 md:px-14 group cursor-pointer"
+          className="ed py-10 sm:py-16 md:py-24 px-4 sm:px-7 md:px-14 group cursor-pointer"
           id="origin"
           data-cursor-label="✦"
           onMouseEnter={() => setHoveredSection("origin")}
@@ -50,7 +50,7 @@ export const EditorialSection: React.FC = () => {
       {/* Section 2: Shift */}
       <div className="relative z-2 bg-transparent">
         <section
-          className="ed py-16 md:py-24 px-7 md:px-14 group cursor-pointer"
+          className="ed py-10 sm:py-16 md:py-24 px-4 sm:px-7 md:px-14 group cursor-pointer"
           id="shift"
           data-cursor-label="✦"
           onMouseEnter={() => setHoveredSection("shift")}
@@ -91,7 +91,7 @@ export const EditorialSection: React.FC = () => {
       {/* Section 3: AI Levels */}
       <div className="relative z-2 bg-transparent">
         <section
-          className="ed py-16 md:py-24 px-7 md:px-14 group cursor-pointer"
+          className="ed py-10 sm:py-16 md:py-24 px-4 sm:px-7 md:px-14 group cursor-pointer"
           id="ai"
           data-cursor-label="✦"
           onMouseEnter={() => setHoveredSection("ai")}

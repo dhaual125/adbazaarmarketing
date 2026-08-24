@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { PixelGlitchBorder } from "./PixelGlitchBorder";
 
 export type ServiceVisualType =
   | "meta-ads"
@@ -773,13 +774,8 @@ export const ServiceCardVisual: React.FC<ServiceCardVisualProps> = ({ type, titl
         className="w-full h-full object-cover block"
       />
 
-      {/* Top Left Live Tech Badge */}
-      <div className="absolute top-4 left-4 z-[3] flex items-center gap-2 bg-white/95 backdrop-blur-md px-3 py-1.5 border border-black/10 shadow-sm pixel-clip-sm">
-        <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
-        <span className="font-mono text-[10px] font-semibold text-[#0A0A0A] uppercase tracking-wider">
-          AD BAZAAR &bull; {type.toUpperCase().replace("-", " ")}
-        </span>
-      </div>
+      {/* Cyber Edge Pixel Glitch Overlay (theme-matched to card) */}
+      <PixelGlitchBorder isHovered={hovered} type={type} />
 
       {/* Hover Case Study Drawer */}
       <div className="absolute inset-0 z-[2] bg-gradient-to-t from-black/80 via-black/30 to-transparent translate-y-full group-hover/card:translate-y-0 transition-transform duration-500 ease-out pointer-events-none flex items-end justify-center pb-5">

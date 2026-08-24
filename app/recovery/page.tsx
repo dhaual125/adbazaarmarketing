@@ -57,7 +57,7 @@ export default function RecoveryPage() {
             Don&apos;t let a sudden account restriction, hack, or lockout stop your business. Our specialized team navigates Meta&apos;s complex appeals process to restore your accounts fast — often within 72 hours.
           </p>
           <Link href="/contact" className="btn-site pixel-clip" style={{ display: "inline-flex", marginTop: "2rem" }}>
-            🚨 Get Emergency Help Now
+            Get Emergency Help Now
           </Link>
         </div>
       </section>
@@ -195,7 +195,7 @@ export default function RecoveryPage() {
         <div className="page-container page-cta__inner">
           <h2 className="page-cta__title">Don&apos;t wait. Every minute counts.</h2>
           <Link href="/contact" className="btn-site pixel-clip page-cta__btn">
-            🚨 Get Emergency Help Now
+            Get Emergency Help Now
           </Link>
         </div>
       </section>

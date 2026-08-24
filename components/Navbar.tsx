@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const links = [
@@ -51,8 +52,14 @@ export const Navbar: React.FC = () => {
       <div className="navbar__inner">
         {/* Logo */}
         <Link href="/" className="navbar__logo">
-          <span className="navbar__logo-text">AD BAZAAR</span>
-          <span className="navbar__logo-dot" style={{ background: activeColor }} />
+          <Image
+            src="/ADBazzarlogo.png"
+            alt="AD Bazaar"
+            width={120}
+            height={40}
+            className="navbar__logo-img"
+            priority
+          />
         </Link>
 
         {/* Desktop nav links */}
