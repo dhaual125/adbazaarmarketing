@@ -48,6 +48,25 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const msg = [
+      `*New Enquiry — AD BAZAAR*`,
+      ``,
+      `*Name:* ${form.name}`,
+      `*Business:* ${form.business}`,
+      `*Email:* ${form.email}`,
+      `*Phone:* ${form.phone}`,
+      form.service ? `*Service:* ${form.service}` : null,
+      form.budget  ? `*Budget:* ${form.budget}`  : null,
+      ``,
+      `*Challenge:*`,
+      form.challenge,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const url = `https://wa.me/918849091228?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank");
     setSent(true);
   };
 
