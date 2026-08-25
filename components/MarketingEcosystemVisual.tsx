@@ -151,12 +151,14 @@ export const MarketingEcosystemVisual: React.FC = () => {
             </div>
           </div>
 
-          {/* Node 05: LinkedIn (+216px, +82px) */}
+          {/* Node 05: Professional Camera / Photography (+216px, +82px) */}
           <div className="absolute translate-x-[216px] translate-y-[82px] z-10">
             <div className="animate-[breath_6s_ease-in-out_2s_infinite_both]">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.04] border border-black/5 hover:scale-110 transition-transform cursor-pointer" title="LinkedIn B2B Marketing">
-                <svg className="w-7 h-7" viewBox="0 0 24 24" fill="#0A66C2">
-                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 8.76a1.63 1.63 0 1 0-.01-3.26 1.63 1.63 0 0 0 .01 3.26M7.86 18.5V10.1H5.07v8.4h2.79z" />
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.04] border border-black/5 hover:scale-110 transition-transform cursor-pointer" title="Professional Photography">
+                <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                  <circle cx="12" cy="13" r="3.5" strokeWidth="2.2" />
+                  <circle cx="6.5" cy="10" r="0.8" fill="#000000" />
                 </svg>
               </div>
             </div>
@@ -184,12 +186,16 @@ export const MarketingEcosystemVisual: React.FC = () => {
             </div>
           </div>
 
-          {/* Node 08: Telegram (+292px, opacity 60) */}
+          {/* Node 08: Video Production & Reels Shooting (+292px, opacity 60) */}
           <div className="absolute translate-x-[292px] opacity-60 z-10 hover:opacity-100 transition-opacity">
             <div className="animate-[breath_6s_ease-in-out_4s_infinite_both]">
-              <div className="flex h-13 w-13 items-center justify-center rounded-full border border-gray-200/80 bg-white shadow-md hover:scale-110 transition-transform cursor-pointer" title="Telegram Community & Channels">
-                <svg className="w-7 h-7" viewBox="0 0 24 24" fill="#229ED9">
-                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.895-1.042 4.908-1.48 7.248-.186.99-.55 1.32-.903 1.353-.768.07-1.352-.508-2.096-.995-.99-.648-1.55-.995-2.512-1.63-.996-.658-.35-1.02.217-1.609.148-.154 2.721-2.493 2.771-2.705.006-.027.012-.128-.048-.182-.06-.053-.148-.035-.212-.02-.09.02-1.527.97-4.312 2.85-.408.28-.778.416-1.109.409-.365-.008-1.067-.207-1.589-.377-.64-.208-1.15-.318-1.105-.672.023-.184.278-.373.763-.566 2.994-1.304 4.992-2.164 5.994-2.58 2.854-1.188 3.447-1.395 3.834-1.401.085-.001.275.02.398.12.104.084.133.198.147.278.014.079.032.261.018.403z" />
+              <div className="flex h-13 w-13 items-center justify-center rounded-full border border-gray-200/80 bg-white shadow-md hover:scale-110 transition-transform cursor-pointer" title="Video Production & Reels Shooting">
+                <svg className="w-6.5 h-6.5" viewBox="0 0 24 24" fill="#000000">
+                  <circle cx="7.5" cy="5.5" r="2.3" />
+                  <circle cx="13" cy="4" r="2.8" />
+                  <rect x="3" y="9" width="12.5" height="11" rx="2.5" />
+                  <circle cx="9.25" cy="14.5" r="1.3" fill="#FFFFFF" />
+                  <path d="M15.5 12.5l5.5-3.5v9l-5.5-3.5v-2z" />
                 </svg>
               </div>
             </div>
