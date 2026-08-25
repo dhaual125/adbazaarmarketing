@@ -1,20 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
-import { HeroCanvas } from "@/components/HeroCanvas";
-import { HeroSection } from "@/components/HeroSection";
-import { IntroLead } from "@/components/IntroLead";
+import React from "react";
 import { Carousel, CarouselSlide } from "@/components/Carousel";
 import { EditorialSection } from "@/components/EditorialSection";
 import { ProcessFlowCanvas } from "@/components/ProcessFlowCanvas";
-import { ProtocolFlowCanvas } from "@/components/ProtocolFlowCanvas";
 import { PixelMarquee } from "@/components/PixelMarquee";
 import { CursorDrivenParticleTypography } from "@/components/ui/cursor-driven-particles-typography";
-
+import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 
 export default function Home() {
-  const [cellSize] = useState(9);
-  const [brushSize] = useState(10);
 
   const workSlides: CarouselSlide[] = [
     {
@@ -110,14 +104,8 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen bg-white text-[#0A0A0A] font-sans selection:bg-[#d8ff00] selection:text-black">
-      {/* Background Hero Pixel Canvas */}
-      <HeroCanvas cellSize={cellSize} brushSize={brushSize} />
-
-      {/* Hero Section with Solid White Header */}
-      <HeroSection />
-
-      {/* Intro Lead Text */}
-      <IntroLead />
+      {/* Hero Section with Live Vertical Offerings Marquee */}
+      <CTAWithVerticalMarquee />
 
       {/* Main Work Showcase Carousel */}
       <Carousel id="work" slides={workSlides} />
