@@ -9,6 +9,7 @@ import { EditorialSection } from "@/components/EditorialSection";
 import { ProcessFlowCanvas } from "@/components/ProcessFlowCanvas";
 import { ProtocolFlowCanvas } from "@/components/ProtocolFlowCanvas";
 import { PixelMarquee } from "@/components/PixelMarquee";
+import { CursorDrivenParticleTypography } from "@/components/ui/cursor-driven-particles-typography";
 
 
 export default function Home() {
@@ -223,8 +224,13 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Dynamic Expanding Particle Stream Canvas */}
-          <ProtocolFlowCanvas />
+          {/* Cursor-Driven Interactive Pixel Typography */}
+          <div className="w-full my-6 sm:my-8 relative overflow-hidden bg-transparent rounded-xl">
+            <CursorDrivenParticleTypography
+              text="One team. Every part of growth."
+              color="#0A0A0A"
+            />
+          </div>
 
           {/* 4 Service Pillars */}
           <div className="donuts grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8">
