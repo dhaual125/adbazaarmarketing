@@ -63,8 +63,8 @@ export default function ContactPage() {
       .filter(Boolean)
       .join("\n");
 
-    // Send to AD BAZAAR number
-    window.open(`https://wa.me/918849091228?text=${encodeURIComponent(msg)}`, "_blank");
+    // Send to Pawan Nath (CEO & Co-Founder) WhatsApp number
+    window.open(`https://wa.me/917728840116?text=${encodeURIComponent(msg)}`, "_blank");
 
     // Also open WhatsApp for the user's own number so they receive a copy
     const userPhone = form.phone.replace(/[^0-9]/g, "");
@@ -201,6 +201,24 @@ export default function ContactPage() {
           {/* Info Sidebar */}
           <aside className="contact-info">
             <div className="contact-info__block">
+              <h3 className="contact-info__label">Call / WhatsApp directly</h3>
+              <p className="contact-info__text font-medium text-black mb-1">
+                Pawan Nath (CEO & Co-Founder)
+              </p>
+              <a href="tel:+917728840116" className="contact-info__link block font-mono text-base font-semibold">
+                +91 77288 40116
+              </a>
+              <a
+                href="https://wa.me/917728840116"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-mono text-emerald-600 hover:underline inline-block mt-1"
+              >
+                💬 Chat on WhatsApp ↗
+              </a>
+            </div>
+
+            <div className="contact-info__block">
               <h3 className="contact-info__label">Email us directly</h3>
               <a href="mailto:hello@adbazaar.com" className="contact-info__link">
                 hello@adbazaar.com
@@ -208,9 +226,9 @@ export default function ContactPage() {
             </div>
 
             <div className="contact-info__block">
-              <h3 className="contact-info__label"> Urgent account recovery?</h3>
+              <h3 className="contact-info__label">🚨 Urgent account recovery?</h3>
               <p className="contact-info__text">
-                If your ad account is restricted or your Business Manager is disabled, don&apos;t wait — every hour means lost revenue.
+                If your ad account is restricted or your Business Manager is disabled, don&apos;t wait — call or WhatsApp us immediately at <a href="tel:+917728840116" className="underline font-semibold">+91 77288 40116</a>.
               </p>
               <a href="mailto:recovery@adbazaar.com" className="contact-info__link">
                 recovery@adbazaar.com
