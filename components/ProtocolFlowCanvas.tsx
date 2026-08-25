@@ -15,7 +15,7 @@ export const ProtocolFlowCanvas: React.FC = () => {
 
     let isVisibleOnScreen = true;
     let isMobile = window.innerWidth < 640;
-    let DPR = isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2);
+    let DPR = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
     let CELL = isMobile ? 5.5 : 7;
     let W = 0;
     let H = 0;
@@ -51,7 +51,7 @@ export const ProtocolFlowCanvas: React.FC = () => {
       isMobile = W < 640;
       CELL = isMobile ? 5.5 : 7;
       H = Math.max(200, Math.min(360, isMobile ? rect.width * 0.46 : rect.width * 0.30));
-      DPR = isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2);
+      DPR = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * DPR);
       cv.height = Math.round(H * DPR);
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -160,7 +160,7 @@ export const ProtocolFlowCanvas: React.FC = () => {
       ctx.clearRect(0, 0, W, H);
 
       const cy = H * 0.5;
-      const activeCount = isMobile ? 550 : MAX_NUM;
+      const activeCount = isMobile ? 260 : MAX_NUM;
 
       // Draw subtle background pixel grid
       ctx.strokeStyle = "rgba(10, 10, 10, 0.025)";

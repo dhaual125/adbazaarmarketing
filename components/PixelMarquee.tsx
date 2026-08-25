@@ -354,7 +354,25 @@ export const PixelMarquee: React.FC = () => {
       return BRAND_PALETTE[Math.abs(idx)];
     };
 
+    let isVisibleOnScreen = true;
+
+    // Pause offscreen to eliminate background CPU/GPU lag on mobile
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisibleOnScreen = entry.isIntersecting;
+        });
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
+
     const draw = () => {
+      if (!isVisibleOnScreen) {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
+
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
@@ -411,6 +429,7 @@ export const PixelMarquee: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(animId);
+      observer.disconnect();
       window.removeEventListener("resize", resize);
     };
   }, []);

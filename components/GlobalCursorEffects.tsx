@@ -217,9 +217,8 @@ export const GlobalCursorEffects: React.FC = () => {
       const activeExplosions = explosionsRef.current;
       const isMobile = W < 768;
 
-      // On mobile devices without active touch or explosion, bypass heavy work
+      // On mobile devices without active touch or explosion, bypass heavy work completely
       if (isMobile && !isVisible && activeExplosions.length === 0) {
-        ctx.clearRect(0, 0, W, H);
         animId = requestAnimationFrame(render);
         return;
       }
