@@ -49,8 +49,8 @@ export const ProcessFlowCanvas: React.FC = () => {
       if (rect.width < 2) return;
       W = rect.width;
       isMobile = W < 640;
-      CELL = isMobile ? 5.5 : 7;
-      H = Math.max(200, Math.min(360, isMobile ? rect.width * 0.46 : rect.width * 0.30));
+      CELL = isMobile ? 4.5 : 7;
+      H = Math.max(160, Math.min(320, isMobile ? rect.width * 0.38 : rect.width * 0.28));
       DPR = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * DPR);
       cv.height = Math.round(H * DPR);
@@ -155,12 +155,12 @@ export const ProcessFlowCanvas: React.FC = () => {
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
-      t += dt * 0.40; // Calm, steady, soothing harmonic flow
+      t += dt * 0.18; // Ultra-calm, soothing, premium harmonic flow
 
       ctx.clearRect(0, 0, W, H);
 
       const cy = H * 0.5;
-      const activeCount = isMobile ? 240 : MAX_NUM;
+      const activeCount = isMobile ? 280 : MAX_NUM;
 
       // Draw subtle background pixel grid
       ctx.strokeStyle = "rgba(10, 10, 10, 0.025)";
@@ -177,16 +177,16 @@ export const ProcessFlowCanvas: React.FC = () => {
       }
       ctx.stroke();
 
-      // Full-Width Continuous DNA Double-Helix Parameters (Spans 100% across the visual)
-      const totalLoops = isMobile ? 4.5 : 5.5; // Complete continuous helical loops across full width
+      // Full-Width Continuous DNA Double-Helix Parameters
+      const totalLoops = isMobile ? 4.0 : 5.5;
       const waveFreq = totalLoops * Math.PI * 2;
-      const phaseOffset = t * 1.25;
+      const phaseOffset = t * 0.90;
 
       for (let i = 0; i < activeCount; i++) {
         const p = particles[i];
 
-        // Smooth living stream flow from left to right
-        p.u = (p.u + dt * 0.016 * p.speed) % 1;
+        // Soothing, calm living stream flow from left to right
+        p.u = (p.u + dt * 0.008 * p.speed) % 1;
         const u = p.u;
 
         // Amplitude envelope: elegant, balanced height with gentle taper at edges

@@ -49,8 +49,8 @@ export const ProtocolFlowCanvas: React.FC = () => {
       if (rect.width < 2) return;
       W = rect.width;
       isMobile = W < 640;
-      CELL = isMobile ? 5.5 : 7;
-      H = Math.max(200, Math.min(360, isMobile ? rect.width * 0.46 : rect.width * 0.30));
+      CELL = isMobile ? 4.5 : 7;
+      H = Math.max(160, Math.min(320, isMobile ? rect.width * 0.38 : rect.width * 0.28));
       DPR = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * DPR);
       cv.height = Math.round(H * DPR);
@@ -105,7 +105,7 @@ export const ProtocolFlowCanvas: React.FC = () => {
     cv.addEventListener("touchend", handleTouchEnd, { passive: true });
     cv.addEventListener("touchcancel", handleTouchEnd, { passive: true });
 
-    // Rich, dense particle population: 550 on mobile, 1800 on desktop
+    // Rich, dense particle population: 300 on mobile, 1800 on desktop
     const MAX_NUM = 1800;
     interface Particle {
       u: number;
@@ -155,12 +155,12 @@ export const ProtocolFlowCanvas: React.FC = () => {
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
-      t += dt * 0.45; // Calm, steady, soothing flow rate
+      t += dt * 0.22; // Calm, steady, soothing flow rate
 
       ctx.clearRect(0, 0, W, H);
 
       const cy = H * 0.5;
-      const activeCount = isMobile ? 260 : MAX_NUM;
+      const activeCount = isMobile ? 300 : MAX_NUM;
 
       // Draw subtle background pixel grid
       ctx.strokeStyle = "rgba(10, 10, 10, 0.025)";
@@ -181,7 +181,7 @@ export const ProtocolFlowCanvas: React.FC = () => {
         const p = particles[i];
 
         // Smooth living stream flow from left to right
-        p.u = (p.u + dt * 0.016 * p.speed) % 1;
+        p.u = (p.u + dt * 0.009 * p.speed) % 1;
         const u = p.u;
 
         let targetX = u * W + p.xNoise * (CELL * 0.5);
