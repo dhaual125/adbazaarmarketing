@@ -32,12 +32,12 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
     let animationFrameId: number;
     const SEED = Math.random() * 1000;
 
-    // Palette: Purple -> Blue -> Green -> Orange
+    // Pastel & Mild Palette: Soft Lavender, Baby Sky Blue, Mint Green, Peach Apricot
     const BANDS: [number, string][] = [
-      [0.30, "#7c3aed"],
-      [0.46, "#2563eb"],
-      [0.62, "#16a34a"],
-      [0.78, "#f97316"],
+      [0.30, "#C4B5FD"], // Pastel Lavender
+      [0.46, "#93C5FD"], // Pastel Sky Blue
+      [0.62, "#86EFAC"], // Pastel Mint Green
+      [0.78, "#FDBA74"], // Pastel Peach
     ];
 
     let mx = -1;
@@ -380,7 +380,7 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
           if (v >= BANDS[1][0]) col = BANDS[1][1];
           if (v >= BANDS[2][0]) col = BANDS[2][1];
           if (v >= BANDS[3][0]) col = BANDS[3][1];
-          if (v >= 0.86 && v < 1.02) col = "#22c55e";
+          if (v >= 0.86 && v < 1.02) col = "#6EE7B7"; // Pastel Mint Accent
 
           ctx.fillStyle = col;
           ctx.fillRect(c2 * cell, vy, s, s);
