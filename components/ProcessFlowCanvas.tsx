@@ -16,22 +16,23 @@ export const ProcessFlowCanvas: React.FC = () => {
     let isVisibleOnScreen = true;
     let isMobile = window.innerWidth < 640;
     let DPR = isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2);
+    let CELL = isMobile ? 5.5 : 7;
     let W = 0;
     let H = 0;
-    let CELL = isMobile ? 5.5 : 7;
     let animId: number;
     let t = Math.random() * 5000;
     let lastTime = performance.now();
 
-    // Brand Palette: Purple -> Blue -> Green -> Orange
-    const PURPLE = "#7c3aed";
-    const PURPLE_LIGHT = "#a855f7";
-    const BLUE = "#2563eb";
-    const BLUE_LIGHT = "#60a5fa";
-    const GREEN = "#16a34a";
-    const GREEN_LIGHT = "#22c55e";
-    const ORANGE = "#f97316";
-    const ORANGE_LIGHT = "#fb923c";
+    // Light Pastel Palette across the entire full-width DNA helix:
+    // Lavender -> Sky Blue -> Mint Green -> Peach Apricot
+    const PURPLE = "#A78BFA";
+    const PURPLE_LIGHT = "#C4B5FD";
+    const BLUE = "#60A5FA";
+    const BLUE_LIGHT = "#93C5FD";
+    const GREEN = "#6EE7B7";
+    const GREEN_LIGHT = "#86EFAC";
+    const ORANGE = "#FDBA74";
+    const ORANGE_LIGHT = "#FED7AA";
 
     let mouseX = -1000;
     let mouseY = -1000;
@@ -49,7 +50,7 @@ export const ProcessFlowCanvas: React.FC = () => {
       W = rect.width;
       isMobile = W < 640;
       CELL = isMobile ? 5.5 : 7;
-      H = Math.max(180, Math.min(340, isMobile ? rect.width * 0.42 : rect.width * 0.28));
+      H = Math.max(200, Math.min(360, isMobile ? rect.width * 0.46 : rect.width * 0.30));
       DPR = isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * DPR);
       cv.height = Math.round(H * DPR);
@@ -59,7 +60,7 @@ export const ProcessFlowCanvas: React.FC = () => {
     resize();
     window.addEventListener("resize", resize);
 
-    // Pause when off-screen to save 100% mobile CPU/battery
+    // Pause when off-screen to save mobile CPU/battery
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -104,13 +105,14 @@ export const ProcessFlowCanvas: React.FC = () => {
     cv.addEventListener("touchend", handleTouchEnd, { passive: true });
     cv.addEventListener("touchcancel", handleTouchEnd, { passive: true });
 
-    // Adaptive Particles: 380 on mobile (ultra-fast, zero lag), 1400 on desktop
-    const MAX_NUM = 1400;
+    // Adaptive Particles for Full-Width Continuous DNA Double-Helix
+    const MAX_NUM = 1500;
     interface Particle {
       u: number;
       seed: number;
       speed: number;
-      waveBranch: number;
+      type: "strandA" | "strandB" | "rung" | "aura";
+      rungPos: number;
       yNoise: number;
       xNoise: number;
       curX: number;
@@ -119,12 +121,24 @@ export const ProcessFlowCanvas: React.FC = () => {
 
     const particles: Particle[] = [];
     for (let i = 0; i < MAX_NUM; i++) {
-      const branchRand = hash(i * 9.17 + 2.43);
+      const r = hash(i * 7.13 + 3.41);
+      let type: "strandA" | "strandB" | "rung" | "aura" = "strandA";
+      if (r < 0.42) {
+        type = "strandA"; // Primary helical strand
+      } else if (r < 0.84) {
+        type = "strandB"; // Opposing helical strand (pi shift)
+      } else if (r < 0.94) {
+        type = "rung"; // Connecting base-pair ladder rungs
+      } else {
+        type = "aura"; // Ambient floating energy particles
+      }
+
       particles.push({
         u: hash(i * 5.31 + 7.19),
         seed: hash(i * 3.71 + 1.49),
-        speed: 0.7 + hash(i * 2.13) * 0.5,
-        waveBranch: branchRand < 0.38 ? 0 : branchRand < 0.74 ? 1 : 2,
+        speed: 0.75 + hash(i * 2.13) * 0.45,
+        type,
+        rungPos: hash(i * 11.39), // 0 (strandA) to 1 (strandB)
         yNoise: (hash(i * 11.73) - 0.5) * 2,
         xNoise: (hash(i * 13.89) - 0.5) * 2,
         curX: 0,
@@ -141,14 +155,14 @@ export const ProcessFlowCanvas: React.FC = () => {
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
-      t += dt * 0.45; // Slower, calmer, soothing harmonic time progression
+      t += dt * 0.40; // Calm, steady, soothing harmonic flow
 
       ctx.clearRect(0, 0, W, H);
 
       const cy = H * 0.5;
-      const activeCount = isMobile ? 380 : MAX_NUM;
+      const activeCount = isMobile ? 420 : MAX_NUM;
 
-      // Draw subtle guide grid
+      // Draw subtle background pixel grid
       ctx.strokeStyle = "rgba(10, 10, 10, 0.025)";
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -163,89 +177,96 @@ export const ProcessFlowCanvas: React.FC = () => {
       }
       ctx.stroke();
 
+      // Full-Width Continuous DNA Double-Helix Parameters (Spans 100% across the visual)
+      const totalLoops = isMobile ? 4.5 : 5.5; // Complete continuous helical loops across full width
+      const waveFreq = totalLoops * Math.PI * 2;
+      const phaseOffset = t * 1.25;
+
       for (let i = 0; i < activeCount; i++) {
         const p = particles[i];
 
-        // Slower, calmer, continuous living stream flow
-        p.u = (p.u + dt * 0.018 * p.speed) % 1;
+        // Smooth living stream flow from left to right
+        p.u = (p.u + dt * 0.016 * p.speed) % 1;
         const u = p.u;
 
-        let targetX = u * W + Math.sin(t * 1.0 + p.seed * 10) * 2.0 + p.xNoise * (CELL * 0.7);
+        // Amplitude envelope: elegant, balanced height with gentle taper at edges
+        const envelope = Math.sin(u * Math.PI);
+        const amp = (0.20 + Math.pow(envelope, 0.4) * 0.08) * H;
+        const strandThickness = (0.016 + Math.pow(envelope, 0.4) * 0.016) * H;
+
+        const theta = u * waveFreq + phaseOffset;
+        const yStrandA = cy + Math.sin(theta) * amp;
+        const yStrandB = cy + Math.sin(theta + Math.PI) * amp;
+
+        let targetX = u * W + p.xNoise * (CELL * 0.5);
         let targetY = cy;
-        let col = PURPLE;
+        let zDepth = 0; // -1 (back) to +1 (front)
 
-        // --- Exact Geometry matching media_1787598097026.jpg ---
-        if (u < 0.36) {
-          // 1. LEFT CLOUD: Wide dispersed scattered particle cloud tapering to center neck
-          const cloudProgress = u / 0.36; // 0 to 1
-          const spreadH = (1 - cloudProgress * 0.75) * H * 0.44;
-          const noiseY = (hash(p.seed * 31.7 + Math.floor(t * 0.02)) - 0.5) * 2;
-          const undulation = Math.sin(u * 10 + t * 1.0 + p.seed * 6) * 5 * (1 - cloudProgress);
-          targetY = cy + p.yNoise * spreadH + noiseY * spreadH * 0.32 + undulation;
+        if (p.type === "strandA") {
+          targetY = yStrandA + p.yNoise * strandThickness;
+          zDepth = Math.cos(theta);
+        } else if (p.type === "strandB") {
+          targetY = yStrandB + p.yNoise * strandThickness;
+          zDepth = Math.cos(theta + Math.PI);
+        } else if (p.type === "rung") {
+          // Discrete base-pair rungs connecting Strand A and Strand B across the entire length
+          const rungQuant = Math.round(theta / (Math.PI / 2.2)) * (Math.PI / 2.2);
+          const rY_A = cy + Math.sin(rungQuant) * amp;
+          const rY_B = cy + Math.sin(rungQuant + Math.PI) * amp;
+          targetY = rY_A + (rY_B - rY_A) * p.rungPos + p.yNoise * (strandThickness * 0.4);
+          zDepth = 0;
+        } else {
+          // Ambient floating particles around the DNA helix
+          const auraSpread = amp * 1.30;
+          targetY = cy + p.yNoise * auraSpread;
+          zDepth = (p.seed - 0.5) * 2;
+        }
 
-          // Color: Purple -> Blue
-          if (cloudProgress < 0.5) {
-            col = p.seed < 0.4 ? PURPLE_LIGHT : PURPLE;
-          } else {
-            col = p.seed < 0.45 ? PURPLE : p.seed < 0.85 ? BLUE : BLUE_LIGHT;
-          }
+        // --- Continuous Full-Width Pastel 4-Color Gradient Transition ---
+        // Pastel Lavender -> Pastel Sky Blue -> Pastel Mint Green -> Pastel Peach Apricot
+        let col = PURPLE_LIGHT;
+        if (u < 0.28) {
+          col = p.seed < 0.45 ? PURPLE : PURPLE_LIGHT;
         } else if (u < 0.52) {
-          // 2. CENTER FUNNEL / INTERTWINED STRANDS
-          const funnelProg = (u - 0.36) / 0.16; // 0 to 1
-          const neckWidth = (0.10 + Math.sin(funnelProg * Math.PI) * 0.06) * H;
-          const swirl = Math.sin(u * 22 + t * 1.8 + p.seed * 5) * neckWidth * 0.5;
-          targetY = cy + p.yNoise * neckWidth * 0.5 + swirl;
-
-          // Color: Blue -> Green
-          if (funnelProg < 0.5) {
-            col = p.seed < 0.3 ? PURPLE : p.seed < 0.75 ? BLUE : GREEN;
+          const blend = (u - 0.28) / 0.24;
+          if (blend < 0.5) {
+            col = p.seed < 0.4 ? PURPLE_LIGHT : BLUE_LIGHT;
           } else {
-            col = p.seed < 0.3 ? BLUE : p.seed < 0.8 ? GREEN : GREEN_LIGHT;
+            col = p.seed < 0.3 ? PURPLE_LIGHT : p.seed < 0.8 ? BLUE_LIGHT : BLUE;
+          }
+        } else if (u < 0.76) {
+          const blend = (u - 0.52) / 0.24;
+          if (blend < 0.5) {
+            col = p.seed < 0.4 ? BLUE_LIGHT : GREEN_LIGHT;
+          } else {
+            col = p.seed < 0.3 ? BLUE_LIGHT : p.seed < 0.8 ? GREEN_LIGHT : GREEN;
           }
         } else {
-          // 3. RIGHT BRAIDED SINE WAVE RIBBONS
-          const waveProg = (u - 0.52) / 0.48; // 0 to 1
-          const amp = (0.28 + waveProg * 0.18) * H;
-          const waveFreq = isMobile ? 9.5 : 11.2;
-          const phaseOffset = t * 1.1;
-
-          let waveOffset = 0;
-          if (p.waveBranch === 0) {
-            waveOffset = Math.sin(u * waveFreq + phaseOffset) * amp;
-          } else if (p.waveBranch === 1) {
-            waveOffset = Math.sin(u * waveFreq + phaseOffset + Math.PI * 0.9) * amp * 0.92;
+          const blend = (u - 0.76) / 0.24;
+          if (blend < 0.45) {
+            col = p.seed < 0.4 ? GREEN_LIGHT : ORANGE_LIGHT;
           } else {
-            waveOffset = Math.cos(u * (waveFreq * 1.35) - phaseOffset * 1.1) * amp * 0.75;
-          }
-
-          const lineThickness = (0.028 + waveProg * 0.045) * H;
-          targetY = cy + waveOffset + p.yNoise * lineThickness;
-
-          // Color: Green -> Orange
-          if (waveProg < 0.42) {
-            col = p.seed < 0.35 ? GREEN : p.seed < 0.75 ? GREEN_LIGHT : ORANGE_LIGHT;
-          } else {
-            col = p.seed < 0.25 ? GREEN : p.seed < 0.72 ? ORANGE : ORANGE_LIGHT;
+            col = p.seed < 0.25 ? GREEN_LIGHT : p.seed < 0.72 ? ORANGE_LIGHT : ORANGE;
           }
         }
 
-        // --- Interactive Repulsion Cut & Wake ---
+        // --- Interactive Repulsion & Wake ---
         if (isHovered && mouseX > 0) {
           const dx = targetX - mouseX;
           const dy = targetY - mouseY;
           const dist = Math.hypot(dx, dy);
-          const repulsionRadius = isMobile ? 70 : 110;
+          const repulsionRadius = isMobile ? 65 : 105;
 
           if (dist < repulsionRadius && dist > 0.1) {
-            const force = Math.pow(1 - dist / repulsionRadius, 1.7) * (isMobile ? 38 : 65);
+            const force = Math.pow(1 - dist / repulsionRadius, 1.7) * (isMobile ? 36 : 60);
             const angle = Math.atan2(dy, dx);
-            const swirl = (p.seed > 0.5 ? 1 : -1) * (1 - dist / repulsionRadius) * 12;
+            const swirl = (p.seed > 0.5 ? 1 : -1) * (1 - dist / repulsionRadius) * 10;
 
             targetX += Math.cos(angle) * force - Math.sin(angle) * swirl;
             targetY += Math.sin(angle) * force + Math.cos(angle) * swirl;
 
-            if (dist > repulsionRadius * 0.65) {
-              col = p.seed < 0.5 ? BLUE : ORANGE;
+            if (dist > repulsionRadius * 0.6) {
+              col = p.seed < 0.5 ? BLUE_LIGHT : ORANGE_LIGHT;
             }
           }
         }
@@ -255,18 +276,27 @@ export const ProcessFlowCanvas: React.FC = () => {
           p.curX = targetX;
           p.curY = targetY;
         } else {
-          p.curX += (targetX - p.curX) * 0.24;
-          p.curY += (targetY - p.curY) * 0.24;
+          p.curX += (targetX - p.curX) * 0.22;
+          p.curY += (targetY - p.curY) * 0.22;
         }
 
-        // Snap to crisp pixel grid
+        // Snap to strict pixel grid
         const gx = Math.round(p.curX / CELL) * CELL;
         const gy = Math.round(p.curY / CELL) * CELL;
 
         if (gx < -CELL || gx > W + CELL || gy < -CELL || gy > H + CELL) continue;
 
+        // 3D Depth Opacity: foreground strands solid, background strands softly dimmed
+        ctx.save();
+        if (zDepth < -0.35) {
+          ctx.globalAlpha = 0.70;
+        } else {
+          ctx.globalAlpha = 1.0;
+        }
+
         ctx.fillStyle = col;
         ctx.fillRect(gx, gy, CELL - 1, CELL - 1);
+        ctx.restore();
       }
 
       animId = requestAnimationFrame(render);

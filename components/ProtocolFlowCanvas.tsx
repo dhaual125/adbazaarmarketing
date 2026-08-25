@@ -20,20 +20,20 @@ export const ProtocolFlowCanvas: React.FC = () => {
     let W = 0;
     let H = 0;
     let animId: number;
-    let t = 0;
+    let t = Math.random() * 5000;
     let lastTime = performance.now();
 
-    // Brand colors only
-    const PURPLE = "#7c3aed";
-    const PURPLE_LIGHT = "#a78bfa";
-    const BLUE = "#2563eb";
-    const BLUE_LIGHT = "#60a5fa";
-    const GREEN = "#16a34a";
-    const GREEN_LIGHT = "#22c55e";
-    const ORANGE = "#f97316";
-    const ORANGE_LIGHT = "#fb923c";
+    // Strictly 4 Brand Colors in Soft Light / Pastel Shades:
+    // Light Purple -> Light Blue -> Light Green -> Light Orange
+    const PURPLE = "#A78BFA";
+    const PURPLE_LIGHT = "#C4B5FD";
+    const BLUE = "#60A5FA";
+    const BLUE_LIGHT = "#93C5FD";
+    const GREEN = "#6EE7B7";
+    const GREEN_LIGHT = "#86EFAC";
+    const ORANGE = "#FDBA74";
+    const ORANGE_LIGHT = "#FED7AA";
 
-    // Pointer & Touch interaction
     let mouseX = -1000;
     let mouseY = -1000;
     let isHovered = false;
@@ -50,7 +50,7 @@ export const ProtocolFlowCanvas: React.FC = () => {
       W = rect.width;
       isMobile = W < 640;
       CELL = isMobile ? 5.5 : 7;
-      H = Math.max(180, Math.min(380, isMobile ? rect.width * 0.42 : rect.width * 0.30));
+      H = Math.max(200, Math.min(360, isMobile ? rect.width * 0.46 : rect.width * 0.30));
       DPR = isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * DPR);
       cv.height = Math.round(H * DPR);
@@ -60,7 +60,7 @@ export const ProtocolFlowCanvas: React.FC = () => {
     resize();
     window.addEventListener("resize", resize);
 
-    // Pause when offscreen to eliminate mobile background lag
+    // Pause when offscreen to save mobile CPU/battery
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -105,26 +105,42 @@ export const ProtocolFlowCanvas: React.FC = () => {
     cv.addEventListener("touchend", handleTouchEnd, { passive: true });
     cv.addEventListener("touchcancel", handleTouchEnd, { passive: true });
 
-    // Adaptive particles: 360 on mobile (ultra-smooth 60/120fps), 1500 on desktop
-    const MAX_NUM = 1500;
+    // Rich, dense particle population: 550 on mobile, 1800 on desktop
+    const MAX_NUM = 1800;
     interface Particle {
-      baseU: number;
+      u: number;
       seed: number;
       speed: number;
-      yOff: number;
-      drift: number;
+      branch: "top" | "bottom" | "core" | "upperWing" | "spark";
+      yNoise: number;
+      xNoise: number;
       curX: number;
       curY: number;
     }
 
     const particles: Particle[] = [];
     for (let i = 0; i < MAX_NUM; i++) {
+      const r = hash(i * 7.13 + 3.41);
+      let branch: "top" | "bottom" | "core" | "upperWing" | "spark" = "core";
+      if (r < 0.28) {
+        branch = "top";
+      } else if (r < 0.56) {
+        branch = "bottom";
+      } else if (r < 0.78) {
+        branch = "core";
+      } else if (r < 0.92) {
+        branch = "upperWing";
+      } else {
+        branch = "spark";
+      }
+
       particles.push({
-        baseU: hash(i * 5.31 + 9.17),
+        u: hash(i * 5.31 + 7.19),
         seed: hash(i * 3.71 + 1.49),
-        speed: 0.65 + hash(i * 2.13) * 0.70,
-        yOff: (hash(i * 11.73) - 0.5) * 2,
-        drift: hash(i * 7.91) * 2 - 1,
+        speed: 0.75 + hash(i * 2.13) * 0.45,
+        branch,
+        yNoise: (hash(i * 11.73) - 0.5) * 2,
+        xNoise: (hash(i * 13.89) - 0.5) * 2,
         curX: 0,
         curY: 0,
       });
@@ -139,108 +155,144 @@ export const ProtocolFlowCanvas: React.FC = () => {
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
-      t += dt * 0.75;
+      t += dt * 0.45; // Calm, steady, soothing flow rate
 
       ctx.clearRect(0, 0, W, H);
 
-      const cy = H * 0.48;
-      const activeCount = isMobile ? 360 : MAX_NUM;
+      const cy = H * 0.5;
+      const activeCount = isMobile ? 550 : MAX_NUM;
+
+      // Draw subtle background pixel grid
+      ctx.strokeStyle = "rgba(10, 10, 10, 0.025)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      const gridStep = CELL * 4;
+      for (let gx = 0; gx <= W; gx += gridStep) {
+        ctx.moveTo(gx + 0.5, 0);
+        ctx.lineTo(gx + 0.5, H);
+      }
+      for (let gy = 0; gy <= H; gy += gridStep) {
+        ctx.moveTo(0, gy + 0.5);
+        ctx.lineTo(W, gy + 0.5);
+      }
+      ctx.stroke();
 
       for (let i = 0; i < activeCount; i++) {
         const p = particles[i];
 
-        // Continuous leftward-to-rightward flow
-        p.baseU = (p.baseU + dt * 0.024 * p.speed) % 1;
-        const u = p.baseU;
+        // Smooth living stream flow from left to right
+        p.u = (p.u + dt * 0.016 * p.speed) % 1;
+        const u = p.u;
 
-        let targetX = u * W;
+        let targetX = u * W + p.xNoise * (CELL * 0.5);
         let targetY = cy;
-        let verticalSpread = 0;
+        let col = PURPLE_LIGHT;
+
+        // =========================================================================
+        // EXACT TOPOLOGY MATCHING media_1787642788360.png:
+        // 1. LEFT SCATTERED CLOUD (u < 0.28)
+        // 2. MIDDLE SOLID CONVERGING DUAL BANDS (0.28 <= u < 0.52)
+        // 3. RIGHT FULL DENSE BODY + UPWARD WING + LOWER EMBERS (u >= 0.52)
+        // =========================================================================
 
         if (u < 0.28) {
-          const prog = u / 0.28;
-          verticalSpread = (1 - prog * 0.5) * H * 0.42;
-          const wobble = Math.sin(t * 1.2 + p.seed * 20 + u * 8) * 6 * (1 - prog * 0.5);
-          targetY = cy + p.yOff * verticalSpread + wobble;
-          targetX += (p.drift * 5) * (1 - prog);
+          // --- 1. LEFT SCATTERED SPRAY / CONVERGING CLOUD ---
+          const prog = u / 0.28; // 0 to 1
+          const spread = (1 - prog * 0.70) * H * 0.44;
+          const curveY = (p.branch === "top" || p.branch === "upperWing" ? -1 : 1) * (1 - prog * 0.5) * H * 0.20;
+          const wobble = Math.sin(u * 10 + t * 1.0 + p.seed * 5) * 4 * (1 - prog);
 
-        } else if (u < 0.42) {
-          const prog = (u - 0.28) / 0.14;
-          const startSpread = H * 0.28;
-          const endSpread = H * 0.10;
-          verticalSpread = startSpread + (endSpread - startSpread) * prog;
-          const wobble = Math.sin(t * 1.8 + p.seed * 15 + u * 12) * 4 * (1 - prog * 0.6);
-          targetY = cy + p.yOff * verticalSpread + wobble;
+          targetY = cy + curveY + p.yNoise * spread + wobble;
 
-        } else if (u < 0.58) {
-          const prog = (u - 0.42) / 0.16;
-          verticalSpread = H * 0.10 + Math.sin(prog * Math.PI) * H * 0.02;
-          const wobble = Math.sin(t * 2.0 + p.seed * 12) * 2.5;
-          targetY = cy + p.yOff * verticalSpread + wobble;
+          // Color: Light Purple / Lavender
+          col = p.seed < 0.5 ? PURPLE_LIGHT : PURPLE;
 
-        } else if (u < 0.72) {
-          const prog = (u - 0.58) / 0.14;
-          const startSpread = H * 0.10;
-          const endSpread = H * 0.30;
-          verticalSpread = startSpread + (endSpread - startSpread) * prog;
-          const wobble = Math.sin(t * 1.4 + p.seed * 18 + u * 10) * 5 * prog;
-          targetY = cy + p.yOff * verticalSpread + wobble;
-          targetY -= prog * H * 0.08 * (p.yOff < 0 ? 1 : 0.3);
+        } else if (u < 0.52) {
+          // --- 2. MIDDLE SOLID PARALLEL HORIZONTAL BANDS ---
+          const prog = (u - 0.28) / 0.24; // 0 to 1
+          const bandThickness = H * 0.12;
+          const separation = (0.13 - prog * 0.05) * H;
+
+          let bandCenter = cy;
+          if (p.branch === "top" || p.branch === "upperWing") {
+            bandCenter = cy - separation;
+          } else if (p.branch === "bottom" || p.branch === "spark") {
+            bandCenter = cy + separation;
+          } else {
+            bandCenter = cy;
+          }
+
+          const ripple = Math.sin(u * 18 + t * 1.5 + p.seed * 3) * 2.5;
+          targetY = bandCenter + p.yNoise * bandThickness * 0.5 + ripple;
+
+          // Color: Sky Blue -> Soft Mint Green
+          if (prog < 0.5) {
+            col = p.seed < 0.4 ? PURPLE_LIGHT : BLUE_LIGHT;
+          } else {
+            col = p.seed < 0.4 ? BLUE_LIGHT : GREEN_LIGHT;
+          }
 
         } else {
-          const prog = (u - 0.72) / 0.28;
-          verticalSpread = H * 0.30 + prog * H * 0.16;
-          const wobble = Math.sin(t * 1.0 + p.seed * 22 + u * 6) * 8 * prog;
-          targetY = cy + p.yOff * verticalSpread + wobble;
-          targetY -= prog * H * 0.18 * (p.yOff < -0.2 ? 1.2 : 0.4);
-          targetX += p.drift * 6 * prog;
+          // --- 3. RIGHT FULL DENSE BODY + UPWARD WING + LOWER EMBERS (Rich & Prominent) ---
+          const prog = (u - 0.52) / 0.48; // 0 to 1
+
+          if (p.branch === "spark") {
+            // Lower right trailing scattered embers
+            targetY = cy + prog * H * 0.36 + p.yNoise * (H * 0.10);
+            col = p.seed < 0.5 ? ORANGE : ORANGE_LIGHT;
+
+          } else if (p.branch === "upperWing") {
+            // Upper prominent upward sweeping wing
+            const upwardLift = -Math.pow(prog, 1.1) * H * 0.38;
+            const wingThickness = (0.08 + prog * 0.14) * H;
+            const undulation = Math.sin(u * 12 - t * 1.2 + p.seed * 4) * 3 * prog;
+            targetY = cy + upwardLift + p.yNoise * wingThickness * 0.5 + undulation;
+
+            // Color: Light Green -> Light Orange
+            if (prog < 0.35) {
+              col = p.seed < 0.5 ? GREEN_LIGHT : GREEN;
+            } else if (prog < 0.70) {
+              col = p.seed < 0.5 ? GREEN_LIGHT : ORANGE_LIGHT;
+            } else {
+              col = p.seed < 0.5 ? ORANGE_LIGHT : ORANGE;
+            }
+
+          } else {
+            // Main rich, dense solid core body filling the right side
+            const coreThickness = (0.16 + prog * 0.26) * H;
+            const centerShift = -prog * H * 0.08;
+            const undulation = Math.sin(u * 10 - t * 1.0 + p.seed * 3) * 4 * prog;
+            targetY = cy + centerShift + p.yNoise * coreThickness * 0.5 + undulation;
+
+            // Color: Light Green -> Light Orange
+            if (prog < 0.30) {
+              col = p.seed < 0.5 ? GREEN_LIGHT : GREEN;
+            } else if (prog < 0.65) {
+              col = p.seed < 0.5 ? GREEN_LIGHT : ORANGE_LIGHT;
+            } else {
+              col = p.seed < 0.4 ? ORANGE_LIGHT : ORANGE;
+            }
+          }
         }
 
-        // --- COLOR: Purple → Blue → Green → Orange ---
-        let col: string;
-        if (u < 0.28) {
-          col = p.seed < 0.4 ? PURPLE : PURPLE_LIGHT;
-        } else if (u < 0.42) {
-          const blend = (u - 0.28) / 0.14;
-          if (blend < 0.5) {
-            col = p.seed < 0.6 ? PURPLE : BLUE_LIGHT;
-          } else {
-            col = p.seed < 0.3 ? PURPLE : p.seed < 0.8 ? BLUE : BLUE_LIGHT;
-          }
-        } else if (u < 0.58) {
-          col = p.seed < 0.7 ? BLUE : BLUE_LIGHT;
-        } else if (u < 0.72) {
-          const blend = (u - 0.58) / 0.14;
-          if (blend < 0.5) {
-            col = p.seed < 0.5 ? BLUE : GREEN;
-          } else {
-            col = p.seed < 0.3 ? BLUE : p.seed < 0.8 ? GREEN : GREEN_LIGHT;
-          }
-        } else if (u < 0.88) {
-          const blend = (u - 0.72) / 0.16;
-          if (blend < 0.5) {
-            col = p.seed < 0.6 ? GREEN : GREEN_LIGHT;
-          } else {
-            col = p.seed < 0.3 ? GREEN : p.seed < 0.75 ? ORANGE : ORANGE_LIGHT;
-          }
-        } else {
-          col = p.seed < 0.6 ? ORANGE : ORANGE_LIGHT;
-        }
-
-        // --- CURSOR / TOUCH REPULSION ---
+        // --- Interactive Repulsion & Wake ---
         if (isHovered && mouseX > 0) {
           const dx = targetX - mouseX;
           const dy = targetY - mouseY;
           const dist = Math.hypot(dx, dy);
-          const repulsionRadius = isMobile ? 65 : 100;
+          const repulsionRadius = isMobile ? 65 : 105;
 
-          if (dist < repulsionRadius && dist > 0.5) {
-            const force = Math.pow(1 - dist / repulsionRadius, 1.8) * (isMobile ? 38 : 70);
+          if (dist < repulsionRadius && dist > 0.1) {
+            const force = Math.pow(1 - dist / repulsionRadius, 1.6) * (isMobile ? 36 : 60);
             const angle = Math.atan2(dy, dx);
-            const swirl = (p.seed > 0.5 ? 1 : -1) * (1 - dist / repulsionRadius) * 12;
+            const swirl = (p.seed > 0.5 ? 1 : -1) * (1 - dist / repulsionRadius) * 10;
 
-            targetX += Math.cos(angle) * force + Math.sin(angle) * swirl;
-            targetY += Math.sin(angle) * force - Math.cos(angle) * swirl;
+            targetX += Math.cos(angle) * force - Math.sin(angle) * swirl;
+            targetY += Math.sin(angle) * force + Math.cos(angle) * swirl;
+
+            if (dist > repulsionRadius * 0.6) {
+              col = p.seed < 0.5 ? BLUE_LIGHT : ORANGE_LIGHT;
+            }
           }
         }
 
@@ -253,7 +305,7 @@ export const ProtocolFlowCanvas: React.FC = () => {
           p.curY += (targetY - p.curY) * 0.22;
         }
 
-        // Snap to pixel grid
+        // Snap to strict pixel grid
         const gx = Math.round(p.curX / CELL) * CELL;
         const gy = Math.round(p.curY / CELL) * CELL;
 
