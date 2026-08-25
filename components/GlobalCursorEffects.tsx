@@ -60,7 +60,8 @@ export const GlobalCursorEffects: React.FC = () => {
     window.addEventListener("resize", resize);
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    const BRAND_COLORS = ["#7c3aed", "#2563eb", "#16a34a", "#f97316"]; // Purple, Blue, Green, Orange
+    // Pastel & Mild 4-Color Palette: Soft Lavender, Baby Sky Blue, Mint Green, Peach Apricot
+    const BRAND_COLORS = ["#A78BFA", "#60A5FA", "#6EE7B7", "#FDBA74"];
 
     // Trigger Full-Screen Geometric Expanding Circle & Shattering Field across ALL screens
     const triggerExplosion = (ex: number, ey: number) => {
@@ -295,31 +296,31 @@ export const GlobalCursorEffects: React.FC = () => {
               const normDist = dist / currentRadius;
               const pHash = Math.abs(Math.sin((px * 12.9898 + py * 78.233) * 0.13 + exp.startTime));
 
-              // --- 1. ENDING SCATTERED PARTICLE FIELD (Brand Colors Only) ---
+              // --- 1. ENDING SCATTERED PARTICLE FIELD (Pastel & Mild Colors) ---
               if (isShattering) {
                 const keepProb = (1 - shatterProgress * 0.85) * (0.85 - pHash * 0.25);
                 if (pHash > keepProb) continue;
 
-                let col = "#F97316"; // Orange
+                let col = "#FDBA74"; // Pastel Peach
                 if (pHash < 0.25) {
-                  col = "#7C3AED"; // Purple
+                  col = "#C4B5FD"; // Pastel Lavender
                 } else if (pHash < 0.50) {
-                  col = "#2563EB"; // Blue
+                  col = "#93C5FD"; // Pastel Sky Blue
                 } else if (pHash < 0.75) {
-                  col = "#16A34A"; // Green
+                  col = "#86EFAC"; // Pastel Mint
                 } else {
-                  col = "#F97316"; // Orange
+                  col = "#FDBA74"; // Pastel Peach
                 }
 
                 ctx.save();
-                ctx.globalAlpha = Math.max(0, 1 - shatterProgress) * 0.92;
+                ctx.globalAlpha = Math.max(0, 1 - shatterProgress) * 0.88;
                 ctx.fillStyle = col;
                 ctx.fillRect(px, py, expCell - 1, expCell - 1);
                 ctx.restore();
                 continue;
               }
 
-              // --- 2. CLEAN GEOMETRIC CONCENTRIC CIRCLE (Purple, Blue, Green, Orange) ---
+              // --- 2. CLEAN GEOMETRIC CONCENTRIC CIRCLE (Pastel & Mild Shades) ---
               if (normDist > 1.0) continue;
 
               // Pixel Smiley Face at upper right quadrant
@@ -330,29 +331,29 @@ export const GlobalCursorEffects: React.FC = () => {
               const isMouth = Math.abs(smileyRelY - 2) < 0.6 && Math.abs(smileyRelX) <= 2;
               const isSmileyPixel = isEyeL || isEyeR || isMouth;
 
-              let col = "#F97316"; // Orange main body
+              let col = "#FED7AA"; // Soft Peach main body
 
               if (isSmileyPixel && normDist < 0.85) {
-                col = "#0A0A0A"; // Black smiley features
+                col = "#334155"; // Slate charcoal smiley features
               } else if (normDist > 0.93) {
-                // Outermost Ring: Purple
-                col = "#7C3AED";
+                // Outermost Ring: Pastel Lavender
+                col = "#C4B5FD";
               } else if (normDist > 0.85) {
-                // Secondary Ring: Blue
-                col = "#2563EB";
+                // Secondary Ring: Pastel Sky Blue
+                col = "#93C5FD";
               } else if (normDist > 0.77) {
-                // Third Ring: Green
-                col = "#16A34A";
+                // Third Ring: Pastel Mint
+                col = "#86EFAC";
               } else if (normDist <= 0.06) {
-                // Center Core Dot: Green
-                col = "#16A34A";
+                // Center Core Dot: Pastel Mint
+                col = "#86EFAC";
               } else {
-                // Inner Disc: Orange
-                col = "#F97316";
+                // Inner Disc: Soft Pastel Peach
+                col = "#FED7AA";
               }
 
               ctx.save();
-              ctx.globalAlpha = shockAlpha * 0.96;
+              ctx.globalAlpha = shockAlpha * 0.90;
               ctx.fillStyle = col;
               ctx.fillRect(px, py, expCell - 1, expCell - 1);
               ctx.restore();
@@ -470,27 +471,27 @@ export const GlobalCursorEffects: React.FC = () => {
             if (headDist <= headRadius) {
               const normDist = headDist / headRadius;
               const angle = Math.atan2(dy, dx);
-              let col = "#16A34A";
+              let col = "#86EFAC"; // Pastel Mint Base
 
               if (normDist > 0.82) {
-                col = "#7C3AED"; // Purple outer
+                col = "#C4B5FD"; // Pastel Lavender Outer
               } else if (normDist > 0.66) {
-                col = "#2563EB"; // Blue ring
+                col = "#93C5FD"; // Pastel Sky Blue Ring
               } else if (normDist > 0.30) {
                 const angleMod = Math.abs(Math.sin(angle * 4));
                 const isCardinal = angleMod < 0.32;
                 const isDiagonal = angleMod > 0.88;
 
                 if (normDist > 0.40 && normDist < 0.62 && (isCardinal || isDiagonal)) {
-                  col = "#F97316"; // Orange accents
+                  col = "#FDBA74"; // Pastel Peach Accents
                 } else {
-                  col = "#16A34A"; // Green
+                  col = "#86EFAC"; // Pastel Mint Green
                 }
               } else if (normDist > 0.16) {
                 const innerPattern = Math.cos(angle * 4 + ts * 0.003);
-                col = innerPattern > 0 ? "#7C3AED" : "#2563EB";
+                col = innerPattern > 0 ? "#C4B5FD" : "#93C5FD";
               } else {
-                col = "#16A34A";
+                col = "#86EFAC";
               }
 
               ctx.fillStyle = col;
@@ -500,11 +501,11 @@ export const GlobalCursorEffects: React.FC = () => {
               const trailRadius = headRadius * (0.45 + 0.35 * trailFactor);
               const trailNorm = minTrailDist / trailRadius;
 
-              let col = "#2563EB";
+              let col = "#93C5FD"; // Pastel Sky Blue
               if (trailNorm > 0.72) {
-                col = "#7C3AED";
+                col = "#C4B5FD"; // Pastel Lavender
               } else if (trailFactor > 0.85 && trailNorm < 0.4) {
-                col = "#16A34A";
+                col = "#86EFAC"; // Pastel Mint
               }
 
               ctx.fillStyle = col;
@@ -514,7 +515,7 @@ export const GlobalCursorEffects: React.FC = () => {
         }
         ctx.restore();
 
-        // Rotating 4-Segment Gradient Cursor Ring
+        // Rotating 4-Segment Gradient Cursor Ring (Pastel & Mild)
         ctx.save();
         const ringR = (isHoveringClickable ? 10 : 8) * Math.min(1.15, pulse);
         const ringW = 1.8;
@@ -533,9 +534,9 @@ export const GlobalCursorEffects: React.FC = () => {
         }
         ctx.restore();
 
-        // Center Dark Cursor Dot
+        // Center Soft Charcoal Cursor Dot
         ctx.save();
-        ctx.fillStyle = "#0A0A0A";
+        ctx.fillStyle = "#1E293B";
         ctx.beginPath();
         ctx.arc(mx, my, isClicking ? 1.8 : 2.4, 0, Math.PI * 2);
         ctx.fill();
