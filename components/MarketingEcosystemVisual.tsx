@@ -140,13 +140,17 @@ export const MarketingEcosystemVisual: React.FC = () => {
             </div>
           </div>
 
-          {/* Node 04: X / Twitter (+216px, -82px) */}
+          {/* Node 04: Navchetna (+216px, -82px) */}
           <div className="absolute translate-x-[216px] -translate-y-[82px] z-10">
             <div className="animate-[breath_6s_ease-in-out_1.5s_infinite_both]">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.04] border border-black/5 hover:scale-110 transition-transform cursor-pointer" title="X (Twitter) Marketing">
-                <svg className="w-7 h-7" viewBox="0 0 24 24" fill="#000000">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg shadow-black/[0.04] border border-black/5 hover:scale-110 transition-transform cursor-pointer" title="Navchetna">
+                <Image
+                  src="/navchetnalogo.png"
+                  alt="Navchetna Logo"
+                  width={34}
+                  height={34}
+                  className="object-contain"
+                />
               </div>
             </div>
           </div>

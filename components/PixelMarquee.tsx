@@ -2,8 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 
-// Bold, High-Readability Pixel Bitmap Font (Matching media_1787608097217.png)
-// 8-Row height font with solid 2-pixel stems and crossbars
+// Bold, High-Readability Pixel Bitmap Font (Matching media_1787689269397.png)
 type GlyphMap = Array<{ r: number; c: number }>;
 
 const BOLD_GLYPHS: Record<string, { width: number; dots: GlyphMap }> = {
@@ -117,14 +116,14 @@ const BOLD_GLYPHS: Record<string, { width: number; dots: GlyphMap }> = {
     ],
   },
   m: {
-    width: 9,
+    width: 8,
     dots: [
       { r: 2, c: 0 }, { r: 2, c: 1 }, { r: 2, c: 2 }, { r: 2, c: 3 }, { r: 2, c: 4 }, { r: 2, c: 5 }, { r: 2, c: 6 }, { r: 2, c: 7 },
-      { r: 3, c: 0 }, { r: 3, c: 1 }, { r: 3, c: 4 }, { r: 3, c: 7 }, { r: 3, c: 8 },
-      { r: 4, c: 0 }, { r: 4, c: 1 }, { r: 4, c: 4 }, { r: 4, c: 7 }, { r: 4, c: 8 },
-      { r: 5, c: 0 }, { r: 5, c: 1 }, { r: 5, c: 4 }, { r: 5, c: 7 }, { r: 5, c: 8 },
-      { r: 6, c: 0 }, { r: 6, c: 1 }, { r: 6, c: 4 }, { r: 6, c: 7 }, { r: 6, c: 8 },
-      { r: 7, c: 0 }, { r: 7, c: 1 }, { r: 7, c: 4 }, { r: 7, c: 7 }, { r: 7, c: 8 },
+      { r: 3, c: 0 }, { r: 3, c: 1 }, { r: 3, c: 3 }, { r: 3, c: 4 }, { r: 3, c: 6 }, { r: 3, c: 7 },
+      { r: 4, c: 0 }, { r: 4, c: 1 }, { r: 4, c: 3 }, { r: 4, c: 4 }, { r: 4, c: 6 }, { r: 4, c: 7 },
+      { r: 5, c: 0 }, { r: 5, c: 1 }, { r: 5, c: 3 }, { r: 5, c: 4 }, { r: 5, c: 6 }, { r: 5, c: 7 },
+      { r: 6, c: 0 }, { r: 6, c: 1 }, { r: 6, c: 3 }, { r: 6, c: 4 }, { r: 6, c: 6 }, { r: 6, c: 7 },
+      { r: 7, c: 0 }, { r: 7, c: 1 }, { r: 7, c: 3 }, { r: 7, c: 4 }, { r: 7, c: 6 }, { r: 7, c: 7 },
     ],
   },
   n: {
@@ -207,26 +206,15 @@ const BOLD_GLYPHS: Record<string, { width: number; dots: GlyphMap }> = {
       { r: 7, c: 1 }, { r: 7, c: 2 }, { r: 7, c: 3 }, { r: 7, c: 4 }, { r: 7, c: 5 },
     ],
   },
-  v: {
-    width: 6,
-    dots: [
-      { r: 2, c: 0 }, { r: 2, c: 1 }, { r: 2, c: 4 }, { r: 2, c: 5 },
-      { r: 3, c: 0 }, { r: 3, c: 1 }, { r: 3, c: 4 }, { r: 3, c: 5 },
-      { r: 4, c: 1 }, { r: 4, c: 2 }, { r: 4, c: 3 }, { r: 4, c: 4 },
-      { r: 5, c: 1 }, { r: 5, c: 2 }, { r: 5, c: 3 }, { r: 5, c: 4 },
-      { r: 6, c: 2 }, { r: 6, c: 3 },
-      { r: 7, c: 2 }, { r: 7, c: 3 },
-    ],
-  },
   w: {
-    width: 9,
+    width: 8,
     dots: [
-      { r: 2, c: 0 }, { r: 2, c: 1 }, { r: 2, c: 4 }, { r: 2, c: 7 }, { r: 2, c: 8 },
-      { r: 3, c: 0 }, { r: 3, c: 1 }, { r: 3, c: 4 }, { r: 3, c: 7 }, { r: 3, c: 8 },
-      { r: 4, c: 0 }, { r: 4, c: 1 }, { r: 4, c: 4 }, { r: 4, c: 7 }, { r: 4, c: 8 },
-      { r: 5, c: 0 }, { r: 5, c: 1 }, { r: 5, c: 3 }, { r: 5, c: 4 }, { r: 5, c: 5 }, { r: 5, c: 7 }, { r: 5, c: 8 },
-      { r: 6, c: 1 }, { r: 6, c: 2 }, { r: 6, c: 3 }, { r: 6, c: 5 }, { r: 6, c: 6 }, { r: 6, c: 7 },
-      { r: 7, c: 1 }, { r: 7, c: 2 }, { r: 7, c: 6 }, { r: 7, c: 7 },
+      { r: 2, c: 0 }, { r: 2, c: 1 }, { r: 2, c: 6 }, { r: 2, c: 7 },
+      { r: 3, c: 0 }, { r: 3, c: 1 }, { r: 3, c: 6 }, { r: 3, c: 7 },
+      { r: 4, c: 0 }, { r: 4, c: 1 }, { r: 4, c: 3 }, { r: 4, c: 4 }, { r: 4, c: 6 }, { r: 4, c: 7 },
+      { r: 5, c: 0 }, { r: 5, c: 1 }, { r: 5, c: 3 }, { r: 5, c: 4 }, { r: 5, c: 6 }, { r: 5, c: 7 },
+      { r: 6, c: 1 }, { r: 6, c: 2 }, { r: 6, c: 5 }, { r: 6, c: 6 },
+      { r: 7, c: 2 }, { r: 7, c: 3 }, { r: 7, c: 4 }, { r: 7, c: 5 },
     ],
   },
   y: {
@@ -264,6 +252,29 @@ const BOLD_GLYPHS: Record<string, { width: number; dots: GlyphMap }> = {
 
 const PHRASE_TEXT = "your brand, our strategy, real growth. ";
 
+// Strictly Brand 4-Color Palette: Purple, Green, Blue, Orange (Matching Image media_1787689269397.png)
+const BRAND_PALETTE = [
+  "#7C3AED", // Royal Purple
+  "#A855F7", // Bright Violet
+  "#2563EB", // Electric Blue
+  "#60A5FA", // Sky Blue
+  "#16A34A", // Emerald Green
+  "#22C55E", // Bright Green
+  "#F97316", // Vibrant Orange
+  "#FB923C", // Bright Orange
+];
+
+interface ParticleDot {
+  row: number;
+  col: number;
+  rIdx: number;
+  colorIdx: number;
+  dispX: number;
+  dispY: number;
+  vx: number;
+  vy: number;
+}
+
 function buildPhraseDots(text: string): { dots: Array<{ row: number; col: number }>; totalCols: number } {
   const dots: Array<{ row: number; col: number }> = [];
   let cursor = 0;
@@ -298,7 +309,7 @@ export const PixelMarquee: React.FC = () => {
     let W = container.clientWidth || window.innerWidth;
     let isMobile = W < 640;
 
-    // Bold large pixel sizing matching media_1787608097217.png
+    // Bold large pixel sizing matching media_1787689269397.png
     let PIXEL = isMobile ? 8.5 : 12;
     let GAP = isMobile ? 1.5 : 2;
     let STEP = PIXEL + GAP;
@@ -307,6 +318,10 @@ export const PixelMarquee: React.FC = () => {
 
     const { dots: phraseDots, totalCols: phraseCols } = buildPhraseDots(PHRASE_TEXT);
     let phraseWidthPx = phraseCols * STEP;
+
+    // Cursor position tracking for particle dispersion
+    let mouseX = -1000;
+    let mouseY = -1000;
 
     const resize = () => {
       if (!container) return;
@@ -327,22 +342,43 @@ export const PixelMarquee: React.FC = () => {
     resize();
     window.addEventListener("resize", resize);
 
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = cv.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    };
+
+    const handleMouseLeave = () => {
+      mouseX = -1000;
+      mouseY = -1000;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const rect = cv.getBoundingClientRect();
+        mouseX = e.touches[0].clientX - rect.left;
+        mouseY = e.touches[0].clientY - rect.top;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      mouseX = -1000;
+      mouseY = -1000;
+    };
+
+    cv.addEventListener("mousemove", handleMouseMove);
+    cv.addEventListener("mouseleave", handleMouseLeave);
+    cv.addEventListener("touchmove", handleTouchMove, { passive: true });
+    cv.addEventListener("touchstart", handleTouchMove, { passive: true });
+    cv.addEventListener("touchend", handleTouchEnd, { passive: true });
+
     let offsetX = 0;
     let animId: number;
     let t = 0;
     let lastTime = performance.now();
 
-    // Strictly Brand 4-Color Palette: Purple, Green, Blue, Orange
-    const BRAND_PALETTE = [
-      "#7C3AED", // Royal Purple
-      "#A855F7", // Bright Violet
-      "#2563EB", // Electric Blue
-      "#60A5FA", // Sky Blue
-      "#16A34A", // Emerald Green
-      "#22C55E", // Bright Green
-      "#F97316", // Vibrant Orange
-      "#FB923C", // Bright Orange
-    ];
+    // Map of persistent particle dispersion states
+    const particleMap = new Map<string, { dispX: number; dispY: number; vx: number; vy: number }>();
 
     const getPixelColor = (c: number, r: number, time: number) => {
       const v =
@@ -356,7 +392,7 @@ export const PixelMarquee: React.FC = () => {
 
     let isVisibleOnScreen = true;
 
-    // Pause offscreen to eliminate background CPU/GPU lag on mobile
+    // Pause offscreen to eliminate background CPU/GPU lag
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -380,8 +416,8 @@ export const PixelMarquee: React.FC = () => {
 
       ctx.clearRect(0, 0, W, H_PX);
 
-      // Subtle Background Grid
-      ctx.strokeStyle = "rgba(10, 10, 10, 0.03)";
+      // Subtle Background Pixel Grid (Matching Image 1)
+      ctx.strokeStyle = "rgba(10, 10, 10, 0.035)";
       ctx.lineWidth = 1;
       ctx.beginPath();
       for (let x = 0; x <= W; x += STEP) {
@@ -396,26 +432,70 @@ export const PixelMarquee: React.FC = () => {
 
       const paddingY = isMobile ? 12 : 18;
       const numRepeats = Math.ceil(W / phraseWidthPx) + 2;
+      const interactionRadius = isMobile ? 90 : 120;
+      const dispersionStrength = isMobile ? 12 : 18;
+      const returnSpeed = 0.085;
 
-      // Render bold pixel dots tiled seamlessly across the entire screen
+      // Render colorful pixel dots with cursor dispersion physics
       for (let rIdx = -1; rIdx < numRepeats; rIdx++) {
         const repeatOffset = rIdx * phraseWidthPx - offsetX;
 
-        if (repeatOffset + phraseWidthPx < -50 || repeatOffset > W + 50) continue;
+        if (repeatOffset + phraseWidthPx < -80 || repeatOffset > W + 80) continue;
 
         for (let i = 0; i < phraseDots.length; i++) {
           const dot = phraseDots[i];
-          const px = Math.round(repeatOffset + dot.col * STEP);
-          const py = Math.round(paddingY + dot.row * STEP);
+          const originX = repeatOffset + dot.col * STEP;
+          const originY = paddingY + dot.row * STEP;
 
-          if (px < -PIXEL || px > W) continue;
+          const key = `${rIdx}-${i}`;
+          let pState = particleMap.get(key);
+          if (!pState) {
+            pState = { dispX: 0, dispY: 0, vx: 0, vy: 0 };
+            particleMap.set(key, pState);
+          }
 
-          ctx.fillStyle = getPixelColor(dot.col + rIdx * phraseCols, dot.row, t);
-          ctx.fillRect(px, py, PIXEL, PIXEL);
+          const currentX = originX + pState.dispX;
+          const currentY = originY + pState.dispY;
+
+          // Compute cursor repulsion physics
+          if (mouseX > -500 && mouseY > -500) {
+            const dx = mouseX - currentX;
+            const dy = mouseY - currentY;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist < interactionRadius && dist > 0.001) {
+              const force = (interactionRadius - dist) / interactionRadius;
+              const forceDirX = dx / dist;
+              const forceDirY = dy / dist;
+
+              pState.vx -= forceDirX * force * dispersionStrength;
+              pState.vy -= forceDirY * force * dispersionStrength;
+            }
+          }
+
+          // Spring force back to origin position (0,0 offset)
+          pState.vx += -pState.dispX * returnSpeed;
+          pState.vy += -pState.dispY * returnSpeed;
+
+          // Friction damping
+          pState.vx *= 0.85;
+          pState.vy *= 0.85;
+
+          // Update animated displacement
+          pState.dispX += pState.vx;
+          pState.dispY += pState.vy;
+
+          const drawX = Math.round(originX + pState.dispX);
+          const drawY = Math.round(originY + pState.dispY);
+
+          if (drawX < -PIXEL || drawX > W + PIXEL) continue;
+
+          ctx.fillStyle = "#0A0A0A";
+          ctx.fillRect(drawX, drawY, PIXEL, PIXEL);
         }
       }
 
-      // Smooth constant marquee sliding motion across all devices
+      // Smooth constant marquee sliding motion
       const speedPxPerSec = isMobile ? 65 : 85;
       offsetX += speedPxPerSec * dt;
       if (offsetX >= phraseWidthPx) {
@@ -431,14 +511,19 @@ export const PixelMarquee: React.FC = () => {
       cancelAnimationFrame(animId);
       observer.disconnect();
       window.removeEventListener("resize", resize);
+      cv.removeEventListener("mousemove", handleMouseMove);
+      cv.removeEventListener("mouseleave", handleMouseLeave);
+      cv.removeEventListener("touchmove", handleTouchMove);
+      cv.removeEventListener("touchstart", handleTouchMove);
+      cv.removeEventListener("touchend", handleTouchEnd);
     };
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className="w-full overflow-hidden relative select-none"
-      style={{ height: "130px", minHeight: "110px" }}
+      className="w-full overflow-hidden relative select-none cursor-pointer"
+      style={{ height: "135px", minHeight: "115px" }}
     >
       <canvas
         ref={canvasRef}
