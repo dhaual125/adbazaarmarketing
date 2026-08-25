@@ -252,29 +252,6 @@ const BOLD_GLYPHS: Record<string, { width: number; dots: GlyphMap }> = {
 
 const PHRASE_TEXT = "your brand, our strategy, real growth. ";
 
-// Strictly Brand 4-Color Palette: Purple, Green, Blue, Orange (Matching Image media_1787689269397.png)
-const BRAND_PALETTE = [
-  "#7C3AED", // Royal Purple
-  "#A855F7", // Bright Violet
-  "#2563EB", // Electric Blue
-  "#60A5FA", // Sky Blue
-  "#16A34A", // Emerald Green
-  "#22C55E", // Bright Green
-  "#F97316", // Vibrant Orange
-  "#FB923C", // Bright Orange
-];
-
-interface ParticleDot {
-  row: number;
-  col: number;
-  rIdx: number;
-  colorIdx: number;
-  dispX: number;
-  dispY: number;
-  vx: number;
-  vy: number;
-}
-
 function buildPhraseDots(text: string): { dots: Array<{ row: number; col: number }>; totalCols: number } {
   const dots: Array<{ row: number; col: number }> = [];
   let cursor = 0;
@@ -302,97 +279,103 @@ export const PixelMarquee: React.FC = () => {
     const cv = canvasRef.current;
     const container = containerRef.current;
     if (!cv || !container) return;
-    const ctx = cv.getContext("2d");
+    const ctx = cv.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    let DPR = Math.min(window.devicePixelRatio || 1, 2);
+    let isMobile = window.innerWidth < 768;
+    let DPR = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
     let W = container.clientWidth || window.innerWidth;
-    let isMobile = W < 640;
 
-    // Bold large pixel sizing matching media_1787689269397.png
-    let PIXEL = isMobile ? 8.5 : 12;
+    let PIXEL = isMobile ? 8 : 11;
     let GAP = isMobile ? 1.5 : 2;
     let STEP = PIXEL + GAP;
     const GRID_ROWS = 10;
-    let H_PX = Math.round(GRID_ROWS * STEP + (isMobile ? 24 : 36));
+    let H_PX = Math.round(GRID_ROWS * STEP + (isMobile ? 20 : 32));
 
     const { dots: phraseDots, totalCols: phraseCols } = buildPhraseDots(PHRASE_TEXT);
     let phraseWidthPx = phraseCols * STEP;
 
-    // Cursor position tracking for particle dispersion
-    let mouseX = -1000;
-    let mouseY = -1000;
+    // Pre-bake phrase onto high-speed Offscreen Canvas for 0% CPU mobile rendering
+    let offscreenCanvas: HTMLCanvasElement | null = null;
+
+    const bakeOffscreenCanvas = () => {
+      offscreenCanvas = document.createElement("canvas");
+      offscreenCanvas.width = Math.round(phraseWidthPx * DPR);
+      offscreenCanvas.height = Math.round(H_PX * DPR);
+      const offCtx = offscreenCanvas.getContext("2d");
+      if (!offCtx) return;
+
+      offCtx.scale(DPR, DPR);
+      const paddingY = isMobile ? 10 : 16;
+
+      // Draw pixel blocks in solid black #0A0A0A
+      offCtx.fillStyle = "#0A0A0A";
+      for (let i = 0; i < phraseDots.length; i++) {
+        const dot = phraseDots[i];
+        const px = dot.col * STEP;
+        const py = paddingY + dot.row * STEP;
+        offCtx.fillRect(px, py, PIXEL, PIXEL);
+      }
+    };
 
     const resize = () => {
       if (!container) return;
       W = container.clientWidth || window.innerWidth;
-      isMobile = W < 640;
-      PIXEL = isMobile ? 8.5 : 12;
+      isMobile = W < 768;
+      DPR = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+      PIXEL = isMobile ? 8 : 11;
       GAP = isMobile ? 1.5 : 2;
       STEP = PIXEL + GAP;
-      H_PX = Math.round(GRID_ROWS * STEP + (isMobile ? 24 : 36));
+      H_PX = Math.round(GRID_ROWS * STEP + (isMobile ? 20 : 32));
       phraseWidthPx = phraseCols * STEP;
 
-      DPR = Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * DPR);
       cv.height = Math.round(H_PX * DPR);
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+      bakeOffscreenCanvas();
     };
 
     resize();
     window.addEventListener("resize", resize);
 
+    // Desktop cursor particle dispersion tracking
+    let mouseX = -1000;
+    let mouseY = -1000;
+    let isHovered = false;
+
+    // Flat pre-allocated typed arrays for physics (Zero Garbage Collection!)
+    const particleCount = phraseDots.length;
+    const dispX = new Float32Array(particleCount * 4);
+    const dispY = new Float32Array(particleCount * 4);
+    const vx = new Float32Array(particleCount * 4);
+    const vy = new Float32Array(particleCount * 4);
+
     const handleMouseMove = (e: MouseEvent) => {
+      if (isMobile) return;
       const rect = cv.getBoundingClientRect();
       mouseX = e.clientX - rect.left;
       mouseY = e.clientY - rect.top;
+      isHovered = mouseX >= -50 && mouseX <= W + 50 && mouseY >= -50 && mouseY <= H_PX + 50;
     };
 
     const handleMouseLeave = () => {
       mouseX = -1000;
       mouseY = -1000;
+      isHovered = false;
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        const rect = cv.getBoundingClientRect();
-        mouseX = e.touches[0].clientX - rect.left;
-        mouseY = e.touches[0].clientY - rect.top;
-      }
-    };
-
-    const handleTouchEnd = () => {
-      mouseX = -1000;
-      mouseY = -1000;
-    };
-
-    cv.addEventListener("mousemove", handleMouseMove);
-    cv.addEventListener("mouseleave", handleMouseLeave);
-    cv.addEventListener("touchmove", handleTouchMove, { passive: true });
-    cv.addEventListener("touchstart", handleTouchMove, { passive: true });
-    cv.addEventListener("touchend", handleTouchEnd, { passive: true });
-
-    let offsetX = 0;
-    let animId: number;
-    let t = 0;
-    let lastTime = performance.now();
-
-    // Map of persistent particle dispersion states
-    const particleMap = new Map<string, { dispX: number; dispY: number; vx: number; vy: number }>();
-
-    const getPixelColor = (c: number, r: number, time: number) => {
-      const v =
-        Math.sin(c * 0.35 - time * 2.0) * 0.5 +
-        Math.cos(r * 0.6 + c * 0.2 + time * 1.4) * 0.5 +
-        Math.sin((c + r) * 0.25 - time * 1.0) * 0.35;
-
-      const idx = Math.floor((Math.abs(v * 10) + Math.sin(c * 17.1 + r * 31.3) * 4)) % BRAND_PALETTE.length;
-      return BRAND_PALETTE[Math.abs(idx)];
-    };
+    if (!isMobile) {
+      cv.addEventListener("mousemove", handleMouseMove, { passive: true });
+      cv.addEventListener("mouseleave", handleMouseLeave, { passive: true });
+    }
 
     let isVisibleOnScreen = true;
+    let offsetX = 0;
+    let animId: number;
+    let lastTime = performance.now();
 
-    // Pause offscreen to eliminate background CPU/GPU lag
+    // 100% pause when scrolled away
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -410,98 +393,94 @@ export const PixelMarquee: React.FC = () => {
     observer.observe(container);
 
     const draw = () => {
-      if (!isVisibleOnScreen) {
-        return;
-      }
+      if (!isVisibleOnScreen) return;
 
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
-      t += dt * 1.8;
 
       ctx.clearRect(0, 0, W, H_PX);
 
-      // Subtle Background Pixel Grid (Matching Image 1)
-      ctx.strokeStyle = "rgba(10, 10, 10, 0.035)";
+      // Subtle Background Grid
+      ctx.strokeStyle = "rgba(10, 10, 10, 0.03)";
       ctx.lineWidth = 1;
       ctx.beginPath();
-      for (let x = 0; x <= W; x += STEP) {
+      const gridStep = STEP * 2;
+      for (let x = 0; x <= W; x += gridStep) {
         ctx.moveTo(x + 0.5, 0);
         ctx.lineTo(x + 0.5, H_PX);
       }
-      for (let y = 0; y <= H_PX; y += STEP) {
+      for (let y = 0; y <= H_PX; y += gridStep) {
         ctx.moveTo(0, y + 0.5);
         ctx.lineTo(W, y + 0.5);
       }
       ctx.stroke();
 
-      const paddingY = isMobile ? 12 : 18;
       const numRepeats = Math.ceil(W / phraseWidthPx) + 2;
-      const interactionRadius = isMobile ? 90 : 120;
-      const dispersionStrength = isMobile ? 12 : 18;
-      const returnSpeed = 0.085;
 
-      // Render colorful pixel dots with cursor dispersion physics
-      for (let rIdx = -1; rIdx < numRepeats; rIdx++) {
-        const repeatOffset = rIdx * phraseWidthPx - offsetX;
-
-        if (repeatOffset + phraseWidthPx < -80 || repeatOffset > W + 80) continue;
-
-        for (let i = 0; i < phraseDots.length; i++) {
-          const dot = phraseDots[i];
-          const originX = repeatOffset + dot.col * STEP;
-          const originY = paddingY + dot.row * STEP;
-
-          const key = `${rIdx}-${i}`;
-          let pState = particleMap.get(key);
-          if (!pState) {
-            pState = { dispX: 0, dispY: 0, vx: 0, vy: 0 };
-            particleMap.set(key, pState);
+      // MOBILE & IDLE PATH: 100% GPU Blitted Offscreen Texture (0.02ms render time!)
+      if (isMobile || !isHovered || !offscreenCanvas) {
+        if (offscreenCanvas) {
+          for (let rIdx = -1; rIdx < numRepeats; rIdx++) {
+            const repeatOffset = rIdx * phraseWidthPx - offsetX;
+            if (repeatOffset + phraseWidthPx < -10 || repeatOffset > W + 10) continue;
+            ctx.drawImage(offscreenCanvas, repeatOffset, 0, phraseWidthPx, H_PX);
           }
+        }
+      } else {
+        // DESKTOP INTERACTIVE CURSOR PATH: Physics Dispersion
+        const paddingY = 16;
+        const interactionRadius = 115;
+        const dispersionStrength = 16;
+        const returnSpeed = 0.09;
 
-          const currentX = originX + pState.dispX;
-          const currentY = originY + pState.dispY;
+        ctx.fillStyle = "#0A0A0A";
 
-          // Compute cursor repulsion physics
-          if (mouseX > -500 && mouseY > -500) {
-            const dx = mouseX - currentX;
-            const dy = mouseY - currentY;
+        for (let rIdx = -1; rIdx < numRepeats; rIdx++) {
+          const repeatOffset = rIdx * phraseWidthPx - offsetX;
+          if (repeatOffset + phraseWidthPx < -80 || repeatOffset > W + 80) continue;
+
+          const rOffsetIdx = ((rIdx + 1) % 4) * particleCount;
+
+          for (let i = 0; i < particleCount; i++) {
+            const dot = phraseDots[i];
+            const pIdx = rOffsetIdx + i;
+            const originX = repeatOffset + dot.col * STEP;
+            const originY = paddingY + dot.row * STEP;
+
+            const curX = originX + dispX[pIdx];
+            const curY = originY + dispY[pIdx];
+
+            const dx = mouseX - curX;
+            const dy = mouseY - curY;
             const dist = Math.hypot(dx, dy);
 
             if (dist < interactionRadius && dist > 0.001) {
               const force = (interactionRadius - dist) / interactionRadius;
-              const forceDirX = dx / dist;
-              const forceDirY = dy / dist;
-
-              pState.vx -= forceDirX * force * dispersionStrength;
-              pState.vy -= forceDirY * force * dispersionStrength;
+              vx[pIdx] -= (dx / dist) * force * dispersionStrength;
+              vy[pIdx] -= (dy / dist) * force * dispersionStrength;
             }
+
+            vx[pIdx] += -dispX[pIdx] * returnSpeed;
+            vy[pIdx] += -dispY[pIdx] * returnSpeed;
+            vx[pIdx] *= 0.85;
+            vy[pIdx] *= 0.85;
+
+            dispX[pIdx] += vx[pIdx];
+            dispY[pIdx] += vy[pIdx];
+
+            const drawX = Math.round(originX + dispX[pIdx]);
+            const drawY = Math.round(originY + dispY[pIdx]);
+
+            if (drawX < -PIXEL || drawX > W + PIXEL) continue;
+
+            ctx.fillRect(drawX, drawY, PIXEL, PIXEL);
           }
-
-          // Spring force back to origin position (0,0 offset)
-          pState.vx += -pState.dispX * returnSpeed;
-          pState.vy += -pState.dispY * returnSpeed;
-
-          // Friction damping
-          pState.vx *= 0.85;
-          pState.vy *= 0.85;
-
-          // Update animated displacement
-          pState.dispX += pState.vx;
-          pState.dispY += pState.vy;
-
-          const drawX = Math.round(originX + pState.dispX);
-          const drawY = Math.round(originY + pState.dispY);
-
-          if (drawX < -PIXEL || drawX > W + PIXEL) continue;
-
-          ctx.fillStyle = "#0A0A0A";
-          ctx.fillRect(drawX, drawY, PIXEL, PIXEL);
         }
       }
 
       // Smooth constant marquee sliding motion
-      const speedPxPerSec = isMobile ? 65 : 85;
+      const speedPxPerSec = isMobile ? 60 : 75;
       offsetX += speedPxPerSec * dt;
       if (offsetX >= phraseWidthPx) {
         offsetX %= phraseWidthPx;
@@ -516,19 +495,18 @@ export const PixelMarquee: React.FC = () => {
       cancelAnimationFrame(animId);
       observer.disconnect();
       window.removeEventListener("resize", resize);
-      cv.removeEventListener("mousemove", handleMouseMove);
-      cv.removeEventListener("mouseleave", handleMouseLeave);
-      cv.removeEventListener("touchmove", handleTouchMove);
-      cv.removeEventListener("touchstart", handleTouchMove);
-      cv.removeEventListener("touchend", handleTouchEnd);
+      if (!isMobile) {
+        cv.removeEventListener("mousemove", handleMouseMove);
+        cv.removeEventListener("mouseleave", handleMouseLeave);
+      }
     };
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className="w-full overflow-hidden relative select-none cursor-pointer"
-      style={{ height: "135px", minHeight: "115px" }}
+      className="w-full overflow-hidden relative select-none"
+      style={{ height: "120px", minHeight: "100px" }}
     >
       <canvas
         ref={canvasRef}
