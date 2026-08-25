@@ -2390,10 +2390,10 @@ canvas, img, video {
    =================================================== */
 .team-card__photo {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
-  border-radius: 4px;
-  margin-bottom: 4px;
+  border-radius: 8px;
+  margin-bottom: 8px;
   background: #f0f0f0;
 }
 
@@ -2401,7 +2401,7 @@ canvas, img, video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: top center;
+  object-position: 50% 10%;
   display: block;
   transition: transform 0.4s ease;
 }

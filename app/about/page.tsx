@@ -31,6 +31,7 @@ const team = [
     name: "Pawan Nath",
     role: "CEO & Co-Founder",
     image: "/pawan nath.png",
+    objectPosition: "50% 10%",
     bio: "15+ years in digital marketing and technology. Passionate about helping businesses scale. Believes the best growth comes from combining great technology with great marketing.",
     color: "var(--purple)",
   },
@@ -38,6 +39,7 @@ const team = [
     name: "Chirag Nath",
     role: "Co-Founder",
     image: "/chirag nath.png",
+    objectPosition: "50% 10%",
     bio: "Google & Meta certified expert. Managed $50M+ in ad spend. Specializes in full-funnel growth strategies that turn ad budgets into compounding revenue engines.",
     color: "var(--blue)",
   },
@@ -45,6 +47,7 @@ const team = [
     name: "Kuldeep",
     role: "COO & Partner",
     image: "/kuldeeep.jpeg",
+    objectPosition: "50% 15%",
     bio: "Operations leader driving efficiency and growth. Oversees delivery, client success, and strategic partnerships across all service lines.",
     color: "var(--green)",
   },
@@ -238,9 +241,14 @@ export default function AboutPage() {
           <div className="team-grid">
             {team.map((m, i) => (
               <div key={i} className="team-card" style={{ "--accent": m.color } as React.CSSProperties}>
-                <div className="team-card__photo">
+                <div className="team-card__photo !aspect-[4/5] overflow-hidden rounded-lg bg-[#f0f0f0]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={m.image} alt={m.name} className="team-card__img" />
+                  <img
+                    src={m.image}
+                    alt={m.name}
+                    className="team-card__img w-full h-full object-cover block"
+                    style={{ objectPosition: m.objectPosition || "top center" }}
+                  />
                 </div>
                 <h3 className="team-card__name">{m.name}</h3>
                 <p className="team-card__role">{m.role}</p>
