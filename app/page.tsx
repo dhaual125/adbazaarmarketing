@@ -205,7 +205,7 @@ export default function Home() {
               </p>
               <a
                 href="/services"
-                className="btn-site pixel-clip inline-flex text-sm py-3.5 px-8"
+                className="btn-site inline-flex text-sm py-3.5 px-8"
               >
                 View all services
               </a>
@@ -292,7 +292,7 @@ export default function Home() {
         <div className="wrap max-w-[1176px] mx-auto flex flex-col items-center">
           <a
             href="/contact"
-            className="btn-site pixel-clip text-lg md:text-xl py-4 px-10 mb-8"
+            className="btn-site text-base md:text-lg py-3.5 px-9 mb-8"
           >
             Book your free strategy call
           </a>

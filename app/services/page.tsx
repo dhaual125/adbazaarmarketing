@@ -179,7 +179,7 @@ export default function ServicesPage() {
           <p className="page-lead">
             Growth marketing, IT consulting, creative production, leads management, and crisis account recovery — all integrated, all focused on one thing: your business growth.
           </p>
-          <Link href="/contact" className="btn-site pixel-clip" style={{ display: "inline-flex", marginTop: "2rem", width: "100%", maxWidth: "320px" }}>
+          <Link href="/contact" className="btn-site" style={{ display: "inline-flex", marginTop: "2rem", width: "100%", maxWidth: "320px" }}>
             Get a Free Marketing Audit →
           </Link>
         </div>
@@ -215,7 +215,7 @@ export default function ServicesPage() {
                         <span key={t} className="service-tag">{t}</span>
                       ))}
                     </div>
-                    <Link href="/contact" className="btn-site pixel-clip svc-accordion__cta">
+                    <Link href="/contact" className="btn-site svc-accordion__cta">
                       {s.cta} →
                     </Link>
                   </div>
@@ -272,7 +272,7 @@ export default function ServicesPage() {
             ))}
           </div>
           <div style={{ marginTop: "3rem" }}>
-            <Link href="/contact" className="btn-site pixel-clip">
+            <Link href="/contact" className="btn-site">
               Start Your Journey →
             </Link>
           </div>
@@ -318,7 +318,7 @@ export default function ServicesPage() {
       <section className="page-cta">
         <div className="page-container page-cta__inner">
           <h2 className="page-cta__title">Ready to scale your marketing?</h2>
-          <Link href="/contact" className="btn-site pixel-clip page-cta__btn">
+          <Link href="/contact" className="btn-site page-cta__btn">
             Book your free strategy call
           </Link>
         </div>

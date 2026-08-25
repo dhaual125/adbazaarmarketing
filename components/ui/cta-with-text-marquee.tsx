@@ -139,13 +139,13 @@ export default function CTAWithVerticalMarquee({
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-1 sm:pt-2 w-full sm:w-auto">
               <a
                 href={primaryButtonHref}
-                className="btn-site pixel-clip inline-flex justify-center items-center text-sm py-3.5 px-7 font-medium text-center"
+                className="btn-site text-sm py-3 px-8 text-center"
               >
                 {primaryButtonText}
               </a>
               <a
                 href={secondaryButtonHref}
-                className="inline-flex justify-center items-center text-sm py-3 px-6 font-medium text-[#0A0A0A] bg-transparent border border-black/15 hover:border-black/50 hover:bg-black/[0.03] transition-all duration-200 rounded-[2px] text-center"
+                className="btn-site-outline text-sm py-3 px-7 text-center"
               >
                 {secondaryButtonText}
               </a>

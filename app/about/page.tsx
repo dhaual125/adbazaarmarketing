@@ -310,7 +310,7 @@ export default function AboutPage() {
       <section className="page-cta">
         <div className="page-container page-cta__inner">
           <h2 className="page-cta__title">Ready to partner with a team that cares?</h2>
-          <Link href="/contact" className="btn-site pixel-clip page-cta__btn">
+          <Link href="/contact" className="btn-site page-cta__btn">
             Start a conversation
           </Link>
         </div>

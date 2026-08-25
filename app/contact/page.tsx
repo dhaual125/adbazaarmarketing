@@ -192,7 +192,7 @@ export default function ContactPage() {
                   />
                 </div>
 
-                <button type="submit" className="btn-site pixel-clip contact-submit">
+                <button type="submit" className="btn-site contact-submit">
                   Send message
                 </button>
               </form>

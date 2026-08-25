@@ -342,7 +342,7 @@ export const FooterTetris: React.FC = () => {
               <button
                 type="button"
                 onClick={startGame}
-                className="tt-again btn-site pixel-clip text-sm py-2 px-6"
+                className="tt-again btn-site text-sm py-2 px-6"
               >
                 PLAY AGAIN
               </button>

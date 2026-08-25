@@ -162,25 +162,66 @@ a {
   animation: arrowPulse 1.2s ease-in-out infinite;
 }
 
-/* ===== Button Site ===== */
+/* ===== Button Site (Modern Pill-Shaped Capsule matching reference) ===== */
 .btn-site {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  font-size: clamp(15px, 1.2vw, 18px);
+  font-size: clamp(14px, 1.1vw, 16px);
   font-weight: 500;
   letter-spacing: -0.01em;
-  padding: 16px 36px;
-  background: var(--ink);
-  color: #fff;
-  transition: background 0.2s, transform 0.2s;
+  padding: 12px 32px;
+  background: #000000;
+  color: #ffffff;
+  border-radius: 9999px !important;
+  clip-path: none !important;
+  border: 1px solid #000000;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .btn-site:hover {
-  background: var(--purple);
+  background: #1f1f1f;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+}
+
+.btn-site:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.btn-site-outline {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: clamp(14px, 1.1vw, 16px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  padding: 11px 28px;
+  background: transparent;
+  color: #0A0A0A;
+  border-radius: 9999px !important;
+  clip-path: none !important;
+  border: 1px solid rgba(10, 10, 10, 0.20);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.btn-site-outline:hover {
+  border-color: #0A0A0A;
+  background: rgba(10, 10, 10, 0.04);
+  transform: translateY(-1px);
+}
+
+.btn-site-outline:active {
+  transform: translateY(0);
 }
 
 /* Toplink */
@@ -507,16 +548,20 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-family: inherit;
   text-decoration: none;
   color: #ffffff;
-  background: #0A0A0A;
-  padding: 9px 18px;
-  transition: background 0.25s ease, transform 0.2s ease;
+  background: #000000;
+  padding: 8px 20px;
+  border-radius: 9999px !important;
+  clip-path: none !important;
+  border: 1px solid #000000;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   flex: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .navbar__cta svg {
@@ -524,7 +569,9 @@ a {
 }
 
 .navbar__cta:hover {
-  background: var(--purple);
+  background: #1f1f1f;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
 .navbar__cta:hover svg {

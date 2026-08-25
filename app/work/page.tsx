@@ -154,7 +154,7 @@ export default function WorkPage() {
       <section className="page-cta">
         <div className="page-container page-cta__inner">
           <h2 className="page-cta__title">Ready to be our next success story?</h2>
-          <Link href="/contact" className="btn-site pixel-clip page-cta__btn">
+          <Link href="/contact" className="btn-site page-cta__btn">
             Book a free consultation
           </Link>
         </div>
