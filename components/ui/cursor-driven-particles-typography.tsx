@@ -323,8 +323,8 @@ class PixelParticle {
     this.size = size;
     this.baseColor = baseColor;
     this.activeColor = activeColor;
-    this.dispersion = 24;
-    this.returnSpd = 0.10;
+    this.dispersion = 22;
+    this.returnSpd = 0.11;
     this.activeVal = 0;
   }
 
@@ -332,7 +332,7 @@ class PixelParticle {
     const dx = mouseX - this.x;
     const dy = mouseY - this.y;
     const distance = Math.hypot(dx, dy);
-    const interactionRadius = 90;
+    const interactionRadius = 85;
 
     // Disperse when mouse/touch approaches
     if (distance < interactionRadius && mouseX > -500 && mouseY > -500) {
@@ -347,7 +347,7 @@ class PixelParticle {
       this.vy -= repulsionY;
       this.activeVal = 1;
     } else {
-      this.activeVal *= 0.92;
+      this.activeVal *= 0.90;
     }
 
     // Spring return to exact origin
@@ -357,14 +357,14 @@ class PixelParticle {
     this.vx += toOriginX * this.returnSpd;
     this.vy += toOriginY * this.returnSpd;
 
-    this.vx *= 0.78;
-    this.vy *= 0.78;
+    this.vx *= 0.76;
+    this.vy *= 0.76;
 
     this.x += this.vx;
     this.y += this.vy;
 
     // Snap to exact origin when settled so text is 100% normal & razor sharp
-    if (Math.abs(toOriginX) < 0.12 && Math.abs(toOriginY) < 0.12 && Math.abs(this.vx) < 0.05 && Math.abs(this.vy) < 0.05) {
+    if (Math.abs(toOriginX) < 0.10 && Math.abs(toOriginY) < 0.10 && Math.abs(this.vx) < 0.05 && Math.abs(this.vy) < 0.05) {
       this.x = this.originX;
       this.y = this.originY;
       this.vx = 0;
@@ -383,8 +383,8 @@ class PixelParticle {
     ctx.fillRect(
       Math.round(this.x),
       Math.round(this.y),
-      this.size - 1,
-      this.size - 1
+      Math.max(1, this.size - 1),
+      Math.max(1, this.size - 1)
     );
   }
 }
@@ -430,29 +430,23 @@ export function CursorDrivenParticleTypography({
       if (!container) return;
 
       containerWidth = container.clientWidth;
-      containerHeight = container.clientHeight;
-      if (containerWidth < 10 || containerHeight < 10) return;
+      if (containerWidth < 10) return;
 
-      const isMobile = containerWidth < 768;
-      const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+      const isMobilePhone = containerWidth < 520;
+      const isTablet = containerWidth >= 520 && containerWidth < 880;
+      const dpr = isMobilePhone ? 1 : Math.min(window.devicePixelRatio || 1, 2);
 
-      canvas.width = Math.round(containerWidth * dpr);
-      canvas.height = Math.round(containerHeight * dpr);
-      canvas.style.width = `${containerWidth}px`;
-      canvas.style.height = `${containerHeight}px`;
-
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
-
-      particles = [];
-
-      // Determine lines: On mobile/tablet split into 2 punchy lines so text is HUGE & bold
-      let lines = [text.toLowerCase()];
-      if (isMobile && text.includes(".")) {
-        const parts = text.split(".").map((s) => s.trim().toLowerCase()).filter(Boolean);
-        if (parts.length >= 2) {
-          lines = [parts[0] + ".", parts.slice(1).join(" ")];
-        }
+      // Adaptive Multi-line Wrapping for 100% Perfect Phone / Tablet / Desktop Fit:
+      // Phone (<520px): 3 balanced lines -> "one team." | "every part" | "of growth."
+      // Tablet (520px-880px): 2 balanced lines -> "one team." | "every part of growth."
+      // Desktop (>880px): 1 grand line -> "one team. every part of growth."
+      let lines: string[] = [];
+      if (isMobilePhone) {
+        lines = ["one team.", "every part", "of growth."];
+      } else if (isTablet) {
+        lines = ["one team.", "every part of growth."];
+      } else {
+        lines = ["one team. every part of growth."];
       }
 
       // Compute total columns for each line
@@ -468,13 +462,25 @@ export function CursorDrivenParticleTypography({
 
       const maxCols = Math.max(...lineColCounts);
 
-      // Auto-scale CELL size so the text spans ~88% to 94% of horizontal area
-      const maxAllowedWidth = containerWidth * 0.92;
-      CELL = Math.max(4.5, Math.min(isMobile ? 7.5 : 11, maxAllowedWidth / maxCols));
+      // Auto-scale CELL size so the text spans ~86% to 92% of horizontal screen width
+      const maxAllowedWidth = containerWidth * 0.90;
+      CELL = Math.max(5.0, Math.min(isMobilePhone ? 7.2 : isTablet ? 8.5 : 10.5, maxAllowedWidth / maxCols));
 
-      const lineHeightCells = 12;
-      const totalHeightPx = lines.length * (lineHeightCells * CELL);
-      const startY = Math.round((containerHeight - totalHeightPx) / 2 / CELL) * CELL;
+      const lineHeightCells = 11.5;
+      const totalHeightPx = lines.length * (lineHeightCells * CELL) + (isMobilePhone ? 30 : 40);
+      containerHeight = Math.max(isMobilePhone ? 220 : 180, Math.round(totalHeightPx));
+
+      canvas.width = Math.round(containerWidth * dpr);
+      canvas.height = Math.round(containerHeight * dpr);
+      canvas.style.width = `${containerWidth}px`;
+      canvas.style.height = `${containerHeight}px`;
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+
+      particles = [];
+
+      const startY = Math.round((containerHeight - lines.length * (lineHeightCells * CELL)) / 2 / CELL) * CELL;
 
       lines.forEach((line, lineIdx) => {
         const totalLineWidthPx = lineColCounts[lineIdx] * CELL;
@@ -600,7 +606,7 @@ export function CursorDrivenParticleTypography({
     <div
       ref={containerRef}
       className={cn(
-        "w-full h-[180px] sm:h-[220px] md:h-[260px] flex items-center justify-center relative touch-pan-y cursor-pointer select-none",
+        "w-full min-h-[180px] sm:min-h-[220px] md:min-h-[260px] flex items-center justify-center relative touch-pan-y cursor-pointer select-none",
         className
       )}
     >
