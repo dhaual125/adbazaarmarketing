@@ -124,7 +124,7 @@ export const ProcessFlowCanvas: React.FC = () => {
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
-      t += dt * 1.35; // Constant silky smooth time progression
+      t += dt * 0.60; // Gentle, soothing harmonic time progression
 
       ctx.clearRect(0, 0, W, H);
 
@@ -149,11 +149,11 @@ export const ProcessFlowCanvas: React.FC = () => {
       for (let i = 0; i < activeCount; i++) {
         const p = particles[i];
 
-        // Continuous left-to-right living stream flow
-        p.u = (p.u + dt * 0.065 * p.speed) % 1;
+        // Slower, smoother, continuous left-to-right living stream flow
+        p.u = (p.u + dt * 0.028 * p.speed) % 1;
         const u = p.u;
 
-        let targetX = u * W + Math.sin(t * 1.6 + p.seed * 10) * 3 + p.xNoise * (CELL * 0.7);
+        let targetX = u * W + Math.sin(t * 1.2 + p.seed * 10) * 2.5 + p.xNoise * (CELL * 0.7);
         let targetY = cy;
         let col = PURPLE;
 
@@ -162,8 +162,8 @@ export const ProcessFlowCanvas: React.FC = () => {
           // 1. LEFT CLOUD: Wide dispersed scattered particle cloud tapering to center neck
           const cloudProgress = u / 0.36; // 0 to 1
           const spreadH = (1 - cloudProgress * 0.75) * H * 0.44;
-          const noiseY = (hash(p.seed * 31.7 + Math.floor(t * 0.05)) - 0.5) * 2;
-          const undulation = Math.sin(u * 10 + t * 1.8 + p.seed * 6) * 10 * (1 - cloudProgress);
+          const noiseY = (hash(p.seed * 31.7 + Math.floor(t * 0.03)) - 0.5) * 2;
+          const undulation = Math.sin(u * 10 + t * 1.2 + p.seed * 6) * 7 * (1 - cloudProgress);
           targetY = cy + p.yNoise * spreadH + noiseY * spreadH * 0.32 + undulation;
 
           // Color: Purple -> Blue
@@ -176,7 +176,7 @@ export const ProcessFlowCanvas: React.FC = () => {
           // 2. CENTER FUNNEL / INTERTWINED STRANDS: Narrow neck with swirling strands
           const funnelProg = (u - 0.36) / 0.16; // 0 to 1
           const neckWidth = (0.10 + Math.sin(funnelProg * Math.PI) * 0.06) * H;
-          const swirl = Math.sin(u * 22 + t * 3.5 + p.seed * 5) * neckWidth * 0.5;
+          const swirl = Math.sin(u * 22 + t * 2.2 + p.seed * 5) * neckWidth * 0.5;
           targetY = cy + p.yNoise * neckWidth * 0.5 + swirl;
 
           // Color: Blue -> Green
@@ -190,7 +190,7 @@ export const ProcessFlowCanvas: React.FC = () => {
           const waveProg = (u - 0.52) / 0.48; // 0 to 1
           const amp = (0.28 + waveProg * 0.18) * H;
           const waveFreq = isMobile ? 9.5 : 11.2;
-          const phaseOffset = t * 2.8;
+          const phaseOffset = t * 1.35;
 
           let waveOffset = 0;
           if (p.waveBranch === 0) {

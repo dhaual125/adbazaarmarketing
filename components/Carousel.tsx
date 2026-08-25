@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { ServiceCardVisual, ServiceVisualType } from "./ServiceCardVisual";
 
 export interface CarouselSlide {
@@ -22,6 +22,7 @@ interface CarouselProps {
   description?: string;
   slides: CarouselSlide[];
   isLab?: boolean;
+  autoSlide?: boolean;
 }
 
 export const Carousel: React.FC<CarouselProps> = ({
@@ -30,22 +31,95 @@ export const Carousel: React.FC<CarouselProps> = ({
   description,
   slides,
   isLab = false,
+  autoSlide = true,
 }) => {
   const trackRef = useRef<HTMLDivElement>(null);
+  const isPausedRef = useRef(false);
+  const isInteractingRef = useRef(false);
+  const resumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleScroll = () => {};
+  // Triple slides for infinite seamless wrapping
+  const infiniteSlides = useMemo(() => {
+    if (slides.length <= 1) return slides;
+    return [...slides, ...slides, ...slides];
+  }, [slides]);
 
   useEffect(() => {
     const el = trackRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-      if (el.scrollLeft + el.clientWidth >= el.scrollWidth && e.deltaY > 0) return;
-      if (el.scrollLeft <= 0 && e.deltaY < 0) return;
+    if (!el || !autoSlide || slides.length <= 1) return;
+
+    let animId: number;
+    let lastTime = performance.now();
+
+    // Initial scroll position in the middle set
+    const singleSetWidth = el.scrollWidth / 3;
+    if (el.scrollLeft < 10) {
+      el.scrollLeft = singleSetWidth;
+    }
+
+    const step = () => {
+      const now = performance.now();
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+
+      if (!isPausedRef.current && !isInteractingRef.current && el) {
+        // Slow, elegant continuous sliding speed (approx 36px per sec)
+        const speed = 36;
+        el.scrollLeft += speed * dt;
+
+        // Seamless loop without visual jump
+        const oneSet = el.scrollWidth / 3;
+        if (el.scrollLeft >= oneSet * 2) {
+          el.scrollLeft -= oneSet;
+        } else if (el.scrollLeft <= 0) {
+          el.scrollLeft += oneSet;
+        }
+      }
+
+      animId = requestAnimationFrame(step);
     };
-    el.addEventListener("wheel", onWheel, { passive: true });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, []);
+
+    animId = requestAnimationFrame(step);
+
+    const onPointerEnter = () => {
+      isPausedRef.current = true;
+    };
+
+    const onPointerLeave = () => {
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+      resumeTimeoutRef.current = setTimeout(() => {
+        isPausedRef.current = false;
+      }, 400);
+    };
+
+    const onTouchStart = () => {
+      isInteractingRef.current = true;
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    };
+
+    const onTouchEnd = () => {
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+      resumeTimeoutRef.current = setTimeout(() => {
+        isInteractingRef.current = false;
+      }, 1200);
+    };
+
+    el.addEventListener("pointerenter", onPointerEnter);
+    el.addEventListener("pointerleave", onPointerLeave);
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchend", onTouchEnd, { passive: true });
+    el.addEventListener("touchcancel", onTouchEnd, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(animId);
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+      el.removeEventListener("pointerenter", onPointerEnter);
+      el.removeEventListener("pointerleave", onPointerLeave);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener("touchcancel", onTouchEnd);
+    };
+  }, [autoSlide, slides.length]);
 
   return (
     <section className="caro relative z-[10] bg-white py-10 sm:py-14" id={id}>
@@ -65,17 +139,17 @@ export const Carousel: React.FC<CarouselProps> = ({
       <div className="sl-wrap">
         <div
           ref={trackRef}
-          onScroll={handleScroll}
-          className="overflow-x-auto scrollbar-none py-6 select-none snap-x snap-mandatory"
+          className="overflow-x-auto scrollbar-none py-6 select-none"
+          style={{ scrollBehavior: "auto" }}
         >
           <div className="flex gap-3 sm:gap-5 w-max px-4 sm:px-7 md:px-14">
-            {slides.map((slide, idx) => (
+            {infiniteSlides.map((slide, idx) => (
               <a
                 key={idx}
                 href={slide.instagramUrl ?? slide.href ?? "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group/card flex flex-col text-center gap-0 pb-4 text-inherit no-underline snap-center flex-shrink-0 ${
+                className={`group/card flex flex-col text-center gap-0 pb-4 text-inherit no-underline flex-shrink-0 transition-transform duration-300 ${
                   slide.reelsVideo
                     ? "w-[calc(55vw-1rem)] sm:w-[200px] md:w-[220px] lg:w-[240px]"
                     : slide.visualType
@@ -102,7 +176,7 @@ export const Carousel: React.FC<CarouselProps> = ({
                       <img
                         src={slide.thumbSrc}
                         alt={slide.title}
-                        className="w-full h-full object-cover block"
+                        className="w-full h-full object-cover block transition-transform duration-500 group-hover/card:scale-105"
                       />
                       {/* Instagram icon top-right */}
                       <div className="absolute top-3 right-3 z-[4]">
@@ -170,8 +244,6 @@ export const Carousel: React.FC<CarouselProps> = ({
             ))}
           </div>
         </div>
-
-
       </div>
     </section>
   );
