@@ -8,7 +8,6 @@ import { usePathname } from "next/navigation";
 const links = [
   { href: "/services",  label: "Services",  color: "#7c3aed" },
   { href: "/work",      label: "Work",      color: "#f97316" },
-  { href: "/recovery", label: "Recovery",  color: "#ef4444" },
   { href: "/about",    label: "About",     color: "#2563eb" },
   { href: "/contact",  label: "Contact",   color: "#16a34a" },
 ];
@@ -130,7 +129,7 @@ export const Navbar: React.FC = () => {
             </Link>
           ))}
         </div>
-        <Link href="/contact" className="navbar__mobile-cta pixel-clip" onClick={() => setMenuOpen(false)}>
+        <Link href="/contact" className="navbar__mobile-cta rounded-full text-center py-3.5 px-6 font-medium" onClick={() => setMenuOpen(false)}>
           Get in touch →
         </Link>
       </div>

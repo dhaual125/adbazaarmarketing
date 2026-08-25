@@ -92,6 +92,10 @@ export const GlobalCursorEffects: React.FC = () => {
     };
 
     const handlePointerMove = (e: PointerEvent) => {
+      if (e.pointerType === "touch" || window.innerWidth < 768) {
+        setIsVisible(false);
+        return;
+      }
       const now = performance.now() / 1000;
       mouseRef.current = { x: e.clientX, y: e.clientY };
       setIsVisible(true);
@@ -134,10 +138,7 @@ export const GlobalCursorEffects: React.FC = () => {
         const now = performance.now();
         const dist = Math.hypot(t0.clientX - tapX, t0.clientY - tapY);
         
-        mouseRef.current = { x: t0.clientX, y: t0.clientY };
-        setIsVisible(true);
-
-        // Generous double-tap window (480ms) and comfortable touch radius (75px)
+        // Double-tap window on mobile (cursor circle stays hidden)
         if (now - lastTap < 480 && dist < 75) {
           if (now - lastExplosionTime > 400) {
             triggerExplosion(t0.clientX, t0.clientY);
@@ -152,25 +153,8 @@ export const GlobalCursorEffects: React.FC = () => {
       }
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        const t0 = e.touches[0];
-        const now = performance.now() / 1000;
-        mouseRef.current = { x: t0.clientX, y: t0.clientY };
-        setIsVisible(true);
-
-        const pts = trailPointsRef.current;
-        const last = pts[pts.length - 1];
-        if (!last || Math.hypot(t0.clientX - last.x, t0.clientY - last.y) > 5) {
-          pts.push({
-            x: t0.clientX,
-            y: t0.clientY,
-            time: now,
-            phase: smoothPhaseRef.current,
-          });
-          if (pts.length > 10) pts.shift();
-        }
-      }
+    const handleTouchMove = () => {
+      // Keep cursor circle hidden during mobile swipe/scroll
     };
 
     const handleTouchEnd = () => {
@@ -364,12 +348,10 @@ export const GlobalCursorEffects: React.FC = () => {
       }
 
       // ==========================================
-      // 2. RENDER CONCENTRIC DISK CURSOR & RIBBON
+      // 2. RENDER CONCENTRIC DISK CURSOR & RIBBON (DESKTOP ONLY)
       // ==========================================
-      if (isVisible && mx > -100 && my > -100) {
-        // Responsive disk sizing
-        const isMobile = W < 640;
-        const baseRadius = isHoveringClickable ? (isMobile ? 26 : 32) : (isMobile ? 20 : 25);
+      if (!isMobile && isVisible && mx > -100 && my > -100) {
+        const baseRadius = isHoveringClickable ? 32 : 25;
         const pulse = 1 + Math.sin(curPhase * Math.PI) * 0.10;
         const headRadius = baseRadius * pulse;
 

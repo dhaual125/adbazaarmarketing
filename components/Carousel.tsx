@@ -122,7 +122,7 @@ export const Carousel: React.FC<CarouselProps> = ({
   }, [autoSlide, slides.length]);
 
   return (
-    <section className="caro relative z-[10] bg-white py-10 sm:py-14" id={id}>
+    <section className="caro relative z-[10] bg-transparent py-10 sm:py-14" id={id}>
       {title && (
         <div className="ch max-w-[1176px] mx-auto mb-7 px-4 sm:px-7 md:px-14 flex flex-col md:flex-row justify-between items-start md:items-baseline gap-4">
           <h2 className="text-[clamp(26px,3.4vw,46px)] leading-[1.06] font-normal tracking-[-0.02em] m-0">

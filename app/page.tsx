@@ -5,7 +5,7 @@ import { Carousel, CarouselSlide } from "@/components/Carousel";
 import { EditorialSection } from "@/components/EditorialSection";
 import { ProcessFlowCanvas } from "@/components/ProcessFlowCanvas";
 import { PixelMarquee } from "@/components/PixelMarquee";
-import { CursorDrivenParticleTypography } from "@/components/ui/cursor-driven-particles-typography";
+import { MarketingEcosystemVisual } from "@/components/MarketingEcosystemVisual";
 import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 
 export default function Home() {
@@ -103,7 +103,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="relative min-h-screen bg-white text-[#0A0A0A] font-sans selection:bg-[#d8ff00] selection:text-black">
+    <main className="relative min-h-screen bg-transparent text-[#0A0A0A] font-sans selection:bg-[#d8ff00] selection:text-black">
       {/* Hero Section with Live Vertical Offerings Marquee */}
       <CTAWithVerticalMarquee />
 
@@ -212,12 +212,9 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Cursor-Driven Interactive Pixel Typography */}
-          <div className="w-full my-6 sm:my-8 relative overflow-hidden bg-transparent rounded-xl">
-            <CursorDrivenParticleTypography
-              text="One team. Every part of growth."
-              color="#0A0A0A"
-            />
+          {/* Animated Tech Ecosystem Visual with Spinning Conical Border & Floating Nodes */}
+          <div className="w-full my-6 sm:my-8 relative">
+            <MarketingEcosystemVisual />
           </div>
 
           {/* 4 Service Pillars */}

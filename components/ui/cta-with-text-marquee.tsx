@@ -170,10 +170,10 @@ export default function CTAWithVerticalMarquee({
               </VerticalMarquee>
 
               {/* Top gradient vignette */}
-              <div className="pointer-events-none absolute top-0 left-0 right-0 h-16 sm:h-24 lg:h-32 bg-gradient-to-b from-white via-white/80 to-transparent z-10" />
+              <div className="pointer-events-none absolute top-0 left-0 right-0 h-16 sm:h-24 lg:h-32 bg-gradient-to-b from-[#FEFDF8] via-[#FEFDF8]/60 to-transparent z-10" />
 
               {/* Bottom gradient vignette */}
-              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 sm:h-24 lg:h-32 bg-gradient-to-t from-white via-white/80 to-transparent z-10" />
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 sm:h-24 lg:h-32 bg-gradient-to-t from-[#FEFDF8] via-[#FEFDF8]/60 to-transparent z-10" />
             </div>
           </div>
         </div>
