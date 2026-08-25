@@ -4,18 +4,21 @@ import React, { useEffect, useRef } from "react";
 
 export const ProtocolFlowCanvas: React.FC = () => {
   const cvRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const cv = cvRef.current;
-    if (!cv) return;
-    const ctx = cv.getContext("2d");
+    const container = containerRef.current;
+    if (!cv || !container) return;
+    const ctx = cv.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    let DPR = Math.min(window.devicePixelRatio || 1, 2);
-    let CELL = 7;
+    let isVisibleOnScreen = true;
+    let isMobile = window.innerWidth < 640;
+    let DPR = isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2);
+    let CELL = isMobile ? 5.5 : 7;
     let W = 0;
     let H = 0;
-    let isMobile = false;
     let animId: number;
     let t = 0;
     let lastTime = performance.now();
@@ -41,15 +44,14 @@ export const ProtocolFlowCanvas: React.FC = () => {
     };
 
     const resize = () => {
-      const parent = cv.parentElement;
-      if (!parent) return;
-      const rect = parent.getBoundingClientRect();
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
       if (rect.width < 2) return;
       W = rect.width;
       isMobile = W < 640;
       CELL = isMobile ? 5.5 : 7;
-      H = Math.max(190, Math.min(420, isMobile ? rect.width * 0.44 : rect.width * 0.32));
-      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      H = Math.max(180, Math.min(380, isMobile ? rect.width * 0.42 : rect.width * 0.30));
+      DPR = isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * DPR);
       cv.height = Math.round(H * DPR);
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -57,6 +59,17 @@ export const ProtocolFlowCanvas: React.FC = () => {
 
     resize();
     window.addEventListener("resize", resize);
+
+    // Pause when offscreen to eliminate mobile background lag
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisibleOnScreen = entry.isIntersecting;
+        });
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
 
     const handlePointerMove = (e: PointerEvent) => {
       const rect = cv.getBoundingClientRect();
@@ -92,8 +105,8 @@ export const ProtocolFlowCanvas: React.FC = () => {
     cv.addEventListener("touchend", handleTouchEnd, { passive: true });
     cv.addEventListener("touchcancel", handleTouchEnd, { passive: true });
 
-    // --- Particles: Horizontal comet stream matching media_1787596605265.png ---
-    const MAX_NUM = 2400;
+    // Adaptive particles: 360 on mobile (ultra-smooth 60/120fps), 1500 on desktop
+    const MAX_NUM = 1500;
     interface Particle {
       baseU: number;
       seed: number;
@@ -109,7 +122,7 @@ export const ProtocolFlowCanvas: React.FC = () => {
       particles.push({
         baseU: hash(i * 5.31 + 9.17),
         seed: hash(i * 3.71 + 1.49),
-        speed: 0.65 + hash(i * 2.13) * 0.75,
+        speed: 0.65 + hash(i * 2.13) * 0.70,
         yOff: (hash(i * 11.73) - 0.5) * 2,
         drift: hash(i * 7.91) * 2 - 1,
         curX: 0,
@@ -118,21 +131,26 @@ export const ProtocolFlowCanvas: React.FC = () => {
     }
 
     const render = () => {
+      if (!isVisibleOnScreen) {
+        animId = requestAnimationFrame(render);
+        return;
+      }
+
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
-      t += dt * 1.25;
+      t += dt * 0.75;
 
       ctx.clearRect(0, 0, W, H);
 
       const cy = H * 0.48;
-      const activeCount = isMobile ? 1050 : MAX_NUM;
+      const activeCount = isMobile ? 360 : MAX_NUM;
 
       for (let i = 0; i < activeCount; i++) {
         const p = particles[i];
 
         // Continuous leftward-to-rightward flow
-        p.baseU = (p.baseU + dt * 0.055 * p.speed) % 1;
+        p.baseU = (p.baseU + dt * 0.024 * p.speed) % 1;
         const u = p.baseU;
 
         let targetX = u * W;
@@ -140,47 +158,42 @@ export const ProtocolFlowCanvas: React.FC = () => {
         let verticalSpread = 0;
 
         if (u < 0.28) {
-          // LEFT SCATTER
           const prog = u / 0.28;
           verticalSpread = (1 - prog * 0.5) * H * 0.42;
-          const wobble = Math.sin(t * 1.2 + p.seed * 20 + u * 8) * 8 * (1 - prog * 0.5);
+          const wobble = Math.sin(t * 1.2 + p.seed * 20 + u * 8) * 6 * (1 - prog * 0.5);
           targetY = cy + p.yOff * verticalSpread + wobble;
-          targetX += (p.drift * 6) * (1 - prog);
+          targetX += (p.drift * 5) * (1 - prog);
 
         } else if (u < 0.42) {
-          // LEFT CONVERGENCE
           const prog = (u - 0.28) / 0.14;
           const startSpread = H * 0.28;
           const endSpread = H * 0.10;
           verticalSpread = startSpread + (endSpread - startSpread) * prog;
-          const wobble = Math.sin(t * 1.8 + p.seed * 15 + u * 12) * 5 * (1 - prog * 0.6);
+          const wobble = Math.sin(t * 1.8 + p.seed * 15 + u * 12) * 4 * (1 - prog * 0.6);
           targetY = cy + p.yOff * verticalSpread + wobble;
 
         } else if (u < 0.58) {
-          // DENSE CENTER BLOCK
           const prog = (u - 0.42) / 0.16;
           verticalSpread = H * 0.10 + Math.sin(prog * Math.PI) * H * 0.02;
-          const wobble = Math.sin(t * 2.2 + p.seed * 12) * 3;
+          const wobble = Math.sin(t * 2.0 + p.seed * 12) * 2.5;
           targetY = cy + p.yOff * verticalSpread + wobble;
 
         } else if (u < 0.72) {
-          // RIGHT EXPANSION
           const prog = (u - 0.58) / 0.14;
           const startSpread = H * 0.10;
           const endSpread = H * 0.30;
           verticalSpread = startSpread + (endSpread - startSpread) * prog;
-          const wobble = Math.sin(t * 1.5 + p.seed * 18 + u * 10) * 6 * prog;
+          const wobble = Math.sin(t * 1.4 + p.seed * 18 + u * 10) * 5 * prog;
           targetY = cy + p.yOff * verticalSpread + wobble;
           targetY -= prog * H * 0.08 * (p.yOff < 0 ? 1 : 0.3);
 
         } else {
-          // RIGHT SCATTER
           const prog = (u - 0.72) / 0.28;
           verticalSpread = H * 0.30 + prog * H * 0.16;
-          const wobble = Math.sin(t * 1.0 + p.seed * 22 + u * 6) * 10 * prog;
+          const wobble = Math.sin(t * 1.0 + p.seed * 22 + u * 6) * 8 * prog;
           targetY = cy + p.yOff * verticalSpread + wobble;
           targetY -= prog * H * 0.18 * (p.yOff < -0.2 ? 1.2 : 0.4);
-          targetX += p.drift * 8 * prog;
+          targetX += p.drift * 6 * prog;
         }
 
         // --- COLOR: Purple → Blue → Green → Orange ---
@@ -219,12 +232,12 @@ export const ProtocolFlowCanvas: React.FC = () => {
           const dx = targetX - mouseX;
           const dy = targetY - mouseY;
           const dist = Math.hypot(dx, dy);
-          const repulsionRadius = isMobile ? 75 : 100;
+          const repulsionRadius = isMobile ? 65 : 100;
 
           if (dist < repulsionRadius && dist > 0.5) {
-            const force = Math.pow(1 - dist / repulsionRadius, 1.8) * (isMobile ? 48 : 70);
+            const force = Math.pow(1 - dist / repulsionRadius, 1.8) * (isMobile ? 38 : 70);
             const angle = Math.atan2(dy, dx);
-            const swirl = (p.seed > 0.5 ? 1 : -1) * (1 - dist / repulsionRadius) * 16;
+            const swirl = (p.seed > 0.5 ? 1 : -1) * (1 - dist / repulsionRadius) * 12;
 
             targetX += Math.cos(angle) * force + Math.sin(angle) * swirl;
             targetY += Math.sin(angle) * force - Math.cos(angle) * swirl;
@@ -257,6 +270,7 @@ export const ProtocolFlowCanvas: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(animId);
+      observer.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", handlePointerMove);
       cv.removeEventListener("pointerleave", handlePointerLeave);
@@ -267,7 +281,7 @@ export const ProtocolFlowCanvas: React.FC = () => {
   }, []);
 
   return (
-    <div className="procflow w-full mb-8 relative group touch-pan-y">
+    <div ref={containerRef} className="procflow w-full mb-8 relative group touch-pan-y">
       <canvas
         ref={cvRef}
         id="bcp-flowviz"

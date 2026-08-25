@@ -120,16 +120,13 @@ export const GlobalCursorEffects: React.FC = () => {
     const handlePointerDown = () => setIsClicking(true);
     const handlePointerUp = () => setIsClicking(false);
 
-    // Global Double-Click Explosion Trigger across Whole Page
-    const handleDblClick = (e: MouseEvent) => {
-      triggerExplosion(e.clientX, e.clientY);
-    };
-
     // Mobile double-tap & touch support for all screen sizes
     let lastTap = 0;
     let tapX = 0;
     let tapY = 0;
+    let lastExplosionTime = 0;
 
+    // Mobile double-tap & touch support for all screen sizes
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches.length > 0) {
         const t0 = e.touches[0];
@@ -139,8 +136,12 @@ export const GlobalCursorEffects: React.FC = () => {
         mouseRef.current = { x: t0.clientX, y: t0.clientY };
         setIsVisible(true);
 
-        if (now - lastTap < 350 && dist < 45) {
-          triggerExplosion(t0.clientX, t0.clientY);
+        // Generous double-tap window (480ms) and comfortable touch radius (75px)
+        if (now - lastTap < 480 && dist < 75) {
+          if (now - lastExplosionTime > 400) {
+            triggerExplosion(t0.clientX, t0.clientY);
+            lastExplosionTime = now;
+          }
           lastTap = 0;
         } else {
           lastTap = now;
@@ -177,6 +178,14 @@ export const GlobalCursorEffects: React.FC = () => {
       trailPointsRef.current = [];
     };
 
+    const handleDblClick = (e: MouseEvent) => {
+      const now = performance.now();
+      if (now - lastExplosionTime > 400) {
+        triggerExplosion(e.clientX, e.clientY);
+        lastExplosionTime = now;
+      }
+    };
+
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     window.addEventListener("pointerdown", handlePointerDown);
     window.addEventListener("pointerup", handlePointerUp);
@@ -204,6 +213,16 @@ export const GlobalCursorEffects: React.FC = () => {
     };
 
     const render = (ts: number) => {
+      const activeExplosions = explosionsRef.current;
+      const isMobile = W < 768;
+
+      // On mobile devices without active touch or explosion, bypass heavy work
+      if (isMobile && !isVisible && activeExplosions.length === 0) {
+        ctx.clearRect(0, 0, W, H);
+        animId = requestAnimationFrame(render);
+        return;
+      }
+
       ctx.clearRect(0, 0, W, H);
       const now = performance.now() / 1000;
 
@@ -229,7 +248,7 @@ export const GlobalCursorEffects: React.FC = () => {
       // ==========================================
       // 1. RENDER GLOBAL DOUBLE-CLICK EXPLOSIONS
       // ==========================================
-      const activeExplosions = explosionsRef.current;
+      const expCell = isMobile ? 9.5 : CELL;
       for (let eIdx = activeExplosions.length - 1; eIdx >= 0; eIdx--) {
         const exp = activeExplosions[eIdx];
         const age = now - exp.startTime;
@@ -245,7 +264,7 @@ export const GlobalCursorEffects: React.FC = () => {
         const shockAlpha = Math.max(0, 1 - progress);
 
         // High-frequency mini-second vibration screen shake during initial expansion
-        const shakeAmp = Math.max(0, 1 - progress / 0.26) * 6.5;
+        const shakeAmp = Math.max(0, 1 - progress / 0.26) * (isMobile ? 4.5 : 6.5);
         const shakeX = shakeAmp > 0.01 ? (Math.sin(ts * 0.15) * 0.6 + (Math.random() - 0.5) * 0.4) * shakeAmp : 0;
         const shakeY = shakeAmp > 0.01 ? (Math.cos(ts * 0.17) * 0.6 + (Math.random() - 0.5) * 0.4) * shakeAmp : 0;
 
@@ -254,24 +273,20 @@ export const GlobalCursorEffects: React.FC = () => {
           ctx.translate(shakeX, shakeY);
         }
 
-        // =========================================================================
-        // FULL-SCREEN GEOMETRIC CIRCLE EXPANSION (media_1787599006211.png)
-        // FOLLOWED BY ENDING SCATTERED PIXEL FIELD (media_1787598977876.png)
-        // BRAND COLORS ONLY: Purple, Blue, Green, Orange
-        // =========================================================================
-        const maxR = currentRadius + CELL;
-        const boxMinX = Math.max(0, Math.floor((exp.x - maxR) / CELL) * CELL);
-        const boxMaxX = Math.min(W, Math.ceil((exp.x + maxR) / CELL) * CELL);
-        const boxMinY = Math.max(0, Math.floor((exp.y - maxR) / CELL) * CELL);
-        const boxMaxY = Math.min(H, Math.ceil((exp.y + maxR) / CELL) * CELL);
+        // FULL-SCREEN GEOMETRIC CIRCLE EXPANSION
+        const maxR = currentRadius + expCell;
+        const boxMinX = Math.max(0, Math.floor((exp.x - maxR) / expCell) * expCell);
+        const boxMaxX = Math.min(W, Math.ceil((exp.x + maxR) / expCell) * expCell);
+        const boxMinY = Math.max(0, Math.floor((exp.y - maxR) / expCell) * expCell);
+        const boxMaxY = Math.min(H, Math.ceil((exp.y + maxR) / expCell) * expCell);
 
         const isShattering = progress >= 0.45;
         const shatterProgress = isShattering ? (progress - 0.45) / 0.55 : 0;
 
-        for (let py = boxMinY; py <= boxMaxY; py += CELL) {
-          for (let px = boxMinX; px <= boxMaxX; px += CELL) {
-            const cx = px + CELL / 2;
-            const cy = py + CELL / 2;
+        for (let py = boxMinY; py <= boxMaxY; py += expCell) {
+          for (let px = boxMinX; px <= boxMaxX; px += expCell) {
+            const cx = px + expCell / 2;
+            const cy = py + expCell / 2;
             const dx = cx - exp.x;
             const dy = cy - exp.y;
             const dist = Math.hypot(dx, dy);
@@ -299,7 +314,7 @@ export const GlobalCursorEffects: React.FC = () => {
                 ctx.save();
                 ctx.globalAlpha = Math.max(0, 1 - shatterProgress) * 0.92;
                 ctx.fillStyle = col;
-                ctx.fillRect(px, py, CELL - 1, CELL - 1);
+                ctx.fillRect(px, py, expCell - 1, expCell - 1);
                 ctx.restore();
                 continue;
               }
@@ -308,8 +323,8 @@ export const GlobalCursorEffects: React.FC = () => {
               if (normDist > 1.0) continue;
 
               // Pixel Smiley Face at upper right quadrant
-              const smileyRelX = (dx - currentRadius * 0.55) / CELL;
-              const smileyRelY = (dy + currentRadius * 0.55) / CELL;
+              const smileyRelX = (dx - currentRadius * 0.55) / expCell;
+              const smileyRelY = (dy + currentRadius * 0.55) / expCell;
               const isEyeL = Math.abs(smileyRelX + 2) < 0.6 && Math.abs(smileyRelY) < 0.6;
               const isEyeR = Math.abs(smileyRelX - 2) < 0.6 && Math.abs(smileyRelY) < 0.6;
               const isMouth = Math.abs(smileyRelY - 2) < 0.6 && Math.abs(smileyRelX) <= 2;
@@ -339,7 +354,7 @@ export const GlobalCursorEffects: React.FC = () => {
               ctx.save();
               ctx.globalAlpha = shockAlpha * 0.96;
               ctx.fillStyle = col;
-              ctx.fillRect(px, py, CELL - 1, CELL - 1);
+              ctx.fillRect(px, py, expCell - 1, expCell - 1);
               ctx.restore();
             }
           }

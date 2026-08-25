@@ -4,18 +4,21 @@ import React, { useEffect, useRef } from "react";
 
 export const ProcessFlowCanvas: React.FC = () => {
   const cvRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const cv = cvRef.current;
-    if (!cv) return;
-    const ctx = cv.getContext("2d");
+    const container = containerRef.current;
+    if (!cv || !container) return;
+    const ctx = cv.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    let DPR = Math.min(window.devicePixelRatio || 1, 2);
+    let isVisibleOnScreen = true;
+    let isMobile = window.innerWidth < 640;
+    let DPR = isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2);
     let W = 0;
     let H = 0;
-    let isMobile = false;
-    let CELL = 7;
+    let CELL = isMobile ? 5.5 : 7;
     let animId: number;
     let t = Math.random() * 5000;
     let lastTime = performance.now();
@@ -40,16 +43,14 @@ export const ProcessFlowCanvas: React.FC = () => {
     };
 
     const resize = () => {
-      const parent = cv.parentElement;
-      if (!parent) return;
-      const rect = parent.getBoundingClientRect();
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
       if (rect.width < 2) return;
       W = rect.width;
       isMobile = W < 640;
       CELL = isMobile ? 5.5 : 7;
-      // Responsive height: well-proportioned on small phone screens
-      H = Math.max(190, Math.min(360, isMobile ? rect.width * 0.44 : rect.width * 0.30));
-      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      H = Math.max(180, Math.min(340, isMobile ? rect.width * 0.42 : rect.width * 0.28));
+      DPR = isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * DPR);
       cv.height = Math.round(H * DPR);
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -57,6 +58,17 @@ export const ProcessFlowCanvas: React.FC = () => {
 
     resize();
     window.addEventListener("resize", resize);
+
+    // Pause when off-screen to save 100% mobile CPU/battery
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisibleOnScreen = entry.isIntersecting;
+        });
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
 
     const handlePointerMove = (e: PointerEvent) => {
       const rect = cv.getBoundingClientRect();
@@ -92,8 +104,8 @@ export const ProcessFlowCanvas: React.FC = () => {
     cv.addEventListener("touchend", handleTouchEnd, { passive: true });
     cv.addEventListener("touchcancel", handleTouchEnd, { passive: true });
 
-    // 2000 Particles configured for Braided Wave Harmonic Flow (media_1787598097026.jpg)
-    const MAX_NUM = 2000;
+    // Adaptive Particles: 380 on mobile (ultra-fast, zero lag), 1400 on desktop
+    const MAX_NUM = 1400;
     interface Particle {
       u: number;
       seed: number;
@@ -111,7 +123,7 @@ export const ProcessFlowCanvas: React.FC = () => {
       particles.push({
         u: hash(i * 5.31 + 7.19),
         seed: hash(i * 3.71 + 1.49),
-        speed: 0.75 + hash(i * 2.13) * 0.55,
+        speed: 0.7 + hash(i * 2.13) * 0.5,
         waveBranch: branchRand < 0.38 ? 0 : branchRand < 0.74 ? 1 : 2,
         yNoise: (hash(i * 11.73) - 0.5) * 2,
         xNoise: (hash(i * 13.89) - 0.5) * 2,
@@ -121,18 +133,23 @@ export const ProcessFlowCanvas: React.FC = () => {
     }
 
     const render = () => {
+      if (!isVisibleOnScreen) {
+        animId = requestAnimationFrame(render);
+        return;
+      }
+
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
-      t += dt * 0.60; // Gentle, soothing harmonic time progression
+      t += dt * 0.45; // Slower, calmer, soothing harmonic time progression
 
       ctx.clearRect(0, 0, W, H);
 
       const cy = H * 0.5;
-      const activeCount = isMobile ? 950 : MAX_NUM;
+      const activeCount = isMobile ? 380 : MAX_NUM;
 
       // Draw subtle guide grid
-      ctx.strokeStyle = "rgba(10, 10, 10, 0.03)";
+      ctx.strokeStyle = "rgba(10, 10, 10, 0.025)";
       ctx.lineWidth = 1;
       ctx.beginPath();
       const gridStep = CELL * 4;
@@ -149,11 +166,11 @@ export const ProcessFlowCanvas: React.FC = () => {
       for (let i = 0; i < activeCount; i++) {
         const p = particles[i];
 
-        // Slower, smoother, continuous left-to-right living stream flow
-        p.u = (p.u + dt * 0.028 * p.speed) % 1;
+        // Slower, calmer, continuous living stream flow
+        p.u = (p.u + dt * 0.018 * p.speed) % 1;
         const u = p.u;
 
-        let targetX = u * W + Math.sin(t * 1.2 + p.seed * 10) * 2.5 + p.xNoise * (CELL * 0.7);
+        let targetX = u * W + Math.sin(t * 1.0 + p.seed * 10) * 2.0 + p.xNoise * (CELL * 0.7);
         let targetY = cy;
         let col = PURPLE;
 
@@ -162,8 +179,8 @@ export const ProcessFlowCanvas: React.FC = () => {
           // 1. LEFT CLOUD: Wide dispersed scattered particle cloud tapering to center neck
           const cloudProgress = u / 0.36; // 0 to 1
           const spreadH = (1 - cloudProgress * 0.75) * H * 0.44;
-          const noiseY = (hash(p.seed * 31.7 + Math.floor(t * 0.03)) - 0.5) * 2;
-          const undulation = Math.sin(u * 10 + t * 1.2 + p.seed * 6) * 7 * (1 - cloudProgress);
+          const noiseY = (hash(p.seed * 31.7 + Math.floor(t * 0.02)) - 0.5) * 2;
+          const undulation = Math.sin(u * 10 + t * 1.0 + p.seed * 6) * 5 * (1 - cloudProgress);
           targetY = cy + p.yNoise * spreadH + noiseY * spreadH * 0.32 + undulation;
 
           // Color: Purple -> Blue
@@ -173,10 +190,10 @@ export const ProcessFlowCanvas: React.FC = () => {
             col = p.seed < 0.45 ? PURPLE : p.seed < 0.85 ? BLUE : BLUE_LIGHT;
           }
         } else if (u < 0.52) {
-          // 2. CENTER FUNNEL / INTERTWINED STRANDS: Narrow neck with swirling strands
+          // 2. CENTER FUNNEL / INTERTWINED STRANDS
           const funnelProg = (u - 0.36) / 0.16; // 0 to 1
           const neckWidth = (0.10 + Math.sin(funnelProg * Math.PI) * 0.06) * H;
-          const swirl = Math.sin(u * 22 + t * 2.2 + p.seed * 5) * neckWidth * 0.5;
+          const swirl = Math.sin(u * 22 + t * 1.8 + p.seed * 5) * neckWidth * 0.5;
           targetY = cy + p.yNoise * neckWidth * 0.5 + swirl;
 
           // Color: Blue -> Green
@@ -186,11 +203,11 @@ export const ProcessFlowCanvas: React.FC = () => {
             col = p.seed < 0.3 ? BLUE : p.seed < 0.8 ? GREEN : GREEN_LIGHT;
           }
         } else {
-          // 3. RIGHT BRAIDED SINE WAVE RIBBONS (media_1787598097026.jpg)
+          // 3. RIGHT BRAIDED SINE WAVE RIBBONS
           const waveProg = (u - 0.52) / 0.48; // 0 to 1
           const amp = (0.28 + waveProg * 0.18) * H;
           const waveFreq = isMobile ? 9.5 : 11.2;
-          const phaseOffset = t * 1.35;
+          const phaseOffset = t * 1.1;
 
           let waveOffset = 0;
           if (p.waveBranch === 0) {
@@ -217,12 +234,12 @@ export const ProcessFlowCanvas: React.FC = () => {
           const dx = targetX - mouseX;
           const dy = targetY - mouseY;
           const dist = Math.hypot(dx, dy);
-          const repulsionRadius = isMobile ? 80 : 110;
+          const repulsionRadius = isMobile ? 70 : 110;
 
           if (dist < repulsionRadius && dist > 0.1) {
-            const force = Math.pow(1 - dist / repulsionRadius, 1.7) * (isMobile ? 45 : 65);
+            const force = Math.pow(1 - dist / repulsionRadius, 1.7) * (isMobile ? 38 : 65);
             const angle = Math.atan2(dy, dx);
-            const swirl = (p.seed > 0.5 ? 1 : -1) * (1 - dist / repulsionRadius) * 14;
+            const swirl = (p.seed > 0.5 ? 1 : -1) * (1 - dist / repulsionRadius) * 12;
 
             targetX += Math.cos(angle) * force - Math.sin(angle) * swirl;
             targetY += Math.sin(angle) * force + Math.cos(angle) * swirl;
@@ -238,8 +255,8 @@ export const ProcessFlowCanvas: React.FC = () => {
           p.curX = targetX;
           p.curY = targetY;
         } else {
-          p.curX += (targetX - p.curX) * 0.26;
-          p.curY += (targetY - p.curY) * 0.26;
+          p.curX += (targetX - p.curX) * 0.24;
+          p.curY += (targetY - p.curY) * 0.24;
         }
 
         // Snap to crisp pixel grid
@@ -259,6 +276,7 @@ export const ProcessFlowCanvas: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(animId);
+      observer.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", handlePointerMove);
       cv.removeEventListener("pointerleave", handlePointerLeave);
@@ -269,7 +287,7 @@ export const ProcessFlowCanvas: React.FC = () => {
   }, []);
 
   return (
-    <div className="procflow w-full mb-10 relative group touch-pan-y">
+    <div ref={containerRef} className="procflow w-full mb-10 relative group touch-pan-y">
       <canvas
         ref={cvRef}
         id="procflow"

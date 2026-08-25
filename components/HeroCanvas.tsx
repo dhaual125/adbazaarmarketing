@@ -122,8 +122,10 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
     const resize = () => {
       W = window.innerWidth;
       H = window.innerHeight;
-      cell = cellSize;
-      BRUSH = brushSize;
+      const isMobile = W < 640;
+      cell = isMobile ? Math.max(15, cellSize) : cellSize;
+      BRUSH = isMobile ? Math.max(14, brushSize) : brushSize;
+      DPR = isMobile ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2);
       cv.width = Math.round(W * DPR);
       cv.height = Math.round(H * DPR);
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -217,6 +219,16 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
     let lastTs = performance.now();
 
     const render = (ts: number) => {
+      const sy = window.scrollY || 0;
+      const heroEl = document.getElementById("hero");
+      const heroHeight = heroEl ? heroEl.offsetHeight : H;
+
+      // When user scrolled past hero, completely stop heavy computation
+      if (sy > heroHeight + 60) {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
+
       const dt = Math.min(32, ts - lastTs);
       lastTs = ts;
       t += dt;
@@ -225,9 +237,6 @@ export const HeroCanvas: React.FC<HeroCanvasProps> = ({
 
       if (!heat || !dis) return;
 
-      const sy = window.scrollY || 0;
-      const heroEl = document.getElementById("hero");
-      const heroHeight = heroEl ? heroEl.offsetHeight : H;
       const heroBottom = heroHeight - sy;
       const heroEnd = heroBottom * 0.55;
       const fadeSpan = Math.max(1, heroBottom * 0.18);
