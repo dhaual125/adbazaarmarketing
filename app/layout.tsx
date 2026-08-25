@@ -19,10 +19,10 @@ export const metadata: Metadata = {
   description: "AD BAZAAR is a full-service growth partner offering growth marketing, IT consulting, advertising creatives, leads management, and crisis account recovery.",
   icons: {
     icon: [
-      { url: "/ADBazzarlogo.png", type: "image/png" },
+      { url: "/favicon.png", type: "image/png" },
     ],
-    apple: "/ADBazzarlogo.png",
-    shortcut: "/ADBazzarlogo.png",
+    apple: "/favicon.png",
+    shortcut: "/favicon.png",
   },
 };
 

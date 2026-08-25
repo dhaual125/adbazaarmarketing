@@ -53,10 +53,10 @@ export const Navbar: React.FC = () => {
         {/* Logo */}
         <Link href="/" className="navbar__logo">
           <Image
-            src="/ADBazzarlogo.png"
-            alt="AD Bazaar"
-            width={120}
-            height={40}
+            src="/ADBMlogo-transparent.png"
+            alt="AD Bazaar Marketing"
+            width={160}
+            height={52}
             className="navbar__logo-img"
             priority
           />
