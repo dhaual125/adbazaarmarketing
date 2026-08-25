@@ -396,7 +396,13 @@ export const PixelMarquee: React.FC = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          const wasVisible = isVisibleOnScreen;
           isVisibleOnScreen = entry.isIntersecting;
+          if (!wasVisible && isVisibleOnScreen) {
+            lastTime = performance.now();
+            cancelAnimationFrame(animId);
+            animId = requestAnimationFrame(draw);
+          }
         });
       },
       { threshold: 0.05 }
@@ -405,7 +411,6 @@ export const PixelMarquee: React.FC = () => {
 
     const draw = () => {
       if (!isVisibleOnScreen) {
-        animId = requestAnimationFrame(draw);
         return;
       }
 

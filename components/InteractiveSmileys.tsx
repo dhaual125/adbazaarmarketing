@@ -12,11 +12,21 @@ export const InteractiveSmileys: React.FC = () => {
   const sadRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (typeof window === "undefined" || window.innerWidth < 768) return;
+
+    let frameId: number | null = null;
     const handlePointerMove = (e: PointerEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+      if (frameId !== null) return;
+      frameId = requestAnimationFrame(() => {
+        setMousePos({ x: e.clientX, y: e.clientY });
+        frameId = null;
+      });
     };
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    return () => window.removeEventListener("pointermove", handlePointerMove);
+    return () => {
+      if (frameId !== null) cancelAnimationFrame(frameId);
+      window.removeEventListener("pointermove", handlePointerMove);
+    };
   }, []);
 
   // Idle Blinking

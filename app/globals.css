@@ -57,6 +57,12 @@ body {
   font-feature-settings: "ss06" 1;
 }
 
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+  }
+}
+
 a {
   color: inherit;
 }

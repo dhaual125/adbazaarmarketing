@@ -60,11 +60,17 @@ export const ProcessFlowCanvas: React.FC = () => {
     resize();
     window.addEventListener("resize", resize);
 
-    // Pause when off-screen to save mobile CPU/battery
+    // Pause when off-screen to save 100% mobile CPU/battery
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          const wasVisible = isVisibleOnScreen;
           isVisibleOnScreen = entry.isIntersecting;
+          if (!wasVisible && isVisibleOnScreen) {
+            lastTime = performance.now();
+            cancelAnimationFrame(animId);
+            animId = requestAnimationFrame(render);
+          }
         });
       },
       { threshold: 0.05 }
@@ -106,7 +112,7 @@ export const ProcessFlowCanvas: React.FC = () => {
     cv.addEventListener("touchcancel", handleTouchEnd, { passive: true });
 
     // Adaptive Particles for Full-Width Continuous DNA Double-Helix
-    const MAX_NUM = 1500;
+    const MAX_NUM = 650;
     interface Particle {
       u: number;
       seed: number;
@@ -148,7 +154,6 @@ export const ProcessFlowCanvas: React.FC = () => {
 
     const render = () => {
       if (!isVisibleOnScreen) {
-        animId = requestAnimationFrame(render);
         return;
       }
 
@@ -160,7 +165,7 @@ export const ProcessFlowCanvas: React.FC = () => {
       ctx.clearRect(0, 0, W, H);
 
       const cy = H * 0.5;
-      const activeCount = isMobile ? 280 : MAX_NUM;
+      const activeCount = isMobile ? 85 : MAX_NUM;
 
       // Draw subtle background pixel grid
       ctx.strokeStyle = "rgba(10, 10, 10, 0.025)";

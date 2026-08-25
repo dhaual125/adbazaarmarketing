@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Carousel, CarouselSlide } from "@/components/Carousel";
 import { EditorialSection } from "@/components/EditorialSection";
 import { ProcessFlowCanvas } from "@/components/ProcessFlowCanvas";
@@ -116,16 +117,35 @@ export default function Home() {
       {/* Process Section - Matches Image 2 & Image 3 */}
       <section className="proc relative z-2 py-12 sm:py-16 px-4 sm:px-7 md:px-14 bg-transparent" id="process">
         <div className="wrap max-w-[1176px] mx-auto">
-          {/* Header */}
-          <div className="ph mb-6">
-            <h2 className="text-[clamp(28px,3.6vw,48px)] leading-[1.04] tracking-[-0.025em] font-normal m-0 text-black">
-              Plan. Create.
-              <br />
-              Launch. Scale.
-            </h2>
-            <p className="pd text-[#2a2a2a] text-[clamp(15px,1.15vw,18px)] leading-[1.62] max-w-[48ch] mt-4">
-              Every campaign starts with deep understanding and ends with compounding growth. We don&apos;t guess — we build, test and scale what works.
-            </p>
+          {/* Header & Marketing Showcase */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-14 items-center mb-10 sm:mb-12">
+            <div>
+              <h2 className="text-[clamp(28px,3.6vw,48px)] leading-[1.04] tracking-[-0.025em] font-normal m-0 text-black">
+                Plan. Create.
+                <br />
+                Launch. Scale.
+              </h2>
+              <p className="pd text-[#2a2a2a] text-[clamp(15px,1.15vw,18px)] leading-[1.62] max-w-[48ch] mt-4">
+                Every campaign starts with deep understanding and ends with compounding growth. We don&apos;t guess — we build, test and scale what works.
+              </p>
+              <p className="text-[clamp(14px,1vw,16px)] leading-[1.6] text-[#555555] max-w-[48ch] mt-3">
+                We focus on the metrics that actually matter: Customer Acquisition Cost (CAC), Return on Ad Spend (ROAS), and real money in the bank.
+              </p>
+            </div>
+
+            {/* Right Side: Marketing Mockup Showcase */}
+            <div className="flex items-center justify-center lg:justify-end">
+              <div className="relative group transition-transform duration-500 hover:scale-[1.02]">
+                <Image
+                  src="/marketing.png"
+                  alt="Live Marketing Performance & Insights"
+                  width={520}
+                  height={620}
+                  className="w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[440px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
+                  priority
+                />
+              </div>
+            </div>
           </div>
 
           {/* Double-Helix Wave Canvas (Image 2) */}

@@ -31,6 +31,11 @@ export const GlobalCursorEffects: React.FC = () => {
   const smoothPhaseRef = useRef(0);
 
   useEffect(() => {
+    // 100% bypass on mobile screens and touch devices for silky smooth 0-lag mobile scrolling
+    if (typeof window === "undefined" || window.innerWidth < 768 || window.matchMedia("(pointer: coarse)").matches) {
+      return;
+    }
+
     const cv = canvasRef.current;
     if (!cv) return;
     const ctx = cv.getContext("2d");
