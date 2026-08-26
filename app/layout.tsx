@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "AD BAZAAR — Your Growth, Our Strategy",
-  description: "AD BAZAAR is a full-service growth partner offering growth marketing, IT consulting, advertising creatives, leads management, and crisis account recovery.",
+  description: "AD BAZAAR is a full-service growth partner offering growth marketing, IT consulting, advertising creatives, and leads management.",
   icons: {
     icon: [
       { url: "/favicon.png", type: "image/png" },

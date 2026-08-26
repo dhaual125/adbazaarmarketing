@@ -16,17 +16,6 @@ const cases = [
     color: "var(--purple)",
   },
   {
-    industry: "E-commerce",
-    service: "Account Recovery",
-    title: "How We Saved an E-commerce Business $10K/Day",
-    challenge: "An e-commerce business had their ad account permanently restricted with no warning. They were losing $10,000 per day in revenue and had exhausted all self-service appeal options.",
-    solution: "We conducted a deep audit to understand the root cause, gathered all necessary documentation, and crafted a comprehensive appeal. We followed up persistently and escalated the case to a higher tier.",
-    results: [{ num: "72hrs", label: "To restoration" }, { num: "$30K", label: "Revenue saved" }, { num: "Full", label: "Access restored" }, { num: "0", label: "Future restrictions" }],
-    quote: "Our ad account was permanently restricted. We were losing $10K/day. This team got us back in 72 hours. They're not just marketers — they're lifesavers.",
-    author: "Sarah K., E-commerce Founder",
-    color: "var(--green)",
-  },
-  {
     industry: "Professional Services",
     service: "IT & Consulting",
     title: "How We Digitally Transformed a Plumbing Business",
@@ -43,10 +32,10 @@ const cases = [
     title: "SaaS Company IT & Marketing Overhaul",
     challenge: "Disconnected CRM, inefficient lead generation, and low conversion rates were costing this SaaS company thousands in wasted ad spend every month.",
     solution: "We integrated their CRM, built lead qualification automation, and launched a full-funnel marketing strategy that aligned their technology and marketing for the first time.",
-    results: [{ num: "5X", label: "Qualified leads" }, { num: "50%", label: "Shorter sales cycles" }, { num: "300%", label: "Revenue growth" }, { num: "95%", label: "Lead retention" }],
-    quote: "Finally, a team that understands both technology and marketing. They didn't just fix our ads — they fixed our entire growth engine.",
-    author: "David M., SaaS Founder",
-    color: "var(--orange)",
+    results: [{ num: "3X", label: "MRR in 12 months" }, { num: "60%", label: "Faster lead response" }, { num: "4.5X", label: "Blended ROAS" }, { num: "$2M+", label: "ARR milestone reached" }],
+    quote: "Our technology and our marketing finally talk to each other. That alone changed our entire trajectory.",
+    author: "Elena M., Head of Growth",
+    color: "var(--purple)",
   },
   {
     industry: "Healthcare",
@@ -72,7 +61,7 @@ const cases = [
   },
 ];
 
-const filters = ["All", "Growth Marketing", "IT & Consulting", "Account Recovery", "Full Transformation", "Influencer Marketing"];
+const filters = ["All", "Growth Marketing", "IT & Consulting", "Full Transformation", "Influencer Marketing"];
 
 export default function WorkPage() {
   const [active, setActive] = useState("All");

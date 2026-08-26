@@ -69,7 +69,7 @@ const marqueeItems = [
   "Growth Marketing",
   "AI & Custom Tech",
   "Google & Meta Ads",
-  "Account Recovery",
+  "Creative Production",
   "Leads & CRM Pipeline",
   "High-Converting Video",
   "Full Brand Scaling",
@@ -77,7 +77,7 @@ const marqueeItems = [
 
 export default function CTAWithVerticalMarquee({
   title = "Build. Grow. Scale.\nOne Partner, End-to-End.",
-  description = "From AI-powered websites and custom software to revenue-driving ads, influencer campaigns, and crisis account recovery — we provide the complete technology and marketing stack your business needs to dominate.",
+  description = "From AI-powered websites and custom software to revenue-driving ads, influencer campaigns, and creative video production — we provide the complete technology and marketing stack your business needs to dominate.",
   primaryButtonText = "GET IN TOUCH",
   primaryButtonHref = "/contact",
   secondaryButtonText = "VIEW ALL SERVICES",

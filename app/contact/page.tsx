@@ -13,15 +13,15 @@ const faqs = [
   },
   {
     q: "What's your pricing model?",
-    a: "We offer flexible pricing — monthly retainers for marketing and managed IT, project-based fees for websites and software, and flat fees for account recovery. We'll provide a custom quote during your free consultation.",
+    a: "We offer flexible pricing — monthly retainers for marketing and managed IT, and project-based fees for websites and custom software. We'll provide a custom quote during your free consultation.",
   },
   {
     q: "Do you guarantee results?",
     a: "We can't guarantee specific outcomes, but we guarantee we'll work tirelessly to deliver results. Our track record speaks for itself — 95% client retention and hundreds of successful campaigns.",
   },
   {
-    q: "What if my ad account recovery fails?",
-    a: "Recovery depends on Meta's final decision. Our service fee covers our professional time and expertise in navigating the process. We'll always be honest about your chances before we begin.",
+    q: "How do you track campaign performance?",
+    a: "We set up comprehensive tracking using Meta Pixel, Google Analytics 4, and server-side tracking so you get transparent weekly reports on CAC, ROAS, and qualified leads.",
   },
   {
     q: "Can you help if I'm not in India or the US?",
@@ -87,7 +87,7 @@ export default function ContactPage() {
             Let&apos;s build, grow,<br />and scale together.
           </h1>
           <p className="page-lead">
-            Fill out the form below, or reach out directly. We respond within 24 hours — usually much faster. For urgent account recovery issues, call us immediately.
+            Fill out the form below, or reach out directly. We respond within 24 hours — usually much faster.
           </p>
         </div>
       </section>
@@ -160,7 +160,7 @@ export default function ContactPage() {
                       <option value="">Select a service</option>
                       <option value="growth-marketing">Growth Marketing (Ads, Social, Influencer)</option>
                       <option value="it-consulting">IT & Consulting (Website, App, Software)</option>
-                      <option value="account-recovery">Crisis & Account Recovery</option>
+                      <option value="creative-video">Creative Production & Video</option>
                       <option value="full-transformation">Full Digital Transformation</option>
                       <option value="leads-crm">Leads Management & CRM</option>
                       <option value="other">Other</option>
@@ -170,10 +170,11 @@ export default function ContactPage() {
                     <label className="form-label">Monthly budget</label>
                     <select name="budget" className="form-input form-select" value={form.budget} onChange={handleChange}>
                       <option value="">Select a range</option>
-                      <option value="1k-5k">₹1K–₹5K / month</option>
-                      <option value="5k-10k">₹5K–₹10K / month</option>
-                      <option value="10k-25k">₹10K–₹25K / month</option>
-                      <option value="25k+">₹25K+ / month</option>
+                      <option value="15k-25k">₹15K–₹25K / month</option>
+                      <option value="25k-40k">₹25K–₹40K / month</option>
+                      <option value="40k-60k">₹40K–₹60K / month</option>
+                      <option value="60k-80k">₹60K–₹80K / month</option>
+                      <option value="80k+">₹80K+ / month</option>
                       <option value="not-sure">Not sure yet</option>
                     </select>
                   </div>
@@ -226,21 +227,30 @@ export default function ContactPage() {
             </div>
 
             <div className="contact-info__block">
-              <h3 className="contact-info__label">🚨 Urgent account recovery?</h3>
-              <p className="contact-info__text">
-                If your ad account is restricted or your Business Manager is disabled, don&apos;t wait — call or WhatsApp us immediately at <a href="tel:+917728840116" className="underline font-semibold">+91 77288 40116</a>.
+              <h3 className="contact-info__label">Office Address</h3>
+              <p className="contact-info__text font-medium text-black leading-relaxed">
+                Amba Mira Kunj Building,<br />
+                Akhalia Circle, D-8,<br />
+                Jodhpur, Rajasthan 342001
               </p>
-              <a href="mailto:recovery@adbazaar.com" className="contact-info__link">
-                recovery@adbazaar.com
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Amba+Mira+kunj+building+Akhalia+circle+D-8+Jodhpur+Rajasthan+342001"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-mono text-blue-600 hover:underline inline-block mt-1.5"
+              >
+                📍 View on Google Maps ↗
               </a>
             </div>
 
             <div className="contact-info__block">
               <h3 className="contact-info__label">Business hours</h3>
-              <p className="contact-info__text">
-                Mon – Fri: 9:00 AM – 6:00 PM<br />
-                Saturday: By appointment<br />
-                Sunday: Emergency support only
+              <p className="contact-info__text font-semibold text-emerald-600 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Open 24 Hours
+              </p>
+              <p className="contact-info__text text-xs text-gray-500 mt-1">
+                Always available for client growth & support.
               </p>
             </div>
 

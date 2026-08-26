@@ -268,10 +268,10 @@ export default function Home() {
                 <span className="dn inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[#16a34a] text-white font-mono text-[11px] font-medium tracking-wide">
                   03
                 </span>
-                <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">Account Recovery</span>
+                <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">Creative Production</span>
               </div>
               <p className="dd m-0 text-[14px] leading-[1.55] text-[#2a2a2a]">
-                Restricted Meta Business Manager, disabled ad accounts, hacked pages — we get you back in business fast.
+                High-converting video ads, cinematic reels, product shoots and viral creative assets tailored to scale.
               </p>
             </div>
 
@@ -314,22 +314,30 @@ export default function Home() {
             Book your free strategy call
           </a>
           <p className="meta text-[clamp(15px,1.2vw,19px)] leading-[1.6] max-w-[46ch] text-[#8b8b8b] text-center mb-4">
-            From ads and influencer campaigns to IT builds and account recovery — one partner, end-to-end. Let&apos;s talk about your goals and build a plan to achieve them.
+            From ads and influencer campaigns to IT builds and creative production — one partner, end-to-end. Let&apos;s talk about your goals and build a plan to achieve them.
           </p>
-          <p className="meta text-[clamp(15px,1.2vw,19px)] leading-[1.6] text-[#0A0A0A]">
+          <p className="meta text-[clamp(15px,1.2vw,19px)] leading-[1.6] text-[#0A0A0A] flex flex-wrap items-center justify-center gap-3">
             <a
               href="mailto:hello@adbazaar.com"
               className="text-[#0A0A0A] no-underline border-b border-black/50 hover:border-black transition-colors"
             >
               hello@adbazaar.com
-            </a>{" "}
-            &middot;{" "}
-            <a
-              href="mailto:recovery@adbazaar.com"
-              className="text-[#0A0A0A] no-underline border-b border-black/50 hover:border-black transition-colors"
-            >
-              recovery@adbazaar.com
             </a>
+            <span>&bull;</span>
+            <a
+              href="tel:+917728840116"
+              className="text-[#0A0A0A] no-underline border-b border-black/50 hover:border-black transition-colors font-mono"
+            >
+              +91 77288 40116
+            </a>
+            <span>&bull;</span>
+            <span className="text-emerald-700 font-medium flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Open 24 Hours
+            </span>
+          </p>
+          <p className="text-xs text-[#555555] mt-3 text-center max-w-[54ch] leading-relaxed">
+            📍 Amba Mira Kunj Building, Akhalia Circle, D-8, Jodhpur, Rajasthan 342001
           </p>
         </div>
       </section>

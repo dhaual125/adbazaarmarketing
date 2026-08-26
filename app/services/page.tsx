@@ -107,23 +107,6 @@ const services = [
   },
   {
     number: "07",
-    title: "Crisis & Account Recovery",
-    headline: "Locked Out? Restricted? Hacked? We Can Help.",
-    desc: "We're not just marketers. We're account recovery specialists who understand the nuances of Meta's policies, appeal processes, and verification requirements. We fight for your business.",
-    what: [
-      "Meta Business Manager & ad account appeals",
-      "Hacked or disabled Instagram & Facebook page recovery",
-      "Business verification & documentation",
-      "Instagram Shop & payment issue resolution",
-      "Compliance audit & prevention strategy",
-    ],
-    results: ["95% recovery success rate", "72-hour average recovery time", "500+ accounts recovered"],
-    cta: "Get Emergency Help Now",
-    tags: ["Meta Recovery", "Ad Account Appeals", "Page Reinstatement", "Compliance"],
-    color: "var(--green)",
-  },
-  {
-    number: "08",
     title: "Website & App Development — Navchetna Technologies",
     headline: "Custom Digital Products Built to Perform",
     desc: "Powered by Navchetna Technologies, we design and develop high-performance websites, mobile apps, and custom software solutions tailored to your business. From sleek landing pages to full-scale enterprise platforms — we build it all, fast and right.",
@@ -158,8 +141,9 @@ const steps = [
 
 const stats = [
   { num: "$50M+", label: "Ad Spend Managed" },
+
   { num: "300%", label: "Average ROAS Increase" },
-  { num: "500+", label: "Accounts Recovered" },
+
   { num: "10M+", label: "Social Reach Generated" },
 ];
 
@@ -177,7 +161,7 @@ export default function ServicesPage() {
             Everything you need<br />to grow, under one roof.
           </h1>
           <p className="page-lead">
-            Growth marketing, IT consulting, creative production, leads management, and crisis account recovery — all integrated, all focused on one thing: your business growth.
+            Growth marketing, IT consulting, creative production, and leads management — all integrated, all focused on one thing: your business growth.
           </p>
           <Link href="/contact" className="btn-site" style={{ display: "inline-flex", marginTop: "2rem", width: "100%", maxWidth: "320px" }}>
             Get a Free Marketing Audit →
@@ -245,9 +229,9 @@ export default function ServicesPage() {
 
       {/* Stats */}
       <section className="about-numbers">
-        <div className="page-container">
+        <div className="page-container" style={{ textAlign: "center" }}>
           <h2 className="section-label">Marketing that delivers</h2>
-          <div className="numbers-grid">
+          <div className="numbers-grid" style={{ justifyContent: "center" }}>
             {stats.map((n, i) => (
               <div key={i} className="number-item">
                 <div className="number-val">{n.num}</div>

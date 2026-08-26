@@ -56,7 +56,7 @@ const team = [
 const capabilities = [
   { name: "Growth Marketing", desc: "Google & Meta Ads, influencer campaigns, social media growth, content creation and full lead generation.", color: "var(--purple)" },
   { name: "Business & IT Consulting", desc: "Technology strategy, custom websites and apps, software development, cloud services, managed IT and AI integration.", color: "var(--blue)" },
-  { name: "Crisis & Account Recovery", desc: "Restricted ad accounts, disabled Business Managers, hacked pages — our specialist team gets you back fast.", color: "var(--green)" },
+  { name: "Creative Production & Video", desc: "Cinematic ad creatives, high-converting UGC reels, product photography, and brand storytelling.", color: "var(--green)" },
   { name: "Leads & CRM Automation", desc: "Automated qualification, instant WhatsApp/SMS nurture, CRM routing and pipeline management.", color: "var(--orange)" },
 ];
 
@@ -156,7 +156,7 @@ export default function AboutPage() {
             We&apos;re not just an agency.<br />We&apos;re your growth partner.
           </h1>
           <p className="page-lead">
-            A team of marketers, technologists, and problem-solvers dedicated to building and scaling your business — combining growth marketing, IT consulting, creative production, and crisis recovery under one roof.
+            A team of marketers, technologists, and problem-solvers dedicated to building and scaling your business — combining growth marketing, IT consulting, and creative production under one roof.
           </p>
         </div>
       </section>
@@ -174,7 +174,7 @@ export default function AboutPage() {
           <div className="value-row">
             <h3 className="value-heading">So we built something different.</h3>
             <p className="value-body">
-              A full-service growth partner that offers everything under one roof. Marketing. Technology. Consulting. Crisis recovery. All integrated. All focused on one thing: your business growth. Today, we&apos;ve helped 300+ businesses across industries — from startups to established enterprises — build their digital foundation and scale their revenue.
+              A full-service growth partner that offers everything under one roof. Marketing. Technology. Consulting. Creative Production. All integrated. All focused on one thing: your business growth. Today, we&apos;ve helped 300+ businesses across industries — from startups to established enterprises — build their digital foundation and scale their revenue.
             </p>
           </div>
           <div className="value-row">
@@ -222,7 +222,7 @@ export default function AboutPage() {
             {[
               { num: "$50M+", label: "Ad spend managed" },
               { num: "300+", label: "Businesses transformed" },
-              { num: "95%", label: "Account recovery success rate" },
+              { num: "98%", label: "Client retention rate" },
               { num: "4.9/5", label: "Client satisfaction score" },
             ].map((n, i) => (
               <div key={i} className="number-item">
