@@ -239,7 +239,7 @@ export default function ContactPage() {
                 rel="noopener noreferrer"
                 className="text-xs font-mono text-blue-600 hover:underline inline-block mt-1.5"
               >
-                📍 View on Google Maps ↗
+                View on Google Maps ↗
               </a>
             </div>
 
