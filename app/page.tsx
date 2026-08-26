@@ -331,13 +331,10 @@ export default function Home() {
               +91 77288 40116
             </a>
             <span>&bull;</span>
-            <span className="text-emerald-700 font-medium flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              Open 24 Hours
-            </span>
+            <span className="font-bold text-[#0A0A0A]">10 AM – 7 PM</span>
           </p>
           <p className="text-xs text-[#555555] mt-3 text-center max-w-[54ch] leading-relaxed">
-            📍 Amba Mira Kunj Building, Akhalia Circle, D-8, Jodhpur, Rajasthan 342001
+            <a href="https://www.google.com/maps/search/?api=1&query=Amba+Mira+Kunj+Building+Akhalia+Circle+D-8+Jodhpur+Rajasthan+342001" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-blue-600 transition-colors">📍 Amba Mira Kunj Building, Akhalia Circle, D-8, Jodhpur, Rajasthan 342001</a>
           </p>
         </div>
       </section>

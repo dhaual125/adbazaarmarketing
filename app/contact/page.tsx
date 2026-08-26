@@ -99,104 +99,104 @@ export default function ContactPage() {
           {/* Form */}
           <div className="contact-form-wrap">
             <form className="contact-form" onSubmit={handleSubmit}>
-                <div className="form-row">
-                  <div className="form-field">
-                    <label className="form-label">Full name *</label>
-                    <input
-                      type="text"
-                      name="name"
-                      className="form-input"
-                      placeholder="Your full name"
-                      value={form.name}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label className="form-label">Business name *</label>
-                    <input
-                      type="text"
-                      name="business"
-                      className="form-input"
-                      placeholder="Your business name"
-                      value={form.business}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="form-row">
-                  <div className="form-field">
-                    <label className="form-label">Email address *</label>
-                    <input
-                      type="email"
-                      name="email"
-                      className="form-input"
-                      placeholder="hello@yourbusiness.com"
-                      value={form.email}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-field">
-                    <label className="form-label">Phone number *</label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      className="form-input"
-                      placeholder="+91 XXXXX XXXXX"
-                      value={form.phone}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="form-row">
-                  <div className="form-field">
-                    <label className="form-label">Service interested in</label>
-                    <select name="service" className="form-input form-select" value={form.service} onChange={handleChange}>
-                      <option value="">Select a service</option>
-                      <option value="growth-marketing">Growth Marketing (Ads, Social, Influencer)</option>
-                      <option value="it-consulting">IT & Consulting (Website, App, Software)</option>
-                      <option value="creative-video">Creative Production & Video</option>
-                      <option value="full-transformation">Full Digital Transformation</option>
-                      <option value="leads-crm">Leads Management & CRM</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-                  <div className="form-field">
-                    <label className="form-label">Monthly budget</label>
-                    <select name="budget" className="form-input form-select" value={form.budget} onChange={handleChange}>
-                      <option value="">Select a range</option>
-                      <option value="15k-25k">₹15K–₹25K / month</option>
-                      <option value="25k-40k">₹25K–₹40K / month</option>
-                      <option value="40k-60k">₹40K–₹60K / month</option>
-                      <option value="60k-80k">₹60K–₹80K / month</option>
-                      <option value="80k+">₹80K+ / month</option>
-                      <option value="not-sure">Not sure yet</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="form-field form-field--full">
-                  <label className="form-label">What&apos;s your biggest business challenge right now? *</label>
-                  <textarea
-                    name="challenge"
-                    className="form-input form-textarea"
-                    placeholder="Tell us what you're working on, what's not working, and what success looks like for you..."
-                    rows={5}
-                    value={form.challenge}
+              <div className="form-row">
+                <div className="form-field">
+                  <label className="form-label">Full name *</label>
+                  <input
+                    type="text"
+                    name="name"
+                    className="form-input"
+                    placeholder="Your full name"
+                    value={form.name}
                     onChange={handleChange}
                     required
                   />
                 </div>
+                <div className="form-field">
+                  <label className="form-label">Business name *</label>
+                  <input
+                    type="text"
+                    name="business"
+                    className="form-input"
+                    placeholder="Your business name"
+                    value={form.business}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
 
-                <button type="submit" className="btn-site contact-submit">
-                  Send message
-                </button>
-              </form>
+              <div className="form-row">
+                <div className="form-field">
+                  <label className="form-label">Email address *</label>
+                  <input
+                    type="email"
+                    name="email"
+                    className="form-input"
+                    placeholder="hello@yourbusiness.com"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="form-field">
+                  <label className="form-label">Phone number *</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    className="form-input"
+                    placeholder="+91 XXXXX XXXXX"
+                    value={form.phone}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-field">
+                  <label className="form-label">Service interested in</label>
+                  <select name="service" className="form-input form-select" value={form.service} onChange={handleChange}>
+                    <option value="">Select a service</option>
+                    <option value="growth-marketing">Growth Marketing (Ads, Social, Influencer)</option>
+                    <option value="it-consulting">IT & Consulting (Website, App, Software)</option>
+                    <option value="creative-video">Creative Production & Video</option>
+                    <option value="full-transformation">Full Digital Transformation</option>
+                    <option value="leads-crm">Leads Management & CRM</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div className="form-field">
+                  <label className="form-label">Monthly budget</label>
+                  <select name="budget" className="form-input form-select" value={form.budget} onChange={handleChange}>
+                    <option value="">Select a range</option>
+                    <option value="15k-25k">₹15K–₹25K / month</option>
+                    <option value="25k-40k">₹25K–₹40K / month</option>
+                    <option value="40k-60k">₹40K–₹60K / month</option>
+                    <option value="60k-80k">₹60K–₹80K / month</option>
+                    <option value="80k+">₹80K+ / month</option>
+                    <option value="not-sure">Not sure yet</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-field form-field--full">
+                <label className="form-label">What&apos;s your biggest business challenge right now? *</label>
+                <textarea
+                  name="challenge"
+                  className="form-input form-textarea"
+                  placeholder="Tell us what you're working on, what's not working, and what success looks like for you..."
+                  rows={5}
+                  value={form.challenge}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <button type="submit" className="btn-site contact-submit">
+                Send message
+              </button>
+            </form>
           </div>
 
           {/* Info Sidebar */}
@@ -215,7 +215,7 @@ export default function ContactPage() {
                 rel="noopener noreferrer"
                 className="text-xs font-mono text-emerald-600 hover:underline inline-block mt-1"
               >
-                💬 Chat on WhatsApp ↗
+                Chat on WhatsApp ↗
               </a>
             </div>
 
@@ -228,11 +228,11 @@ export default function ContactPage() {
 
             <div className="contact-info__block">
               <h3 className="contact-info__label">Office Address</h3>
-              <p className="contact-info__text font-medium text-black leading-relaxed">
+              <a href="https://www.google.com/maps/search/?api=1&query=Amba+Mira+Kunj+Building+Akhalia+Circle+D-8+Jodhpur+Rajasthan+342001" target="_blank" rel="noopener noreferrer" className="contact-info__text font-medium text-black leading-relaxed underline underline-offset-2 hover:text-blue-600 transition-colors">
                 Amba Mira Kunj Building,<br />
                 Akhalia Circle, D-8,<br />
                 Jodhpur, Rajasthan 342001
-              </p>
+              </a>
               <a
                 href="https://www.google.com/maps/search/?api=1&query=Amba+Mira+kunj+building+Akhalia+circle+D-8+Jodhpur+Rajasthan+342001"
                 target="_blank"
@@ -245,10 +245,7 @@ export default function ContactPage() {
 
             <div className="contact-info__block">
               <h3 className="contact-info__label">Business hours</h3>
-              <p className="contact-info__text font-semibold text-emerald-600 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Open 24 Hours
-              </p>
+              <p className="contact-info__text font-bold text-[#0A0A0A]">10 AM – 7 PM</p>
               <p className="contact-info__text text-xs text-gray-500 mt-1">
                 Always available for client growth & support.
               </p>
