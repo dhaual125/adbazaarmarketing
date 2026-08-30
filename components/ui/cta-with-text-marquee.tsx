@@ -69,14 +69,14 @@ export default function CTAWithVerticalMarquee() {
               </span>
             </div>
 
-            {/* Headline */}
-            <h1 className="text-[clamp(40px,9vw,98px)] leading-[0.88] tracking-[-0.03em] text-[#0A0A0A] uppercase m-0 select-none">
+            {/* Headline — Scaled Up & Bold */}
+            <h1 className="text-[clamp(46px,9.8vw,114px)] leading-[0.86] tracking-[-0.03em] text-[#0A0A0A] uppercase m-0 select-none">
               <span className="font-normal block">GROW</span>
               <span className="font-normal block">YOUR</span>
               <span className="relative inline-block font-light italic tracking-tight">
                 <span className="relative z-10">BUSINESS</span>
                 <span
-                  className="absolute bottom-1 sm:bottom-2 left-[-2%] w-[104%] h-[4px] sm:h-[6px] md:h-[7px] bg-[#E2F163] -rotate-[1.6deg] origin-bottom-left z-0 pointer-events-none rounded-full"
+                  className="absolute bottom-1 sm:bottom-2 left-[-2%] w-[104%] h-[5px] sm:h-[7px] md:h-[8px] bg-[#E2F163] -rotate-[1.6deg] origin-bottom-left z-0 pointer-events-none rounded-full"
                   aria-hidden="true"
                 />
               </span>
