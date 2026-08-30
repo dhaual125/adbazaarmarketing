@@ -45,31 +45,27 @@ export default function CTAWithVerticalMarquee() {
 
       <div className="w-full max-w-[1240px] mx-auto animate-fade-in-up">
         
+        {/* Top Eyebrow (Matching Background Theme) */}
+        <div className="flex items-center justify-end sm:justify-start gap-2 mt-6 sm:mt-0 mb-5 sm:mb-8">
+          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-black/5 border border-black/10 flex items-center justify-center text-[#0A0A0A]">
+            <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M4 19h4V9H4v10zm6 0h4V5h-4v14zm6 0h4v-7h-4v7z" />
+            </svg>
+          </div>
+          <span className="text-[10px] sm:text-[12px] font-mono font-bold tracking-[0.2em] sm:tracking-[0.22em] text-[#0A0A0A] uppercase">
+            MARKETING
+          </span>
+        </div>
+
         {/* Main Grid Layout (Matching Reference Design with larger image) */}
         <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-8 sm:gap-10 lg:gap-14 items-center">
           
           {/* Left Column: Big Bold Typography & Subtitle */}
           <div className="space-y-4 sm:space-y-7 text-left">
             
-            {/* Giant Bold Headline with inline MARKETING badge on same line as GROW */}
+            {/* Giant Bold Headline */}
             <h1 className="text-[clamp(38px,8.5vw,92px)] font-extrabold leading-[0.90] tracking-[-0.04em] text-[#0A0A0A] uppercase m-0 select-none">
-              <span className="flex items-center gap-3 sm:gap-4">
-                GROW
-                <span className="flex items-center gap-1.5 translate-y-[2px]">
-                  <span className="text-[clamp(13px,1.4vw,18px)] font-mono font-bold tracking-[0.05em] text-[#0A0A0A]/40 normal-case">/</span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-black/5 border border-black/10 flex items-center justify-center text-[#0A0A0A] shrink-0">
-                      <svg className="w-2 h-2 sm:w-2.5 sm:h-2.5" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M4 19h4V9H4v10zm6 0h4V5h-4v14zm6 0h4v-7h-4v7z" />
-                      </svg>
-                    </span>
-                    <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.18em] text-[#0A0A0A] uppercase normal-case">
-                      MARKETING
-                    </span>
-                  </span>
-                </span>
-              </span>
-              <br />
+              GROW<br />
               YOUR<br />
               BUSINESS
             </h1>
