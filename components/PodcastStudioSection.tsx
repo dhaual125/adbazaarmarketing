@@ -31,10 +31,36 @@ export const PodcastStudioSection: React.FC = () => {
       </svg>
 
       <div className="max-w-[1176px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-10 lg:gap-14 items-center">
           
-          {/* Left Column: Copy & Value Proposition */}
-          <div className="space-y-6">
+          {/* Left Column: Podcast Studio Image with Theme Stepped Shape (Flipped) */}
+          <div className="relative flex items-center justify-center lg:justify-start order-2 lg:order-1">
+            <div className="relative w-full max-w-[480px] sm:max-w-[520px] aspect-[4/5]">
+              {/* Stepped Frame Image Wrapper */}
+              <div 
+                className="theme-stepped-mask relative w-full h-full overflow-hidden group drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
+                style={{
+                  clipPath: "url(#theme-stepped-frame)",
+                  WebkitClipPath: "url(#theme-stepped-frame)",
+                }}
+              >
+                <Image
+                  src="/podcast.png"
+                  alt="AD BAZAAR Professional Podcast & Visual Studio"
+                  fill
+                  className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 520px"
+                  priority
+                />
+
+                {/* Ambient Soft Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Copy & Value Proposition (Flipped) */}
+          <div className="space-y-6 order-1 lg:order-2">
             <h2 className="text-[clamp(28px,3.8vw,50px)] leading-[1.06] tracking-[-0.025em] font-normal m-0 text-[#0A0A0A]">
               Where High-Impact<br />
               <span className="font-semibold text-black">Content Comes to Life.</span>
@@ -113,32 +139,6 @@ export const PodcastStudioSection: React.FC = () => {
               <Link href="/contact" className="btn-site text-sm py-3.5 px-8">
                 Book a Studio Session →
               </Link>
-            </div>
-          </div>
-
-          {/* Right Column: Podcast Studio Image with Theme Stepped Shape */}
-          <div className="relative flex items-center justify-center">
-            <div className="relative w-full max-w-[480px] sm:max-w-[520px] aspect-[4/5]">
-              {/* Stepped Frame Image Wrapper */}
-              <div 
-                className="theme-stepped-mask relative w-full h-full overflow-hidden group drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
-                style={{
-                  clipPath: "url(#theme-stepped-frame)",
-                  WebkitClipPath: "url(#theme-stepped-frame)",
-                }}
-              >
-                <Image
-                  src="/podcast.png"
-                  alt="AD BAZAAR Professional Podcast & Visual Studio"
-                  fill
-                  className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 520px"
-                  priority
-                />
-
-                {/* Ambient Soft Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
-              </div>
             </div>
           </div>
 

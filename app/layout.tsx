@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
-import { GlobalCursorEffects } from "@/components/GlobalCursorEffects";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -40,8 +39,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <body className="min-h-screen flex flex-col">
-        {/* Global Cursor Gradient & Double-Click/Tap Animation across all pages */}
-        <GlobalCursorEffects />
         <Navbar />
         {children}
       </body>

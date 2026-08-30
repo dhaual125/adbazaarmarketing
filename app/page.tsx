@@ -3,11 +3,11 @@
 import React from "react";
 import Image from "next/image";
 import { Carousel, CarouselSlide } from "@/components/Carousel";
-import { EditorialSection } from "@/components/EditorialSection";
 import { PodcastStudioSection } from "@/components/PodcastStudioSection";
 import { YoungAndBoldSection } from "@/components/YoungAndBoldSection";
 import { PixelMarquee } from "@/components/PixelMarquee";
 import { MarketingEcosystemVisual } from "@/components/MarketingEcosystemVisual";
+import { ScrollChatSection } from "@/components/ScrollChatSection";
 import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 
 export default function Home() {
@@ -132,11 +132,11 @@ export default function Home() {
       {/* Hero Section with Live Vertical Offerings Marquee */}
       <CTAWithVerticalMarquee />
 
+      {/* Interactive Scroll-Animated Chat System (Matching User Blueprint & Theme) */}
+      <ScrollChatSection />
+
       {/* Main Work Showcase Carousel */}
       <Carousel id="work" slides={workSlides} />
-
-      {/* Editorial Sections (Origin, Shift with Smileys, AI Levels) */}
-      <EditorialSection />
 
       {/* Process Section - Matches Image 2 & Image 3 */}
       <section className="proc relative z-2 py-12 sm:py-16 px-4 sm:px-7 md:px-14 bg-transparent" id="process">
@@ -161,7 +161,7 @@ export default function Home() {
             <div className="flex items-center justify-center lg:justify-end">
               <div className="relative w-full max-w-[380px] sm:max-w-[440px] aspect-[4/5]">
                 {/* Stepped Frame Image Wrapper without border */}
-                <div 
+                <div
                   className="theme-stepped-mask relative w-full h-full overflow-hidden group drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)] flex items-center justify-center"
                   style={{
                     clipPath: "url(#theme-stepped-frame)",
@@ -317,7 +317,7 @@ export default function Home() {
             <span className="font-bold text-[#0A0A0A]">10 AM – 7 PM</span>
           </p>
           <p className="text-xs text-[#555555] mt-3 text-center max-w-[54ch] leading-relaxed">
-            <a href="https://www.google.com/maps/search/?api=1&query=Amba+Mira+Kunj+Building+Akhalia+Circle+D-8+Jodhpur+Rajasthan+342001" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-blue-600 transition-colors">📍 Amba Mira Kunj Building, Akhalia Circle, D-8, Jodhpur, Rajasthan 342001</a>
+            <a href="https://www.google.com/maps/search/?api=1&query=Amba+Mira+Kunj+Building+Akhalia+Circle+D-8+Jodhpur+Rajasthan+342001" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-blue-600 transition-colors"> Amba Mira Kunj Building, Akhalia Circle, D-8, Jodhpur, Rajasthan 342001</a>
           </p>
         </div>
       </section>
