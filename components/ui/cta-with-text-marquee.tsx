@@ -45,8 +45,8 @@ export default function CTAWithVerticalMarquee() {
 
       <div className="w-full max-w-[1320px] mx-auto animate-fade-in-up">
         
-        {/* Top Eyebrow (Matching Image with Light Yellow Icon) */}
-        <div className="flex items-center gap-2.5 mb-5 sm:mb-8">
+        {/* Top Eyebrow (Right-aligned on mobile phone view) */}
+        <div className="flex items-center justify-end sm:justify-start gap-2.5 mb-5 sm:mb-8">
           <div className="w-6 h-6 rounded-full bg-[#F6EE74] flex items-center justify-center text-black shadow-sm">
             <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M4 19h4V9H4v10zm6 0h4V5h-4v14zm6 0h4v-7h-4v7z" />
