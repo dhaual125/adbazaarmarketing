@@ -46,7 +46,7 @@ export default function CTAWithVerticalMarquee() {
       <div className="w-full max-w-[1240px] mx-auto animate-fade-in-up">
         
         {/* Top Eyebrow (Matching Background Theme) */}
-        <div className="flex items-center gap-2 mb-5 sm:mb-8">
+        <div className="flex items-center justify-end sm:justify-start gap-2 mb-5 sm:mb-8">
           <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-black/5 border border-black/10 flex items-center justify-center text-[#0A0A0A]">
             <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3" viewBox="0 0 24 24" fill="currentColor">
               <path d="M4 19h4V9H4v10zm6 0h4V5h-4v14zm6 0h4v-7h-4v7z" />

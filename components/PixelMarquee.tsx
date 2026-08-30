@@ -339,37 +339,6 @@ export const PixelMarquee: React.FC = () => {
     resize();
     window.addEventListener("resize", resize);
 
-    // Desktop cursor particle dispersion tracking
-    let mouseX = -1000;
-    let mouseY = -1000;
-    let isHovered = false;
-
-    // Flat pre-allocated typed arrays for physics (Zero Garbage Collection!)
-    const particleCount = phraseDots.length;
-    const dispX = new Float32Array(particleCount * 4);
-    const dispY = new Float32Array(particleCount * 4);
-    const vx = new Float32Array(particleCount * 4);
-    const vy = new Float32Array(particleCount * 4);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isMobile) return;
-      const rect = cv.getBoundingClientRect();
-      mouseX = e.clientX - rect.left;
-      mouseY = e.clientY - rect.top;
-      isHovered = mouseX >= -50 && mouseX <= W + 50 && mouseY >= -50 && mouseY <= H_PX + 50;
-    };
-
-    const handleMouseLeave = () => {
-      mouseX = -1000;
-      mouseY = -1000;
-      isHovered = false;
-    };
-
-    if (!isMobile) {
-      cv.addEventListener("mousemove", handleMouseMove, { passive: true });
-      cv.addEventListener("mouseleave", handleMouseLeave, { passive: true });
-    }
-
     let isVisibleOnScreen = true;
     let offsetX = 0;
     let animId: number;
@@ -418,64 +387,12 @@ export const PixelMarquee: React.FC = () => {
 
       const numRepeats = Math.ceil(W / phraseWidthPx) + 2;
 
-      // MOBILE & IDLE PATH: 100% GPU Blitted Offscreen Texture (0.02ms render time!)
-      if (isMobile || !isHovered || !offscreenCanvas) {
-        if (offscreenCanvas) {
-          for (let rIdx = -1; rIdx < numRepeats; rIdx++) {
-            const repeatOffset = rIdx * phraseWidthPx - offsetX;
-            if (repeatOffset + phraseWidthPx < -10 || repeatOffset > W + 10) continue;
-            ctx.drawImage(offscreenCanvas, repeatOffset, 0, phraseWidthPx, H_PX);
-          }
-        }
-      } else {
-        // DESKTOP INTERACTIVE CURSOR PATH: Physics Dispersion
-        const paddingY = 16;
-        const interactionRadius = 115;
-        const dispersionStrength = 16;
-        const returnSpeed = 0.09;
-
-        ctx.fillStyle = "#0A0A0A";
-
+      // Smooth GPU-blitted offscreen texture — no hover interaction
+      if (offscreenCanvas) {
         for (let rIdx = -1; rIdx < numRepeats; rIdx++) {
           const repeatOffset = rIdx * phraseWidthPx - offsetX;
-          if (repeatOffset + phraseWidthPx < -80 || repeatOffset > W + 80) continue;
-
-          const rOffsetIdx = ((rIdx + 1) % 4) * particleCount;
-
-          for (let i = 0; i < particleCount; i++) {
-            const dot = phraseDots[i];
-            const pIdx = rOffsetIdx + i;
-            const originX = repeatOffset + dot.col * STEP;
-            const originY = paddingY + dot.row * STEP;
-
-            const curX = originX + dispX[pIdx];
-            const curY = originY + dispY[pIdx];
-
-            const dx = mouseX - curX;
-            const dy = mouseY - curY;
-            const dist = Math.hypot(dx, dy);
-
-            if (dist < interactionRadius && dist > 0.001) {
-              const force = (interactionRadius - dist) / interactionRadius;
-              vx[pIdx] -= (dx / dist) * force * dispersionStrength;
-              vy[pIdx] -= (dy / dist) * force * dispersionStrength;
-            }
-
-            vx[pIdx] += -dispX[pIdx] * returnSpeed;
-            vy[pIdx] += -dispY[pIdx] * returnSpeed;
-            vx[pIdx] *= 0.85;
-            vy[pIdx] *= 0.85;
-
-            dispX[pIdx] += vx[pIdx];
-            dispY[pIdx] += vy[pIdx];
-
-            const drawX = Math.round(originX + dispX[pIdx]);
-            const drawY = Math.round(originY + dispY[pIdx]);
-
-            if (drawX < -PIXEL || drawX > W + PIXEL) continue;
-
-            ctx.fillRect(drawX, drawY, PIXEL, PIXEL);
-          }
+          if (repeatOffset + phraseWidthPx < -10 || repeatOffset > W + 10) continue;
+          ctx.drawImage(offscreenCanvas, repeatOffset, 0, phraseWidthPx, H_PX);
         }
       }
 
@@ -495,10 +412,6 @@ export const PixelMarquee: React.FC = () => {
       cancelAnimationFrame(animId);
       observer.disconnect();
       window.removeEventListener("resize", resize);
-      if (!isMobile) {
-        cv.removeEventListener("mousemove", handleMouseMove);
-        cv.removeEventListener("mouseleave", handleMouseLeave);
-      }
     };
   }, []);
 
