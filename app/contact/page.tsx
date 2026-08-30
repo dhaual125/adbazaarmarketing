@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     q: "Do you guarantee results?",
-    a: "We can't guarantee specific outcomes, but we guarantee we'll work tirelessly to deliver results. Our track record speaks for itself — 95% client retention and hundreds of successful campaigns.",
+    a: "We can't guarantee specific outcomes, but we guarantee we'll work tirelessly to deliver results. Our track record speaks for itself — 98% client retention and hundreds of successful campaigns.",
   },
   {
     q: "How do you track campaign performance?",
@@ -25,7 +25,7 @@ const faqs = [
   },
   {
     q: "Can you help if I'm not in India or the US?",
-    a: "Absolutely. We work with clients globally and have experience navigating different regional policies, including European appeals bodies and cross-border compliance requirements.",
+    a: "Absolutely. We work with clients globally and have experience navigating different regional policies and cross-border marketing requirements.",
   },
 ];
 
@@ -63,8 +63,8 @@ export default function ContactPage() {
       .filter(Boolean)
       .join("\n");
 
-    // Send to Pawan Nath (CEO & Co-Founder) WhatsApp number
-    window.open(`https://wa.me/917728840116?text=${encodeURIComponent(msg)}`, "_blank");
+    // Send to AD BAZAAR WhatsApp number
+    window.open(`https://wa.me/918949678859?text=${encodeURIComponent(msg)}`, "_blank");
 
     // Also open WhatsApp for the user's own number so they receive a copy
     const userPhone = form.phone.replace(/[^0-9]/g, "");
@@ -84,98 +84,110 @@ export default function ContactPage() {
         <div className="page-container">
           <p className="page-eyebrow">Get in touch</p>
           <h1 className="page-title">
-            Let&apos;s build, grow,<br />and scale together.
+            Let&apos;s Build Something<br />
+            <span className="text-grad">Extraordinary.</span>
           </h1>
           <p className="page-lead">
-            Fill out the form below, or reach out directly. We respond within 24 hours — usually much faster.
+            Ready to scale your brand? Tell us about your goals and we&apos;ll schedule a free strategy call within 24 hours.
           </p>
         </div>
       </section>
 
-      {/* Contact Form + Info */}
+      {/* Contact Form Section */}
       <section className="contact-section">
         <div className="page-container contact-grid">
-
           {/* Form */}
           <div className="contact-form-wrap">
-            <form className="contact-form" onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="contact-form">
               <div className="form-row">
                 <div className="form-field">
-                  <label className="form-label">Full name *</label>
+                  <label className="form-label">Your Name *</label>
                   <input
                     type="text"
                     name="name"
-                    className="form-input"
-                    placeholder="Your full name"
+                    required
                     value={form.name}
                     onChange={handleChange}
-                    required
+                    placeholder="Your full name"
+                    className="form-input"
                   />
                 </div>
                 <div className="form-field">
-                  <label className="form-label">Business name *</label>
+                  <label className="form-label">Business Name *</label>
                   <input
                     type="text"
                     name="business"
-                    className="form-input"
-                    placeholder="Your business name"
+                    required
                     value={form.business}
                     onChange={handleChange}
-                    required
+                    placeholder="Your business name"
+                    className="form-input"
                   />
                 </div>
               </div>
 
               <div className="form-row">
                 <div className="form-field">
-                  <label className="form-label">Email address *</label>
+                  <label className="form-label">Email Address *</label>
                   <input
                     type="email"
                     name="email"
-                    className="form-input"
-                    placeholder="hello@yourbusiness.com"
+                    required
                     value={form.email}
                     onChange={handleChange}
-                    required
+                    placeholder="hello@yourbusiness.com"
+                    className="form-input"
                   />
                 </div>
                 <div className="form-field">
-                  <label className="form-label">Phone number *</label>
+                  <label className="form-label">Phone / WhatsApp Number *</label>
                   <input
                     type="tel"
                     name="phone"
-                    className="form-input"
-                    placeholder="+91 XXXXX XXXXX"
+                    required
                     value={form.phone}
                     onChange={handleChange}
-                    required
+                    placeholder="+91 89496 78859"
+                    className="form-input"
                   />
                 </div>
               </div>
 
               <div className="form-row">
                 <div className="form-field">
-                  <label className="form-label">Service interested in</label>
-                  <select name="service" className="form-input form-select" value={form.service} onChange={handleChange}>
-                    <option value="">Select a service</option>
+                  <label className="form-label">Service Interested In</label>
+                  <select
+                    name="service"
+                    value={form.service}
+                    onChange={handleChange}
+                    className="form-input form-select"
+                  >
+                    <option value="">Select a service...</option>
                     <option value="growth-marketing">Growth Marketing (Ads, Social, Influencer)</option>
-                    <option value="it-consulting">IT & Consulting (Website, App, Software)</option>
-                    <option value="creative-video">Creative Production & Video</option>
+                    <option value="software-ai">IT & Consulting (Website, App, Software)</option>
+                    <option value="creative-production">Creative Production & Video</option>
+                    <option value="leads-pipeline">Leads & CRM Pipeline Setup</option>
                     <option value="full-transformation">Full Digital Transformation</option>
-                    <option value="leads-crm">Leads Management & CRM</option>
                     <option value="other">Other</option>
                   </select>
                 </div>
+
                 <div className="form-field">
-                  <label className="form-label">Monthly budget</label>
-                  <select name="budget" className="form-input form-select" value={form.budget} onChange={handleChange}>
-                    <option value="">Select a range</option>
-                    <option value="15k-25k">₹15K–₹25K / month</option>
-                    <option value="25k-40k">₹25K–₹40K / month</option>
-                    <option value="40k-60k">₹40K–₹60K / month</option>
-                    <option value="60k-80k">₹60K–₹80K / month</option>
-                    <option value="80k+">₹80K+ / month</option>
-                    <option value="not-sure">Not sure yet</option>
+                  <label className="form-label">Monthly Budget</label>
+                  <select
+                    name="budget"
+                    value={form.budget}
+                    onChange={handleChange}
+                    className="form-input form-select"
+                  >
+                    <option value="">Select your budget range...</option>
+                    <option value="15k-25k">₹15K – ₹25K / month</option>
+                    <option value="25k-40k">₹25K – ₹40K / month</option>
+                    <option value="40k-60k">₹40K – ₹60K / month</option>
+                    <option value="60k-80k">₹60K – ₹80K / month</option>
+                    <option value="80k-plus">₹80K+ / month</option>
+                    <option value="custom">Custom / Enterprise Project</option>
+                    <option value="undecided">Not sure yet</option>
                   </select>
                 </div>
               </div>
@@ -184,13 +196,30 @@ export default function ContactPage() {
                 <label className="form-label">What&apos;s your biggest business challenge right now? *</label>
                 <textarea
                   name="challenge"
-                  className="form-input form-textarea"
-                  placeholder="Tell us what you're working on, what's not working, and what success looks like for you..."
-                  rows={5}
+                  required
+                  rows={4}
                   value={form.challenge}
                   onChange={handleChange}
-                  required
+                  placeholder="What are your current growth bottlenecks? What are your revenue/lead goals for the next 3-6 months?"
+                  className="form-input form-textarea"
                 />
+              </div>
+
+              <div className="form-field form-field--full">
+                <label className="form-label">How did you hear about us?</label>
+                <select
+                  name="source"
+                  value={form.source}
+                  onChange={handleChange}
+                  className="form-input form-select"
+                >
+                  <option value="">Select an option...</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="referral">Client Referral / Word of Mouth</option>
+                  <option value="google">Google Search</option>
+                  <option value="linkedin">LinkedIn</option>
+                  <option value="other">Other</option>
+                </select>
               </div>
 
               <button type="submit" className="btn-site contact-submit">
@@ -203,14 +232,11 @@ export default function ContactPage() {
           <aside className="contact-info">
             <div className="contact-info__block">
               <h3 className="contact-info__label">Call / WhatsApp directly</h3>
-              <p className="contact-info__text font-medium text-black mb-1">
-                Pawan Nath (CEO & Co-Founder)
-              </p>
-              <a href="tel:+917728840116" className="contact-info__link block font-mono text-base font-semibold">
-                +91 77288 40116
+              <a href="tel:+918949678859" className="contact-info__link block font-mono text-base font-semibold">
+                +91 89496 78859
               </a>
               <a
-                href="https://wa.me/917728840116"
+                href="https://wa.me/918949678859"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs font-mono text-emerald-600 hover:underline inline-block mt-1"
@@ -221,8 +247,8 @@ export default function ContactPage() {
 
             <div className="contact-info__block">
               <h3 className="contact-info__label">Email us directly</h3>
-              <a href="mailto:hello@adbazaar.com" className="contact-info__link">
-                hello@adbazaar.com
+              <a href="mailto:adbazaar9@gmail.com" className="contact-info__link">
+                adbazaar9@gmail.com
               </a>
             </div>
 

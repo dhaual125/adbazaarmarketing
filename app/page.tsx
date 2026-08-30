@@ -4,7 +4,8 @@ import React from "react";
 import Image from "next/image";
 import { Carousel, CarouselSlide } from "@/components/Carousel";
 import { EditorialSection } from "@/components/EditorialSection";
-import { ProcessFlowCanvas } from "@/components/ProcessFlowCanvas";
+import { PodcastStudioSection } from "@/components/PodcastStudioSection";
+import { YoungAndBoldSection } from "@/components/YoungAndBoldSection";
 import { PixelMarquee } from "@/components/PixelMarquee";
 import { MarketingEcosystemVisual } from "@/components/MarketingEcosystemVisual";
 import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
@@ -104,7 +105,30 @@ export default function Home() {
   ];
 
   return (
-    <main className="relative min-h-screen bg-transparent text-[#0A0A0A] font-sans selection:bg-[#d8ff00] selection:text-black">
+    <main className="relative min-h-screen bg-transparent text-[#0A0A0A] font-sans selection:bg-[#F6EE74] selection:text-black">
+      {/* Global SVG Definition for Theme Stepped Frame */}
+      <svg width="0" height="0" className="absolute pointer-events-none opacity-0" aria-hidden="true">
+        <defs>
+          <clipPath id="theme-stepped-frame" clipPathUnits="objectBoundingBox">
+            <path d="
+              M 0, 0.05
+              Q 0, 0, 0.05, 0
+              L 0.95, 0
+              Q 1, 0, 1, 0.05
+              L 1, 0.95
+              Q 1, 1, 0.95, 1
+              L 0.54, 1
+              Q 0.48, 1, 0.48, 0.94
+              L 0.48, 0.88
+              Q 0.48, 0.82, 0.42, 0.82
+              L 0.05, 0.82
+              Q 0, 0.82, 0, 0.77
+              Z
+            " />
+          </clipPath>
+        </defs>
+      </svg>
+
       {/* Hero Section with Live Vertical Offerings Marquee */}
       <CTAWithVerticalMarquee />
 
@@ -133,76 +157,37 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Right Side: Marketing Mockup Showcase */}
+            {/* Right Side: Marketing Mockup Showcase with Theme Stepped Shape */}
             <div className="flex items-center justify-center lg:justify-end">
-              <div className="relative group transition-transform duration-500 hover:scale-[1.02]">
-                <Image
-                  src="/marketing.png"
-                  alt="Live Marketing Performance & Insights"
-                  width={520}
-                  height={620}
-                  className="w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[440px] h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
-                  priority
-                />
-              </div>
-            </div>
-          </div>
+              <div className="relative w-full max-w-[380px] sm:max-w-[440px] aspect-[4/5]">
+                {/* Stepped Frame Image Wrapper without border */}
+                <div 
+                  className="theme-stepped-mask relative w-full h-full overflow-hidden group drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)] flex items-center justify-center"
+                  style={{
+                    clipPath: "url(#theme-stepped-frame)",
+                    WebkitClipPath: "url(#theme-stepped-frame)",
+                  }}
+                >
+                  <Image
+                    src="/marketing.png"
+                    alt="Live Marketing Performance & Insights"
+                    fill
+                    className="object-contain p-2 transition-transform duration-700 ease-out group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 440px"
+                    priority
+                  />
 
-          {/* Double-Helix Wave Canvas (Image 2) */}
-          <ProcessFlowCanvas />
-
-          {/* 4 Process Steps (Clean Text & Badges, Borderless) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8">
-            <div className="step flex flex-col gap-3 group relative">
-              <div className="dl flex items-center gap-2">
-                <span className="dn inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[#2563eb] text-white font-mono text-[11px] font-medium tracking-wide">
-                  01
-                </span>
-                <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">Plan</span>
+                  {/* Ambient Soft Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent pointer-events-none" />
+                </div>
               </div>
-              <p className="dd m-0 text-[14px] leading-[1.55] text-[#2a2a2a]">
-                Understand the business, audience, offer and objective before the campaign begins.
-              </p>
-            </div>
-
-            <div className="step flex flex-col gap-3 group relative">
-              <div className="dl flex items-center gap-2">
-                <span className="dn inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[#7c3aed] text-white font-mono text-[11px] font-medium tracking-wide">
-                  02
-                </span>
-                <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">Create</span>
-              </div>
-              <p className="dd m-0 text-[14px] leading-[1.55] text-[#2a2a2a]">
-                Develop the ads, videos, creatives and messaging that give people a reason to pay attention.
-              </p>
-            </div>
-
-            <div className="step flex flex-col gap-3 group relative">
-              <div className="dl flex items-center gap-2">
-                <span className="dn inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[#16a34a] text-white font-mono text-[11px] font-medium tracking-wide">
-                  03
-                </span>
-                <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">Launch</span>
-              </div>
-              <p className="dd m-0 text-[14px] leading-[1.55] text-[#2a2a2a]">
-                Take campaigns live across Meta, Google and social platforms with the right targeting and structure.
-              </p>
-            </div>
-
-            <div className="step flex flex-col gap-3 group relative">
-              <div className="dl flex items-center gap-2">
-                <span className="dn inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[#f97316] text-white font-mono text-[11px] font-medium tracking-wide">
-                  04
-                </span>
-                <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">Scale</span>
-              </div>
-              <p className="dd m-0 text-[14px] leading-[1.55] text-[#2a2a2a]">
-                Learn from performance, improve the campaign and scale the strongest opportunities.
-              </p>
             </div>
           </div>
         </div>
       </section>
+
+      {/* In-House Podcast & Video Studio Section with Theme Stepped Frame (Image 2) */}
+      <PodcastStudioSection />
 
       {/* 360° Service Pillars Section */}
       <section className="ed-protocol relative z-2 py-12 sm:py-16 md:py-24 px-4 sm:px-7 md:px-14 bg-transparent" id="protocol">
@@ -223,22 +208,17 @@ export default function Home() {
               <p className="text-[clamp(15px,1.15vw,18px)] leading-[1.62] max-w-[48ch] mb-6 text-[#2a2a2a] text-justify">
                 <b className="font-medium text-[#0A0A0A]">Not just another marketing agency.</b> We&apos;re a full-service growth partner. Whether you need a complete digital transformation, a rescue mission for your restricted ad accounts, or a high-impact marketing campaign — we have the expertise to deliver real results.
               </p>
-              <a
-                href="/services"
-                className="btn-site inline-flex text-sm py-3.5 px-8"
-              >
+              <a href="/services" className="btn-site text-sm py-3 px-6">
                 View all services
               </a>
             </div>
           </div>
 
-          {/* Animated Tech Ecosystem Visual with Spinning Conical Border & Floating Nodes */}
-          <div className="w-full my-6 sm:my-8 relative">
-            <MarketingEcosystemVisual />
-          </div>
+          {/* Marketing Ecosystem Interactive Visual */}
+          <MarketingEcosystemVisual />
 
-          {/* 4 Service Pillars */}
-          <div className="donuts grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+          {/* Service Pillar Highlights Under Visual */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-8 border-t border-black/10">
             <div className="step flex flex-col gap-3 group relative">
               <div className="dl flex items-center gap-2">
                 <span className="dn inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[#7c3aed] text-white font-mono text-[11px] font-medium tracking-wide">
@@ -247,7 +227,7 @@ export default function Home() {
                 <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">Growth Marketing</span>
               </div>
               <p className="dd m-0 text-[14px] leading-[1.55] text-[#2a2a2a]">
-                Google & Meta Ads, influencer campaigns, social media growth, content creation and full lead generation.
+                Google, Meta, YouTube & TikTok ads optimized for lowest CAC and maximum ROAS.
               </p>
             </div>
 
@@ -256,7 +236,7 @@ export default function Home() {
                 <span className="dn inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[#2563eb] text-white font-mono text-[11px] font-medium tracking-wide">
                   02
                 </span>
-                <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">IT Consulting</span>
+                <span className="dt text-[16px] font-bold text-[#0A0A0A] tracking-tight">IT & Consulting</span>
               </div>
               <p className="dd m-0 text-[14px] leading-[1.55] text-[#2a2a2a]">
                 Custom websites, apps, software, cloud infrastructure, AI integration and digital transformation.
@@ -299,6 +279,9 @@ export default function Home() {
         isLab
       />
 
+      {/* "We are young but bold" 3-Pillar Section (Image 1) */}
+      <YoungAndBoldSection />
+
       {/* Merged Seamless Pixel Marquee & Contact CTA Section */}
       <section className="cta relative z-2 pt-10 sm:pt-12 pb-20 sm:pb-24 md:pb-36 px-4 sm:px-7 md:px-14 text-center bg-transparent overflow-hidden" id="contact">
         {/* Pixel Marquee seamlessly integrated above CTA */}
@@ -318,17 +301,17 @@ export default function Home() {
           </p>
           <p className="meta text-[clamp(15px,1.2vw,19px)] leading-[1.6] text-[#0A0A0A] flex flex-wrap items-center justify-center gap-3">
             <a
-              href="mailto:hello@adbazaar.com"
+              href="mailto:adbazaar9@gmail.com"
               className="text-[#0A0A0A] no-underline border-b border-black/50 hover:border-black transition-colors"
             >
-              hello@adbazaar.com
+              adbazaar9@gmail.com
             </a>
             <span>&bull;</span>
             <a
-              href="tel:+917728840116"
+              href="tel:+918949678859"
               className="text-[#0A0A0A] no-underline border-b border-black/50 hover:border-black transition-colors font-mono"
             >
-              +91 77288 40116
+              +91 89496 78859
             </a>
             <span>&bull;</span>
             <span className="font-bold text-[#0A0A0A]">10 AM – 7 PM</span>

@@ -2,22 +2,26 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #FFFFFF;
-  --ink: #0A0A0A;
-  --muted: #8b8b8b;
+  --paper: #e7e7e9;
+  --ink: #050505;
+  --muted: #666668;
   --purple: #7c3aed;
   --orange: #f97316;
   --green: #16a34a;
   --blue: #2563eb;
   --red: #f97316;
-  --neon: #22c55e;
-  --line: rgba(10, 10, 10, 0.12);
-  --line-2: rgba(10, 10, 10, 0.06);
+  --neon: #F6EE74;
+  --primary: #F6EE74;
+  --secondary: #1c1c1c;
+  --light-gray: #e7e7e9;
+  --dark-gray: #c7c7c7;
+  --line: rgba(5, 5, 5, 0.08);
+  --line-2: rgba(5, 5, 5, 0.04);
   --cell: 14px;
   --gutter: 56px;
   --maxw: 1176px;
   --readw: 34ch;
-  --radius: 26px;
+  --radius: 24px;
   --mono: "Space Mono", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
 }
 
@@ -34,18 +38,13 @@
 
 html {
   scroll-behavior: smooth;
-  background-color: #FFFFFF;
+  background-color: #e7e7e9;
   min-height: 100%;
 }
 
 body {
   margin: 0;
-  background: 
-    radial-gradient(ellipse at 50% 15%, rgba(254, 249, 195, 0.32) 0%, rgba(254, 252, 232, 0.18) 50%, transparent 80%),
-    radial-gradient(ellipse at 85% 60%, rgba(254, 240, 138, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse at 15% 85%, rgba(254, 249, 195, 0.20) 0%, transparent 65%),
-    linear-gradient(180deg, #FFFFFF 0%, #FFFDF2 12%, #FEFCE8 38%, #FEF9C3 62%, #FFFDF5 88%, #FFFFFF 100%);
-  background-attachment: fixed;
+  background-color: #e7e7e9;
   color: var(--ink);
   overflow-x: clip;
   min-height: 100vh;
@@ -431,18 +430,18 @@ a {
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(10,10,10,0.06);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: none;
   transition: background 0.4s ease, box-shadow 0.4s ease;
 }
 
 .navbar--scrolled {
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  box-shadow: 0 1px 0 rgba(10,10,10,0.07);
+  background: rgba(231, 231, 233, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: none;
 }
 
 /* Scroll progress bar */
@@ -2453,4 +2452,56 @@ canvas, img, video {
   50%, 100% {
     transform: translateX(100%);
   }
+}
+
+/* ===================================================
+   PODCAST THEME STEPPED FRAME (Matching Image 2)
+   =================================================== */
+.theme-stepped-mask {
+  clip-path: url(#theme-stepped-frame);
+  -webkit-clip-path: url(#theme-stepped-frame);
+}
+
+@supports not (clip-path: url(#theme-stepped-frame)) {
+  .theme-stepped-mask {
+    border-radius: 32px 32px 48px 32px;
+  }
+}
+
+/* ===================================================
+   CIRCULAR BADGE ROTATION ANIMATION
+   =================================================== */
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 12s linear infinite;
+}
+
+/* ===================================================
+   HEADER SHELF SLOW-MOTION MARQUEE
+   =================================================== */
+@keyframes marqueeSlow {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marqueeSlow 20s linear infinite;
+}
+
+.animate-marquee-slow:hover {
+  animation-play-state: paused;
 }
