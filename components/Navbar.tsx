@@ -24,7 +24,7 @@ export const Navbar: React.FC = () => {
     const onScroll = () => {
       const sy  = window.scrollY;
       const max = document.body.scrollHeight - window.innerHeight;
-      setScrolled(sy > 40);
+      setScrolled(sy > 8);
       setScrollPct(max > 0 ? (sy / max) * 100 : 0);
     };
     window.addEventListener("scroll", onScroll, { passive: true });

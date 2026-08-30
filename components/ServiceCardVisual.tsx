@@ -28,6 +28,22 @@ export const ServiceCardVisual: React.FC<ServiceCardVisualProps> = ({ type, titl
 
     let animId: number;
     let t = 0;
+    let isVisible = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const wasVisible = isVisible;
+          isVisible = entry.isIntersecting;
+          if (!wasVisible && isVisible) {
+            cancelAnimationFrame(animId);
+            animId = requestAnimationFrame(render);
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(canvas);
 
     // Helper: Draw crisp platform logo bubble
     const drawPlatformBubble = (
@@ -175,6 +191,7 @@ export const ServiceCardVisual: React.FC<ServiceCardVisualProps> = ({ type, titl
     };
 
     const render = () => {
+      if (!isVisible) return;
       t += 0.022;
       const w = canvas.width;
       const h = canvas.height;
@@ -758,7 +775,10 @@ export const ServiceCardVisual: React.FC<ServiceCardVisualProps> = ({ type, titl
     };
 
     animId = requestAnimationFrame(render);
-    return () => cancelAnimationFrame(animId);
+    return () => {
+      cancelAnimationFrame(animId);
+      observer.disconnect();
+    };
   }, [type, hovered]);
 
   return (

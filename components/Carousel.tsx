@@ -50,6 +50,23 @@ export const Carousel: React.FC<CarouselProps> = ({
 
     let animId: number;
     let lastTime = performance.now();
+    let isVisible = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const wasVisible = isVisible;
+          isVisible = entry.isIntersecting;
+          if (!wasVisible && isVisible) {
+            lastTime = performance.now();
+            cancelAnimationFrame(animId);
+            animId = requestAnimationFrame(step);
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(el);
 
     // Initial scroll position in the middle set
     const singleSetWidth = el.scrollWidth / 3;
@@ -58,6 +75,7 @@ export const Carousel: React.FC<CarouselProps> = ({
     }
 
     const step = () => {
+      if (!isVisible) return;
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
@@ -112,6 +130,7 @@ export const Carousel: React.FC<CarouselProps> = ({
 
     return () => {
       cancelAnimationFrame(animId);
+      observer.disconnect();
       if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
       el.removeEventListener("pointerenter", onPointerEnter);
       el.removeEventListener("pointerleave", onPointerLeave);

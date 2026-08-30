@@ -62,10 +62,14 @@ export const YoungAndBoldSection: React.FC = () => {
       <div className="max-w-[1176px] mx-auto">
         
         {/* Section Header */}
-        <div className="flex flex-col items-center text-center max-w-2xl mx-auto mb-10 sm:mb-16">
-          {/* Main Title */}
-          <h2 className="text-[clamp(26px,5vw,54px)] font-bold tracking-[-0.03em] text-[#0A0A0A] m-0">
-            Built for Growth. Engineered for Results.
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10 sm:mb-16">
+          {/* Main Title Matching Header GROW YOUR BUSINESS Typography */}
+          <h2 className="text-[clamp(28px,4.6vw,56px)] leading-[1.08] tracking-[-0.03em] text-[#0A0A0A] uppercase font-normal m-0 select-none">
+            <span className="font-normal">Built for </span>
+            <span className="font-light italic tracking-tight text-[#0A0A0A]">Growth</span>
+            <span className="font-normal">. Engineered for </span>
+            <span className="font-light italic tracking-tight text-[#0A0A0A]">Results</span>
+            <span className="font-normal">.</span>
           </h2>
         </div>
 
