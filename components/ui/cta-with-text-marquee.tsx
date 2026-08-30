@@ -64,7 +64,7 @@ export default function CTAWithVerticalMarquee() {
                   <path d="M4 19h4V9H4v10zm6 0h4V5h-4v14zm6 0h4v-7h-4v7z" />
                 </svg>
               </div>
-              <span className="text-[11px] sm:text-[12px] font-mono font-bold tracking-[0.22em] text-[#0A0A0A] uppercase">
+              <span className="text-[13px] sm:text-[15px] font-mono font-bold tracking-[0.22em] text-[#0A0A0A] uppercase">
                 MARKETING
               </span>
             </div>
@@ -93,7 +93,7 @@ export default function CTAWithVerticalMarquee() {
             <div className="relative w-full max-w-[480px] sm:max-w-[620px] lg:max-w-[780px] xl:max-w-[840px] aspect-[4/3.4] sm:aspect-[4/3.2] lg:aspect-[4/3.0]">
               
               {/* Top-Left Marquee Ticker */}
-              <div className="absolute top-0 left-0 w-[38%] sm:w-[30%] h-[22px] sm:h-[30px] md:h-[38px] overflow-hidden z-10 pointer-events-none flex items-center px-1.5 sm:px-2.5">
+              <div className="absolute top-6 sm:top-8 md:top-10 left-0 w-[38%] sm:w-[30%] h-[22px] sm:h-[30px] md:h-[38px] overflow-hidden z-10 pointer-events-none flex items-center px-1.5 sm:px-2.5">
                 <div className="animate-marquee-vertical w-full text-[8px] sm:text-[10px] md:text-[12px] font-mono font-bold tracking-[0.12em] sm:tracking-[0.16em] text-[#0A0A0A] uppercase">
                   {marqueeItems.concat(marqueeItems).map((item, idx) => (
                     <div key={idx} className="h-[22px] sm:h-[30px] md:h-[38px] flex items-center gap-1.5 shrink-0">

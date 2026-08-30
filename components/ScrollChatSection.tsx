@@ -55,13 +55,6 @@ const chatMessages: ChatMessage[] = [
     text: "Cool lets connect !",
     time: "10:32 AM",
   },
-  {
-    id: 8,
-    sender: "brand",
-    text: "Great! Our team will connect with you shortly.",
-    time: "10:32 AM",
-    actionCTA: true,
-  },
 ];
 
 const typingPhrases = [
@@ -74,7 +67,6 @@ const typingPhrases = [
 
 export const ScrollChatSection: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const chatScrollRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState<number>(0);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [hasStarted, setHasStarted] = useState<boolean>(false);
@@ -118,25 +110,15 @@ export const ScrollChatSection: React.FC = () => {
       timer = setTimeout(() => {
         setIsTyping(false);
         setVisibleCount((prev) => prev + 1);
-      }, 950);
+      }, 900);
     } else {
       timer = setTimeout(() => {
         setVisibleCount((prev) => prev + 1);
-      }, 650);
+      }, 600);
     }
 
     return () => clearTimeout(timer);
   }, [hasStarted, visibleCount]);
-
-  // Auto-scroll to latest message inside the fixed chat box
-  useEffect(() => {
-    if (chatScrollRef.current) {
-      chatScrollRef.current.scrollTo({
-        top: chatScrollRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [visibleCount, isTyping]);
 
   // Bottom Input Typewriter Effect Loop
   useEffect(() => {
@@ -168,26 +150,26 @@ export const ScrollChatSection: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative z-2 py-8 sm:py-14 md:py-16 px-3.5 sm:px-6 md:px-10 bg-transparent overflow-hidden"
+      className="relative z-2 py-6 sm:py-10 md:py-14 px-3.5 sm:px-6 md:px-10 bg-transparent"
       id="chat-experience"
     >
       {/* Expanded Wide Responsive Container */}
       <div className="w-full max-w-[760px] sm:max-w-[880px] lg:max-w-[960px] mx-auto">
         
-        {/* Chat Interface Box matching Website BG Color with No Outer Border & No Shadow */}
-        <div className="relative rounded-3xl sm:rounded-[32px] bg-[#e7e7e9] border-0 shadow-none overflow-hidden h-[400px] min-[420px]:h-[430px] sm:h-[460px] flex flex-col transition-all">
+        {/* Natural Flowing Chat Container — No Inner Scrollbar */}
+        <div className="relative flex flex-col transition-all">
           
-          {/* Header Bar matching exact website bg */}
-          <div className="shrink-0 flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3 bg-[#e7e7e9] border-0 z-10">
+          {/* Header Bar */}
+          <div className="shrink-0 flex items-center justify-between px-0 py-2 sm:py-2.5 border-0 z-10 mb-2">
             <div className="flex items-center gap-2 sm:gap-2.5">
-              {/* AD Bazaar Logo Avatar */}
-              <div className="relative w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white p-0.5 border border-black/10 flex items-center justify-center shrink-0 overflow-hidden shadow-none">
+              {/* AD Bazaar Brand Avatar */}
+              <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-black/10 flex items-center justify-center shrink-0 overflow-hidden shadow-xs">
                 <Image
-                  src="/favicon.png"
-                  alt="AD BAZAAR Logo"
-                  width={20}
-                  height={20}
-                  className="object-contain"
+                  src="/chat-avatar-brand.jpg"
+                  alt="AD BAZAAR Growth Strategist"
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-cover"
                 />
               </div>
 
@@ -202,15 +184,8 @@ export const ScrollChatSection: React.FC = () => {
             </div>
           </div>
 
-          {/* INNER SCROLLABLE MESSAGES AREA (Website Matching BG) */}
-          <div
-            ref={chatScrollRef}
-            className="flex-1 overflow-y-auto p-3.5 sm:p-5 sm:py-6 space-y-2.5 sm:space-y-3 bg-[#e7e7e9] scroll-smooth"
-            style={{
-              scrollbarWidth: "thin",
-              scrollbarColor: "rgba(0,0,0,0.12) transparent",
-            }}
-          >
+          {/* MESSAGES AREA (Flows Naturally with Main Page Scroll — 0 Inner Scrollbar) */}
+          <div className="py-2 space-y-2.5 sm:space-y-3">
             {chatMessages.map((msg, idx) => {
               const isVisible = idx < visibleCount;
               if (!isVisible) return null;
@@ -224,65 +199,52 @@ export const ScrollChatSection: React.FC = () => {
                     isBrand ? "flex-row-reverse" : "flex-row"
                   } animate-fade-in-up`}
                 >
-                  {/* Small Avatar */}
+                  {/* Photo Avatars */}
                   {isBrand ? (
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white border border-black/10 flex flex-col items-center justify-center shrink-0 p-0.5 shadow-none">
-                      <span className="text-[8.5px] sm:text-[9.5px] font-black text-[#C69C28] leading-none tracking-tighter">AD</span>
-                      <span className="text-[4.5px] sm:text-[5px] font-bold text-[#333333] leading-none tracking-widest uppercase">SYS</span>
+                    <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden shrink-0 border border-black/10 shadow-xs">
+                      <Image
+                        src="/chat-avatar-brand.jpg"
+                        alt="AD BAZAAR"
+                        width={32}
+                        height={32}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   ) : (
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#888888] text-white flex items-center justify-center shrink-0 shadow-none">
-                      <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                      </svg>
+                    <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden shrink-0 border border-black/10 shadow-xs">
+                      <Image
+                        src="/chat-avatar-client.jpg"
+                        alt="Client"
+                        width={32}
+                        height={32}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   )}
 
-                  {/* Small Compact Message Bubble */}
+                  {/* Pure Text Message (No background box, no borders) */}
                   <div
-                    className={`max-w-[78%] sm:max-w-[66%] md:max-w-[56%] rounded-2xl px-3 sm:px-4 py-2 sm:py-2.5 shadow-none transition-all ${
-                      isBrand
-                        ? "bg-[#FEF7D9] text-[#0A0A0A] rounded-tr-xs border border-[#F6E8B6]"
-                        : "bg-white text-[#0A0A0A] rounded-tl-xs border border-black/5"
+                    className={`max-w-[80%] sm:max-w-[70%] md:max-w-[60%] py-0.5 transition-all ${
+                      isBrand ? "text-right" : "text-left"
                     }`}
                   >
-                    {/* Compact Message Text */}
-                    <p className="text-[12px] sm:text-[13px] font-normal leading-relaxed m-0 text-[#0A0A0A]">
+                    {/* Clean Message Text */}
+                    <p className="text-[13px] sm:text-[14.5px] font-medium leading-relaxed m-0 text-[#0A0A0A]">
                       {msg.text}
                     </p>
 
                     {/* Timestamp */}
-                    <div className="text-[8.5px] sm:text-[9.5px] text-[#777777] font-sans text-right mt-1 leading-none">
+                    <div className={`text-[9px] sm:text-[10px] text-[#777777] font-sans mt-0.5 leading-none ${
+                      isBrand ? "text-right" : "text-left"
+                    }`}>
                       {msg.time}
                     </div>
-
-                    {/* Action CTA for Final Message */}
-                    {msg.actionCTA && (
-                      <div className="mt-2 pt-1.5 border-t border-black/10 flex flex-wrap items-center gap-1.5">
-                        <Link
-                          href="/contact"
-                          className="btn-site text-[9.5px] sm:text-[10.5px] py-1 px-3 flex items-center gap-1 shadow-none"
-                        >
-                          <span>Schedule Strategy Call</span>
-                          <span>→</span>
-                        </Link>
-                        <a
-                          href="https://wa.me/918949678859"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-[9.5px] sm:text-[10.5px] font-mono font-semibold transition-colors shadow-none"
-                        >
-                          <span>WhatsApp</span>
-                          <span>↗</span>
-                        </a>
-                      </div>
-                    )}
                   </div>
                 </div>
               );
             })}
 
-            {/* Typing Indicator inside inner scroll */}
+            {/* Typing Indicator */}
             {isTyping && (
               <div className="flex items-center gap-1 text-[10px] sm:text-[10.5px] font-mono text-gray-600 animate-pulse px-1.5 py-0.5">
                 <span className="w-1 h-1 rounded-full bg-[#0A0A0A]" />
@@ -293,8 +255,8 @@ export const ScrollChatSection: React.FC = () => {
             )}
           </div>
 
-          {/* Bottom Chat Input Bar Matching Exact Website BG */}
-          <div className="shrink-0 p-2.5 sm:p-3.5 bg-[#e7e7e9] border-0 z-10">
+          {/* Bottom Chat Input Bar with Typewriter Animation */}
+          <div className="shrink-0 pt-3 sm:pt-4 border-0 z-10">
             <Link
               href="/contact"
               className="flex items-center justify-between gap-2 px-3.5 sm:px-4.5 py-2 sm:py-2.5 rounded-full bg-white border border-black/10 shadow-none group hover:border-black/25 transition-all"
