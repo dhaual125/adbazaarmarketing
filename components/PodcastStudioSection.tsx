@@ -47,7 +47,7 @@ export const PodcastStudioSection: React.FC = () => {
             {/* Studio Capabilities Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div className="flex items-start gap-3 py-1">
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-purple-100 text-purple-700 shrink-0 mt-0.5">
+                <div className="shrink-0 mt-0.5 text-[#0A0A0A]">
                   <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
                     <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
@@ -63,7 +63,7 @@ export const PodcastStudioSection: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-3 py-1">
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 text-blue-700 shrink-0 mt-0.5">
+                <div className="shrink-0 mt-0.5 text-[#0A0A0A]">
                   <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect width="18" height="18" x="3" y="3" rx="2" />
                     <circle cx="9" cy="9" r="2" />
@@ -79,7 +79,7 @@ export const PodcastStudioSection: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-3 py-1">
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 shrink-0 mt-0.5">
+                <div className="shrink-0 mt-0.5 text-[#0A0A0A]">
                   <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="12" cy="12" r="10" />
                     <polygon points="10 8 16 12 10 16 10 8" />
@@ -94,7 +94,7 @@ export const PodcastStudioSection: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-3 py-1">
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-100 text-amber-700 shrink-0 mt-0.5">
+                <div className="shrink-0 mt-0.5 text-[#0A0A0A]">
                   <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                   </svg>
